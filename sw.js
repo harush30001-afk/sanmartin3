@@ -1,5 +1,5 @@
 /* San Martin 3 - offline support: app shell + Firebase SDK cached for use without network */
-const V='sm3-sw-4',SHELL=['./','logo-full.jpg','app-180.png','app-512.png','manifest.webmanifest'];
+const V='sm3-sw-5',SHELL=['./','logo-full.jpg','logo-in-180.png','app-180.png','app-512.png','manifest.webmanifest'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(u).catch(()=>{})))))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 const net=(req,ms)=>new Promise((res,rej)=>{const t=setTimeout(()=>rej(new Error('slow')),ms);fetch(req).then(r=>{clearTimeout(t);res(r)},e=>{clearTimeout(t);rej(e)})});
