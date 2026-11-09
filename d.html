@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>מערכת ניהול פרויקטים YH</title><meta name="description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:title" content="מערכת ניהול פרויקטים YH"><meta property="og:description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:image" content="https://harush30001-afk.github.io/sanmartin3/app-512.png"><meta property="og:type" content="website"><link rel="apple-touch-icon" href="app-180.png"><link rel="icon" type="image/png" href="app-180.png">
-<!-- v: d 473 -->
+<!-- v: d 474 -->
 <style>
 #ld{position:fixed;inset:0;z-index:50;background:#070b14;display:flex;align-items:center;justify-content:center;transition:opacity .35s}#ld.out{opacity:0;pointer-events:none}
 
@@ -55,6 +55,23 @@ details summary{padding:6px 0}
 .ldbar{width:170px;height:3px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
 .ldbar i{display:block;height:100%;width:40%;border-radius:3px;background:linear-gradient(90deg,transparent,#e2a83a,transparent);animation:ldbar 1.3s ease-in-out infinite}
 @keyframes ldbar{0%{transform:translateX(260%)}100%{transform:translateX(-160%)}}
+@keyframes ldxup{from{opacity:0;transform:translateY(6px)}}
+@keyframes ldxpp{from{opacity:0;transform:translateY(4px)}}
+@keyframes ldxtr{to{transform:translateX(-110px)}}
+@keyframes ldxhk{to{transform:translateY(38px)}}
+@keyframes ldxsw{0%{transform:rotate(-3deg)}100%{transform:rotate(3deg)}}
+@keyframes ldxbl{50%{opacity:.1}}
+@keyframes ldxlt{0%,100%{opacity:.8}50%{opacity:1}}
+@keyframes ldxwk{0%,100%{opacity:.35}50%{opacity:.9}}
+@keyframes ldxcar{0%{transform:translateX(-50px)}100%{transform:translateX(420px)}}
+@keyframes ldxcar2{0%{transform:translateX(420px)}100%{transform:translateX(-60px)}}
+@keyframes ldxwd{50%{opacity:0}}
+@keyframes ldxdr{to{transform:translateX(-180px)}}
+@keyframes ldxbd{0%{transform:translate(380px,30px)}100%{transform:translate(-60px,-10px)}}
+@keyframes ldxwg{to{transform:scaleY(-.6)}}
+@keyframes ldxswp{0%{transform:translateX(-120px)}60%,100%{transform:translateX(320px)}}
+@keyframes ldxrs{0%{opacity:0;transform:translateY(4px)}30%,70%{opacity:.9}100%{opacity:0;transform:translateY(-14px)}}
+.ldscene *{animation:none!important}
 .ldtx{font-size:13px;color:#9aa3b2;font-weight:600}
 .ldpr{display:flex;align-items:baseline;gap:8px;font-size:14px;color:#c9c2b5;font-weight:600;margin-top:-2px}
 .ldpr b{color:#f4efe6;font-weight:800}
@@ -126,102 +143,127 @@ Object.assign(DFL.ar,{op:'مفتوحة',wt:'بانتظار الموافقة',dn:
 Object.assign(DFL.ru,{op:'Открыто',wt:'Ждёт подтверждения',dn:'Исправлено',none:'Открытых дефектов нет. Спасибо!',nw:'Новое',od:'Открыто',dd:'дн.'});
 Object.assign(DFL.zh,{op:'未处理',wt:'等待确认',dn:'已处理',none:'没有未处理的缺陷。谢谢！',nw:'新',od:'已开',dd:'天'});
 Object.assign(DFL.hi,{op:'खुले',wt:'मंज़ूरी बाकी',dn:'ठीक किए',none:'कोई खुली खराबी नहीं। धन्यवाद!',nw:'नया',od:'खुला',dd:'दिन'});
-window.LDSCENE=function(D){
-var W=360,H=300,G=252,sd=7;function R(){sd=(sd*9301+49297)%233280;return sd/233280}
-var N=function(n){var r=[];for(var i=0;i<n;i++)r.push(null);return r};var B=(D&&D.b&&D.b.length?D.b:(D&&D.def?D.def:[{n:'',s:5,t:1,f:N(19)},{n:'',s:5,t:1,f:N(11)}])).slice(0,4);
-var known=!!(D&&D.b&&D.b.length);
-var nmax=Math.max.apply(null,B.map(function(b){return b.f.length}));
-var fh=Math.min(11,150/nmax),topY=G-nmax*fh;
-var MX=314,JY=Math.max(28,Math.min(56,topY-46));
-/* מי בעבודה: הבניין הכי פחות גמור, והקומה הגבוהה שבעבודה */
-var act=-1,wf=-1,low=999;B.forEach(function(b,i){if(!known)return;var t=0,n=0,fr=-1;b.f.forEach(function(p,f){t+=p;n++;if(p>0&&p<100)fr=f});if(fr<0){for(var f=0;f<b.f.length;f++)if(b.f[f]<100){fr=f;break}}var av=n?t/n:0;if(fr>=0&&av<low){low=av;act=i;wf=fr}});
-var done=known&&act<0;
-/* רוחב בניינים */
-var ws=B.map(function(b){return Math.max(52,Math.min(96,40+(b.s||4)*9))}),gap=16,x0=18,x1=done?342:272,av=x1-x0-gap*(B.length-1),sum=ws.reduce(function(a,c){return a+c},0),k=Math.min(1,av/sum);
-ws=ws.map(function(w){return Math.round(w*k)});var tot=ws.reduce(function(a,c){return a+c},0)+gap*(B.length-1),X=x0+(av+gap*(B.length-1)-tot)/2;
-var s='<svg class="ldscene" viewBox="0 0 360 300" aria-hidden="true"><defs>'+
-'<linearGradient id="lgsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1120"/><stop offset=".55" stop-color="#1a2440"/><stop offset=".86" stop-color="#5d4438"/><stop offset="1" stop-color="#c98a4b"/></linearGradient>'+
-'<linearGradient id="lgst" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#eadcc1"/><stop offset=".7" stop-color="#d9c7a6"/><stop offset="1" stop-color="#b9a585"/></linearGradient>'+
-'<linearGradient id="lgcn" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b9bcc2"/><stop offset="1" stop-color="#94989f"/></linearGradient>'+
-'<linearGradient id="lggl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#46577a"/><stop offset="1" stop-color="#1c2538"/></linearGradient>'+
-'<radialGradient id="lgglow" cx=".5" cy="1" r=".7"><stop offset="0" stop-color="#f3a75a" stop-opacity=".5"/><stop offset="1" stop-color="#f3a75a" stop-opacity="0"/></radialGradient>'+
-'<radialGradient id="lglamp" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffd58a" stop-opacity=".55"/><stop offset="1" stop-color="#ffd58a" stop-opacity="0"/></radialGradient>'+
-'<clipPath id="lgclip"><rect width="360" height="300" rx="22"/></clipPath></defs><g clip-path="url(#lgclip)">'+
-'<rect width="360" height="300" fill="url(#lgsky)"/><ellipse cx="180" cy="254" rx="280" ry="74" fill="url(#lgglow)"/>';
-for(var i=0;i<34;i++)s+='<circle cx="'+(R()*360).toFixed(0)+'" cy="'+(R()*130).toFixed(0)+'" r="'+(R()*.5+.5).toFixed(1)+'" class="ldsr" style="animation-delay:'+(R()*3).toFixed(2)+'s"/>';
-s+='<path d="M60 30a11 11 0 1 0 8 18a9 9 0 1 1 -8 -18z" fill="#f4ead6" opacity=".85"/>';
-/* הרי ירושלים ועיר ברקע */
-s+='<path d="M0 214 C40 196 70 204 104 192 C140 180 170 196 206 188 C246 178 280 194 316 184 C334 180 350 186 360 190 V252 H0Z" fill="#202a42"/>';
-s+='<path d="M0 230 C50 220 90 228 140 220 C200 212 250 226 300 218 C330 214 350 220 360 222 V252 H0Z" fill="#1a2237"/>';
-var cx=0;while(cx<360){var bw=10+R()*22,bh=8+R()*26;s+='<rect x="'+cx.toFixed(0)+'" y="'+(G-bh).toFixed(0)+'" width="'+bw.toFixed(0)+'" height="'+bh.toFixed(0)+'" fill="#151c2e"/>';if(R()>.5)s+='<rect x="'+(cx+3).toFixed(0)+'" y="'+(G-bh+4).toFixed(0)+'" width="2" height="2" fill="#ffd58a" opacity=".7"/>';cx+=bw+2}
-/* הבניינים */
-var gi=0,PX=0,PY=0,lab='';
-B.forEach(function(b,bi){var w=ws[bi],bx=X,n=b.f.length,top=G-n*fh,nb=Math.max(3,Math.floor((w-6)/10)),bw=(w-6)/nb,all=known&&b.f.every(function(p){return p>=100}),tech=b.t&&n>1;
-  s+='<rect x="'+(bx-1)+'" y="'+(top-1)+'" width="'+(w+2)+'" height="'+(n*fh+1)+'" fill="#000" opacity=".25"/>';
-  for(var f=0;f<n;f++){var p=b.f[f],y=G-(f+1)*fh,isT=tech&&f==n-1,st=p==null?'d':p>=100?'d':p>0?'w':'z',ins=isT?2.5:0,fx=bx+ins,fw=w-ins*2;
-    var dl=Math.min(.9,gi*0.03).toFixed(2);gi++;
-    s+='<g class="ldfl" style="animation-delay:'+dl+'s">';
-    var cl=st=='d'?nb:st=='w'?Math.round(nb*p/100):0;
-    s+='<rect x="'+fx.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+fw.toFixed(1)+'" height="'+fh.toFixed(1)+'" fill="'+(st=='z'?'url(#lgcn)':st=='w'?'#7b7f86':'url(#lgst)')+'"/>';
-    if(st=='w'&&cl>0)s+='<rect x="'+fx.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+(3+cl*bw).toFixed(1)+'" height="'+fh.toFixed(1)+'" fill="url(#lgst)"/>';
-    if(isT){for(var q=0;q<nb;q++)s+='<rect x="'+(fx+2+q*(fw-4)/nb).toFixed(1)+'" y="'+(y+fh*.3).toFixed(1)+'" width="'+((fw-4)/nb-1.5).toFixed(1)+'" height="'+(fh*.45).toFixed(1)+'" fill="#4a5262"/>'}
-    else for(var q=0;q<nb;q++){var wx=bx+3+q*bw+bw*.18,wy=y+fh*.22,ww=bw*.64,wh=fh*.56,cld=q<cl;
-      if(f==0&&q==Math.floor(nb/2)){s+='<rect x="'+wx.toFixed(1)+'" y="'+(y+fh*.12).toFixed(1)+'" width="'+ww.toFixed(1)+'" height="'+(fh*.88).toFixed(1)+'" fill="'+(p>0||p==null?'#ffe1a3':'#141a26')+'" opacity=".92"/>';continue}
-      if(cld){s+='<rect x="'+(wx-.5).toFixed(1)+'" y="'+(wy-.5).toFixed(1)+'" width="'+(ww+1).toFixed(1)+'" height="'+(wh+1).toFixed(1)+'" fill="#efe7d8"/><rect x="'+wx.toFixed(1)+'" y="'+wy.toFixed(1)+'" width="'+ww.toFixed(1)+'" height="'+wh.toFixed(1)+'" fill="url(#lggl)"/>';
-        if(st=='d'&&known&&R()<.22)s+='<rect x="'+wx.toFixed(1)+'" y="'+wy.toFixed(1)+'" width="'+ww.toFixed(1)+'" height="'+wh.toFixed(1)+'" fill="#ffd58a" opacity=".85"/>';
-        if(q%2==1&&f>0&&fh>7)s+='<rect x="'+(wx-1).toFixed(1)+'" y="'+(y+fh*.62).toFixed(1)+'" width="'+(ww+2).toFixed(1)+'" height=".8" fill="#2b2f36"/>'}
-      else{s+='<rect x="'+wx.toFixed(1)+'" y="'+wy.toFixed(1)+'" width="'+ww.toFixed(1)+'" height="'+wh.toFixed(1)+'" fill="#121722"/>';
-        if(st=='w'&&R()<.45)s+='<rect x="'+wx.toFixed(1)+'" y="'+wy.toFixed(1)+'" width="'+ww.toFixed(1)+'" height="'+wh.toFixed(1)+'" class="ldwl" style="fill:#fff0c4;animation-delay:'+(R()*3).toFixed(2)+'s"/>'}}
-    s+='<rect x="'+(fx-1).toFixed(1)+'" y="'+(y+fh-1.2).toFixed(1)+'" width="'+(fw+2).toFixed(1)+'" height="1.2" fill="'+(st=='d'?'#f1e9da':'#a3a6ab')+'"/>';
-    if(st=='w'||st=='z'){var sx=bx-2.5;s+='<g stroke="#cfd3d9" stroke-width=".7">';for(var v=0;v<=nb;v+=2)s+='<line x1="'+(sx+v*bw+3).toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+(sx+v*bw+3).toFixed(1)+'" y2="'+(y+fh).toFixed(1)+'"/>';
-      s+='<line x1="'+sx.toFixed(1)+'" y1="'+(y+fh-.4).toFixed(1)+'" x2="'+(sx+w+5).toFixed(1)+'" y2="'+(y+fh-.4).toFixed(1)+'" stroke="#c9a46c" stroke-width="1"/>';
-      if(f%2==0)s+='<line x1="'+(sx+3).toFixed(1)+'" y1="'+(y+fh).toFixed(1)+'" x2="'+(sx+2*bw+3).toFixed(1)+'" y2="'+y.toFixed(1)+'"/>';s+='</g>';
-      if(st=='z')s+='<rect x="'+(bx-2.5).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+(w+5).toFixed(1)+'" height="'+fh.toFixed(1)+'" fill="#3f8a5c" opacity=".22"/>'}
-    if(bi==act&&f==wf){PX=bx+w+5;PY=y+fh-1.2;s+='<rect x="'+(bx+w).toFixed(1)+'" y="'+(y+fh-2).toFixed(1)+'" width="10" height="1.6" fill="#c9a46c"/><path d="M'+(bx+w+10).toFixed(1)+' '+(y+fh-2)+'v-4" stroke="#e2a83a" stroke-width=".7"/><rect x="'+(bx+w+1).toFixed(1)+'" y="'+(y+fh-6).toFixed(1)+'" width="9" height=".6" fill="#e2a83a"/>'}
-    s+='</g>'}
-  /* גג */
-  var dlr=Math.min(1,gi*0.03).toFixed(2);
-  s+='<g class="ldtop" style="animation-delay:'+dlr+'s"><rect x="'+(bx-1)+'" y="'+(top-2.5).toFixed(1)+'" width="'+(w+2)+'" height="2.5" fill="#d8ccb6"/><rect x="'+(bx+w*.62).toFixed(1)+'" y="'+(top-9).toFixed(1)+'" width="'+(w*.22).toFixed(1)+'" height="6.5" fill="#c3b598"/><line x1="'+(bx+w*.2).toFixed(1)+'" y1="'+(top-2.5).toFixed(1)+'" x2="'+(bx+w*.2).toFixed(1)+'" y2="'+(top-14).toFixed(1)+'" stroke="#9aa3ad" stroke-width=".8"/><circle cx="'+(bx+w*.2).toFixed(1)+'" cy="'+(top-14.5).toFixed(1)+'" r="1.3" class="ldav"/>';
-  if(all){for(var q=0;q<3;q++)s+='<path d="M'+(bx+5+q*8).toFixed(1)+' '+(top-3)+'l6 0l-2 -4l-6 0z" fill="#2f4d7a" stroke="#8fa8c8" stroke-width=".3"/>'}
-  s+='</g>';
-  if(known){var tp=b.f.length?Math.round(b.f.reduce(function(a,c){return a+(c||0)},0)/b.f.length):0;
-    s+='<text x="'+(bx+w/2).toFixed(1)+'" y="'+(top-17).toFixed(1)+'" text-anchor="middle" font-size="10.5" font-weight="800" fill="#f4efe6" class="ldtop" style="animation-delay:'+dlr+'s;paint-order:stroke" stroke="#0a1120" stroke-width="3">'+String(b.n).replace(/[<&]/g,'')+' · '+tp+'%</text>'}
-  X+=w+gap});
-/* מנוף צריח */
-if(!done){var JE=24,CJ=MX+44,MT=JY,lat='',yy;
-  s+='<g class="ldcr" fill="#e2a83a" stroke="#e2a83a"><rect x="'+(MX-9)+'" y="'+(G-4)+'" width="18" height="4" fill="#6b6f77" stroke="none"/>';
-  s+='<rect x="'+(MX-4.6)+'" y="'+(MT+7)+'" width="1.3" height="'+(G-4-MT-7)+'" stroke="none"/><rect x="'+(MX+3.3)+'" y="'+(MT+7)+'" width="1.3" height="'+(G-4-MT-7)+'" stroke="none"/>';
-  for(yy=G-4;yy>MT+9;yy-=8){lat+='M'+(MX-4)+' '+yy+'L'+(MX+4)+' '+(yy-4)+'L'+(MX-4)+' '+(yy-8)+'M'+(MX-4)+' '+yy+'H'+(MX+4)}
-  s+='<path d="'+lat+'" fill="none" stroke-width=".6"/>';
-  /* ראש, זרוע, נגד */
-  s+='<path d="M'+(MX-4)+' '+(MT+1)+'L'+MX+' '+(MT-20)+'L'+(MX+4)+' '+(MT+1)+'" fill="none" stroke-width="1.2"/>';
-  s+='<rect x="'+JE+'" y="'+MT+'" width="'+(MX-JE)+'" height="1.1" stroke="none"/><rect x="'+JE+'" y="'+(MT+5.5)+'" width="'+(MX-JE)+'" height="1.1" stroke="none"/>';
-  lat='';for(var jx=MX;jx>JE+6;jx-=7)lat+='M'+jx+' '+(MT+6)+'L'+(jx-3.5)+' '+MT+'L'+(jx-7)+' '+(MT+6);s+='<path d="'+lat+'" fill="none" stroke-width=".6"/><path d="M'+JE+' '+MT+'v6.6" stroke-width="1"/>';
-  s+='<rect x="'+MX+'" y="'+MT+'" width="'+(CJ-MX)+'" height="1.1" stroke="none"/><rect x="'+MX+'" y="'+(MT+4)+'" width="'+(CJ-MX)+'" height="1.1" stroke="none"/>';
-  lat='';for(var cxx=MX;cxx<CJ-4;cxx+=7)lat+='M'+cxx+' '+(MT+4.5)+'L'+(cxx+3.5)+' '+MT+'L'+(cxx+7)+' '+(MT+4.5);s+='<path d="'+lat+'" fill="none" stroke-width=".6"/>';
-  s+='<path d="M'+MX+' '+(MT-20)+'L'+(JE+(MX-JE)*.42).toFixed(0)+' '+MT+'M'+MX+' '+(MT-20)+'L'+(JE+(MX-JE)*.75).toFixed(0)+' '+MT+'M'+MX+' '+(MT-20)+'L'+(CJ-4)+' '+MT+'" fill="none" stroke="#c9ced6" stroke-width=".45"/>';
-  s+='<rect x="'+(CJ-15)+'" y="'+(MT+5)+'" width="13" height="13" rx=".6" fill="#7c8088" stroke="none"/><rect x="'+(CJ-15)+'" y="'+(MT+9.3)+'" width="13" height=".5" fill="#5a5e66" stroke="none"/><rect x="'+(CJ-15)+'" y="'+(MT+13.6)+'" width="13" height=".5" fill="#5a5e66" stroke="none"/><rect x="'+(MX+7)+'" y="'+(MT-3.5)+'" width="10" height="4" fill="#3b4048" stroke="none"/>';
-  s+='<rect x="'+(MX-15)+'" y="'+(MT+7)+'" width="10" height="9" rx="1.4" fill="#f1f3f5" stroke="none"/><rect x="'+(MX-14.2)+'" y="'+(MT+8.4)+'" width="8.4" height="4.3" fill="#7fb4d9" stroke="none"/><rect x="'+(MX-6)+'" y="'+(MT+6.6)+'" width="12" height="2.2" fill="#3b4048" stroke="none"/>';
-  s+='<rect x="'+(MX-5)+'" y="'+(MT-2)+'" width="10" height="1.4" fill="#fff" stroke="none" opacity=".9"/><text x="'+(MX-34)+'" y="'+(MT+4.7)+'" font-size="3.8" font-weight="900" fill="#1f1a14" stroke="none" letter-spacing=".4">YH</text></g>';
-  s+='<circle cx="'+MX+'" cy="'+(MT-21)+'" r="1.7" class="ldav"/><circle cx="'+(JE+1)+'" cy="'+MT+'" r="1.4" class="ldav" style="animation-delay:.5s"/><circle cx="'+(CJ-1)+'" cy="'+MT+'" r="1.4" class="ldav" style="animation-delay:.8s"/>';
-  /* חומר על הקרקע ליד המנוף */
-  var XP=MX-22,YP=G-9;s+='<g><rect x="'+(XP-9)+'" y="'+(G-5)+'" width="18" height="5" fill="#a88c66"/><rect x="'+(XP-9)+'" y="'+(G-5)+'" width="18" height="1" fill="#c9ad84"/><rect x="'+(XP-8)+'" y="'+(G-10)+'" width="16" height="5" fill="#b8b2a6"/><rect x="'+(XP+12)+'" y="'+(G-4)+'" width="7" height="4" fill="#8a7a62"/></g>';
-  var XT=act>=0?PX:JE+60,YT=act>=0?PY-6:G-60,YU=MT+18;if(XT<JE+8)XT=JE+8;
-  var kt='0;.14;.42;.56;.66;.76;.94;1',sp='.45 0 .3 1;.45 0 .3 1;.45 0 .3 1;.45 0 .3 1;.45 0 .3 1;.45 0 .3 1;.45 0 .3 1',dur='8s';
-  var tx=[XP,XP,XT,XT,XT,XT,XP,XP].join(';'),hy=[YP,YU,YU,YT,YT,YU,YU,YP].join(';');
-  s+='<g><animateTransform attributeName="transform" type="translate" values="'+tx.split(';').map(function(v){return v+' 0'}).join(';')+'" keyTimes="'+kt+'" calcMode="spline" keySplines="'+sp+'" dur="'+dur+'" repeatCount="indefinite"/>';
-  s+='<rect x="-5" y="'+(MT+5.6)+'" width="10" height="3" rx=".8" fill="#3b4048"/>';
-  ['-1.4','1.4'].forEach(function(o){s+='<line x1="'+o+'" y1="'+(MT+8.6)+'" x2="'+o+'" y2="'+YP+'" stroke="#c9ced6" stroke-width=".45"><animate attributeName="y2" values="'+hy+'" keyTimes="'+kt+'" calcMode="spline" keySplines="'+sp+'" dur="'+dur+'" repeatCount="indefinite"/></line>'});
-  s+='<g><animateTransform attributeName="transform" type="translate" values="'+hy.split(';').map(function(v){return '0 '+v}).join(';')+'" keyTimes="'+kt+'" calcMode="spline" keySplines="'+sp+'" dur="'+dur+'" repeatCount="indefinite"/><rect x="-2.6" y="0" width="5.2" height="4" rx=".8" fill="#e2a83a"/><rect x="-2.6" y="1.7" width="5.2" height=".9" fill="#1f1a14"/><path d="M0 4v1.6a1.4 1.4 0 1 0 1.6 1.2" fill="none" stroke="#c9ced6" stroke-width=".7"/>';
-  s+='<g><animate attributeName="opacity" values="1;1;1;1;0;0;0;1" keyTimes="'+kt+'" calcMode="discrete" dur="'+dur+'" repeatCount="indefinite"/><path d="M0 7.2L-7 11M0 7.2L7 11" stroke="#c9ced6" stroke-width=".4"/><rect x="-8" y="11" width="16" height="4.6" fill="#b8b2a6"/><rect x="-8" y="11" width="16" height="1" fill="#d6d0c4"/><rect x="-8.5" y="15.6" width="17" height="1.6" fill="#a88c66"/></g></g></g>';
-  if(act>=0)s+='<g opacity="0"><animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="'+kt+'" calcMode="discrete" dur="'+dur+'" repeatCount="indefinite"/><rect x="'+(XT-8)+'" y="'+(PY-6.6)+'" width="16" height="5" fill="#b8b2a6"/><rect x="'+(XT-8.5)+'" y="'+(PY-1.8)+'" width="17" height="1.6" fill="#a88c66"/></g>';
-}
-/* רחוב */
-s+='<rect x="0" y="'+G+'" width="360" height="48" fill="#0d1322"/><rect x="0" y="'+G+'" width="360" height="1.2" fill="#f0b46e" opacity=".55"/><rect x="0" y="'+(G+5)+'" width="360" height="2" fill="#2a3147"/>';
-for(var lx=30;lx<360;lx+=80)s+='<rect x="'+lx+'" y="'+(G+7)+'" width="1" height="0" fill="#8a909c"/><ellipse cx="'+lx+'" cy="'+(G+16)+'" rx="18" ry="8" fill="url(#lglamp)"/>';
-s+='<path d="M0 '+(G+24)+'H360" stroke="#3a4360" stroke-width="1" stroke-dasharray="10 9"/>';
-s+='<g class="ldcar"><rect x="0" y="'+(G+16)+'" width="13" height="4.5" rx="1.6" fill="#2c3550"/><circle cx="13" cy="'+(G+18)+'" r="1.4" fill="#ffe2a6"/></g>';
-s+='</g></svg>';return s};
+window.LDSCENE=function(D0){
+/* מסך פתיחה: הדמיית הבניינים לפי הנתונים — כל קומה לפי האחוז, חלון מואר = דירה מוכנה, פיגום = בעבודה. אווירה לפי שעה */
+var P={
+ dusk:{sky:['#1a1f3d','#4a3a63','#b8606a','#f1a15f','#ffd59a'],sun:['#ffd18a',.75,300,236,90],haze:'#f4b37a',far:['#5b4766','#3e3550'],stF:['#f2dfc4','#dcc4a3'],stS:['#b48c70','#8b6a56'],pier:'#c9ab88',roof:'#cdb59a',glass:['#3a4b6e','#1f2a44'],gRef:'#ffc98a',warm:'#ffd28a',road:['#2b2635','#151320'],refl:.5,crane:'#f2b705',craneS:'#b07f00',shadow:'#2b1f2a',stars:0,moon:0,lamp:'#ffc778',fog:.25,ground:'#3a2f3a',tree:'#2b2433',lab:'#0b1222'},
+ night:{sky:['#03060f','#081430','#14244a','#24345c','#3a3f63'],sun:['#9fc3ff',.18,280,240,120],haze:'#5b7bd6',far:['#141d38','#0d1428'],stF:['#cfc6b8','#a99f92'],stS:['#6f6a6a','#4c4a50'],pier:'#9d968b',roof:'#8f8a86',glass:['#13213f','#0a1226'],gRef:'#5d86d6',warm:'#ffcf7a',road:['#0d1220','#05070d'],refl:.7,crane:'#f2b705',craneS:'#a87800',shadow:'#03050b',stars:1,moon:1,lamp:'#ffd48a',fog:.18,ground:'#0b1020',tree:'#070b16',lab:'#0b1222'},
+ day:{sky:['#7fb3e6','#a9cdee','#d3e5f3','#eef3f2','#f6f1e6'],sun:['#fff6d8',.7,70,60,110],haze:'#eef2f2',far:['#b8c7d3','#9fb2c1'],stF:['#f6ecdb','#e3d4bb'],stS:['#c9b49a','#a9937b'],pier:'#d8c6a8',roof:'#ddd0bb',glass:['#7ea6c8','#4e7598'],gRef:'#ffffff',warm:'#fff1cf',road:['#5b6068','#41454c'],refl:.22,crane:'#f2b705',craneS:'#c08d00',shadow:'#6d6a66',stars:0,moon:0,lamp:'#ffffff',fog:.35,ground:'#8a8f86',tree:'#4e6a4c',lab:'#1b2a24'}};
+var known=!!(D0&&D0.b&&D0.b.length),A=function(n,v){var r=[];for(var i=0;i<n;i++)r.push(v);return r};
+var D=known?D0:{n:'',b:[{n:'',s:5,t:1,f:A(18,100)},{n:'',s:4,t:1,f:A(10,100)}]};
+var hr=new Date().getHours(),C=hr>=6&&hr<16?P.day:hr>=16&&hr<19?P.dusk:P.night;
+window.__ldn=(window.__ldn||0)+1;var id='lx'+window.__ldn;
+let s='',sd=11;const R=()=>{sd=(sd*9301+49297)%233280;return sd/233280};const G=240,u=id,f1=n=>(+n).toFixed(1);
+ const B=D.b.slice(0,3),maxL=Math.max(...B.map(b=>b.f.length+(b.t?1:0))),fh=Math.min(10,(G-66)/maxL),dx=14,dy=-8;
+ s+=`<defs><linearGradient id="${u}sky" x1="0" y1="0" x2="0" y2="1">${C.sky.map((c,i)=>`<stop offset="${[0,.35,.62,.82,1][i]}" stop-color="${c}"/>`).join('')}</linearGradient>
+ <radialGradient id="${u}sun" cx="${C.sun[2]/360}" cy="${C.sun[3]/300}" r="${C.sun[4]/360}"><stop offset="0" stop-color="${C.sun[0]}" stop-opacity="${C.sun[1]}"/><stop offset="1" stop-color="${C.sun[0]}" stop-opacity="0"/></radialGradient>
+ <linearGradient id="${u}fF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${C.stF[1]}"/><stop offset=".55" stop-color="${C.stF[0]}"/><stop offset="1" stop-color="${C.stF[1]}"/></linearGradient>
+ <linearGradient id="${u}fS" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${C.stS[0]}"/><stop offset="1" stop-color="${C.stS[1]}"/></linearGradient>
+ <linearGradient id="${u}gl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.glass[0]}"/><stop offset=".6" stop-color="${C.glass[1]}"/><stop offset="1" stop-color="${C.gRef}" stop-opacity=".85"/></linearGradient>
+ <linearGradient id="${u}wm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff4d6"/><stop offset="1" stop-color="${C.warm}"/></linearGradient>
+ <linearGradient id="${u}ao" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+ <linearGradient id="${u}rd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.road[0]}"/><stop offset="1" stop-color="${C.road[1]}"/></linearGradient>
+ <linearGradient id="${u}fog" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.haze}" stop-opacity="0"/><stop offset="1" stop-color="${C.haze}" stop-opacity="${C.fog}"/></linearGradient>
+ <linearGradient id="${u}cc" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9aa0a6"/><stop offset="1" stop-color="#c9ced3"/></linearGradient>
+ <linearGradient id="${u}sw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+ <linearGradient id="${u}mk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset=".7" stop-color="#fff" stop-opacity="0"/></linearGradient>
+ <mask id="${u}rm" maskUnits="userSpaceOnUse" x="0" y="${G}" width="360" height="${300-G}"><rect x="0" y="${G}" width="360" height="${300-G}" fill="url(#${u}mk)"/></mask>
+ <radialGradient id="${u}lp" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="${C.lamp}" stop-opacity=".7"/><stop offset="1" stop-color="${C.lamp}" stop-opacity="0"/></radialGradient>
+ <pattern id="${u}net" width="3" height="3" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="#2f6b52" opacity=".55"/><path d="M0 0L3 3M3 0L0 3" stroke="#57a07f" stroke-width=".25"/></pattern>
+ <filter id="${u}bl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4"/></filter>
+ <filter id="${u}bl3" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+ <filter id="${u}rb" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="0 1.6"/></filter>
+ <clipPath id="${u}clip"><rect width="360" height="300"/></clipPath>`;
+ // ---- buildings ----
+ let bx=24,fronts='',body='',labs='',tops=[];
+ B.forEach((b,bi)=>{const n=Math.max(2,Math.min(6,b.s||4)),aw=16,w=n*aw+4,x=bx,L=b.f.length;bx+=w+dx+18;
+  const avg=Math.round(b.f.reduce((a,c)=>a+(+c||0),0)/Math.max(1,L));let g='',d0=bi*.25;
+  g+=`<path d="M${x} ${G}L${x+w+dx} ${G}L${x+w+dx+30} ${G+10}L${x+20} ${G+10}Z" fill="${C.shadow}" opacity=".35" filter="url(#${u}bl)"/>`;
+  for(let i=0;i<L;i++){const p=Math.max(0,Math.min(100,+b.f[i]||0)),y=G-(i+1)*fh;let q='';
+   const side=st=>`<path d="M${x+w} ${f1(y)}l${dx} ${dy}v${f1(fh)}l${-dx} ${-dy}z" fill="${st}"/>`;
+   if(i===0){ // lobby
+    q+=`<rect x="${x}" y="${f1(y)}" width="${w}" height="${f1(fh)}" fill="url(#${u}fF)"/>`+side(`url(#${u}fS)`);
+    q+=`<rect x="${x+3}" y="${f1(y+1.6)}" width="${w-6}" height="${f1(fh-1.6)}" fill="url(#${u}wm)" opacity="${C.stars?1:.85}"/>`;
+    for(let k=1;k<n*2;k++)q+=`<rect x="${f1(x+3+k*(w-6)/(n*2))}" y="${f1(y+1.6)}" width=".5" height="${f1(fh-1.6)}" fill="${C.stS[1]}" opacity=".7"/>`;
+    q+=`<rect x="${x-2}" y="${f1(y+.4)}" width="${w+4}" height="1.4" fill="${C.roof}"/><rect x="${f1(x+w/2-4)}" y="${f1(y+3)}" width="8" height="${f1(fh-3)}" fill="#3a2a1c" opacity=".55"/>`;
+   }else if(p>=85){ // facade done: lit window = ready apartment
+    q+=`<rect x="${x}" y="${f1(y)}" width="${w}" height="${f1(fh)}" fill="url(#${u}fF)"/>`+side(`url(#${u}fS)`);
+    const lit=Math.floor(n*p/100+1e-6),dk=new Set();while(dk.size<n-lit)dk.add(Math.floor(R()*n));
+    for(let k=0;k<n;k++){const wx=x+2+k*aw,on=!dk.has(k);
+     q+=`<rect x="${f1(wx+1.4)}" y="${f1(y+1.4)}" width="${aw-2.8}" height="${f1(fh-3.6)}" rx=".4" fill="${on?`url(#${u}wm)`:`url(#${u}gl)`}"${on?` class="lxlit" style="animation-delay:${f1(R()*7)}s"`:''}/>`;
+     if(!on)q+=`<rect x="${f1(wx+aw/2-1)}" y="${f1(y+2.4)}" width="2" height="1.3" fill="#e9f4ff" class="lxwk" style="animation-delay:${f1(R()*2)}s"/>`;
+     q+=`<rect x="${f1(wx)}" y="${f1(y)}" width="1.4" height="${f1(fh)}" fill="${C.pier}"/>`}
+    q+=`<rect x="${f1(x+w-2)}" y="${f1(y)}" width="2" height="${f1(fh)}" fill="${C.pier}"/>`;
+    for(let k=0;k<2;k++){const sx=x+w+3+k*6;q+=`<path d="M${sx} ${f1(y+1.6-(sx-x-w)*8/14)}l3.6 -2v${f1(fh-3.8)}l-3.6 2z" fill="${C.glass[1]}" opacity=".85"/>`}
+    q+=`<rect x="${x-1.6}" y="${f1(y+fh-1.3)}" width="${w+3.2}" height="1.3" fill="${C.roof}"/><path d="M${x+w+1.6} ${f1(y+fh-1.3)}l${dx} ${dy}v1.3l${-dx} ${-dy}z" fill="${C.stS[1]}"/>`;
+    q+=`<rect x="${x-1.6}" y="${f1(y+fh-3.6)}" width="${w+3.2}" height="2.3" fill="#cfe9ff" opacity=".18"/><rect x="${x}" y="${f1(y+fh)}" width="${w}" height="1.6" fill="url(#${u}ao)"/>`;
+   }else{ // still in construction: skeleton + net on the open part
+    const dw=p>=35?w*p/100:0;
+    q+=`<rect x="${x}" y="${f1(y)}" width="${w}" height="${f1(fh)}" fill="#1a2030" opacity=".5"/>`;
+    if(dw)q+=`<rect x="${x}" y="${f1(y)}" width="${f1(dw)}" height="${f1(fh)}" fill="url(#${u}fF)"/>`;
+    for(let c=0;c<=n;c++)q+=`<rect x="${f1(x+c*(w-2)/n)}" y="${f1(y)}" width="2" height="${f1(fh)}" fill="url(#${u}cc)"/>`;
+    q+=`<rect x="${x}" y="${f1(y+fh-1.4)}" width="${w}" height="1.4" fill="url(#${u}cc)"/>`;
+    q+=`<rect x="${f1(x+dw-1)}" y="${f1(y)}" width="${f1(w-dw+3)}" height="${f1(fh)}" fill="url(#${u}net)"/>`+side(`url(#${u}net)`);
+    q+=`<rect x="${f1(x+dw+2)}" y="${f1(y+2)}" width="2" height="1.4" fill="#e9f4ff" class="lxwk"/>`;
+   }
+   g+=`<g class="lxup" style="animation-delay:${f1(d0+i*.07)}s">${q}</g>`;
+   fronts+=`<rect x="${x}" y="${f1(y)}" width="${w}" height="${f1(fh)}"/>`}
+  let ty=G-L*fh;const dl=f1(d0+L*.07);let r='';
+  if(b.t){const tw=w*.62,tx=x+w*.19,y=ty-fh;
+   r+=`<rect x="${f1(tx)}" y="${f1(y)}" width="${f1(tw)}" height="${f1(fh)}" fill="url(#${u}fF)"/><path d="M${f1(tx+tw)} ${f1(y)}l${dx*.7} ${dy*.7}v${f1(fh)}l${-dx*.7} ${-dy*.7}z" fill="url(#${u}fS)"/>`;
+   for(let k=0;k<7;k++)r+=`<rect x="${f1(tx+2+k*(tw-4)/7)}" y="${f1(y+1.5)}" width="${f1((tw-4)/7-1)}" height="${f1(fh-3)}" fill="${C.stS[1]}" opacity=".55"/>`;
+   r+=`<path d="M${x} ${f1(ty)}l${dx} ${dy}h${w}l${-dx} ${-dy}z" fill="${C.roof}"/>`;
+   ty=y}
+  r+=`<path d="M${f1(b.t?x+w*.19:x)} ${f1(ty)}l${dx*(b.t?.7:1)} ${dy*(b.t?.7:1)}h${f1(b.t?w*.62:w)}l${-dx*(b.t?.7:1)} ${-dy*(b.t?.7:1)}z" fill="${C.roof}" opacity=".9"/>`;
+  // roof: solar water heaters (Israeli roof) + pergola
+  for(let k=0;k<4;k++){const sx=x+w*.24+k*w*.13;r+=`<path d="M${f1(sx)} ${f1(ty-1)}l4 -3.4h3l-4 3.4z" fill="${C.glass[1]}"/><rect x="${f1(sx+3)}" y="${f1(ty-6)}" width="4" height="2.2" rx="1.1" fill="#d9dde2"/>`}
+  r+=`<circle cx="${f1(x+w*.82)}" cy="${f1(ty-1.5)}" r="1.5" fill="#ffe2a8" class="lxweld" filter="url(#${u}bl)"/><circle cx="${f1(x+w*.82)}" cy="${f1(ty-1.5)}" r=".7" fill="#fff"/>`;
+  r+=`<g class="lxrise"><circle cx="${f1(x+w*.3)}" cy="${f1(ty-4)}" r="2.6" fill="#cfc4b3" opacity=".5" filter="url(#${u}bl)"/></g>`;
+  g+=`<g class="lxup" style="animation-delay:${dl}s">${r}</g>`;
+  body+=g;tops.push(ty);
+  // label
+  const lx=x+w/2+6,ly=ty-30,lw=64;
+  if(known)labs+=`<g class="lxpop" style="animation-delay:${f1(+dl+.25)}s"><rect x="${f1(lx-lw/2)}" y="${f1(ly)}" width="${lw}" height="17" rx="8.5" fill="${C.lab}" fill-opacity=".62" stroke="#fff" stroke-opacity=".18"/><text x="${f1(lx+2)}" y="${f1(ly+11.3)}" text-anchor="middle" font-family="Heebo,sans-serif" font-size="8.2" font-weight="600" fill="#f6efe2">${b.n} · ${avg}%</text><rect x="${f1(lx-lw/2+9)}" y="${f1(ly+14)}" width="${lw-18}" height="1" rx=".5" fill="#fff" opacity=".18"/><rect x="${f1(lx-lw/2+9)}" y="${f1(ly+14)}" width="${f1((lw-18)*avg/100)}" height="1" rx=".5" fill="#57c08a"/></g>`});
+ s+=`<clipPath id="${u}fr">${fronts}</clipPath></defs><g clip-path="url(#${u}clip)">`;
+ // ---- sky ----
+ s+=`<rect width="360" height="300" fill="url(#${u}sky)"/><rect width="360" height="300" fill="url(#${u}sun)"/>`;
+ if(C.stars)for(let i=0;i<70;i++)s+=`<circle cx="${f1(R()*360)}" cy="${f1(R()*150)}" r="${(R()*.7+.15).toFixed(2)}" fill="#fff" opacity="${(R()*.7+.1).toFixed(2)}"/>`;
+ if(C.moon)s+=`<circle cx="300" cy="44" r="18" fill="#cfe0ff" opacity=".12" filter="url(#${u}bl3)"/><circle cx="300" cy="44" r="8.5" fill="#f1ecdf"/><circle cx="304" cy="41.5" r="7.8" fill="#081430"/>`;
+ else s+=`<circle cx="${C.sun[2]}" cy="${C.sun[3]-22}" r="11" fill="${C.sun[0]}" opacity=".9" filter="url(#${u}bl)"/>`;
+ s+=`<g class="lxdrift" opacity=".35">`+[[60,70,50,6],[150,52,38,4],[260,88,56,5],[420,60,48,5]].map(([x,y,w,h])=>`<ellipse cx="${x}" cy="${y}" rx="${w}" ry="${h}" fill="${C.haze}" opacity=".5"/><ellipse cx="${x+18}" cy="${y-3}" rx="${w*.5}" ry="${h*.8}" fill="${C.haze}" opacity=".4"/>`).join('')+`</g>`;
+ s+=`<g class="lxbirds">`+[0,8,15,22].map((d,i)=>`<g transform="translate(${d},${(i%2)*4})"><path class="lxwing" d="M0 0q3 -3 6 0q3 -3 6 0" fill="none" stroke="${C.stars?'#9fb0d6':'#3b3443'}" stroke-width=".9" style="animation-delay:${i*.12}s"/></g>`).join('')+`</g>`;
+ s+=`<path d="M0 ${G-40}Q60 ${G-62} 130 ${G-44}T260 ${G-48}T360 ${G-36}V${G}H0Z" fill="${C.far[0]}" opacity=".55"/>`;
+ const sky=(op,col,seed,hmax)=>{sd=seed;let x=-4,p='';while(x<364){const w=8+R()*20,h=10+R()*hmax;p+=`<rect x="${f1(x)}" y="${f1(G-h)}" width="${f1(w)}" height="${f1(h)}" fill="${col}"/>`;if(R()>.4&&C.stars)for(let k=0;k<4;k++)p+=`<rect x="${f1(x+2+R()*(w-4))}" y="${f1(G-h+3+R()*(h-6))}" width="1.1" height="1.3" fill="${C.warm}" opacity="${(R()*.7+.2).toFixed(2)}"/>`;x+=w+.8}return`<g opacity="${op}">${p}</g>`};
+ s+=sky(.6,C.far[0],5,52)+sky(.9,C.far[1],9,36);
+ s+=`<rect x="0" y="${G-70}" width="360" height="70" fill="url(#${u}fog)"/>`;
+ // ---- ground + road ----
+ s+=`<rect x="0" y="${G}" width="360" height="${300-G}" fill="url(#${u}rd)"/>`;
+ // ---- crane ----
+ const MX=Math.min(300,bx+20),cy=Math.max(24,Math.min(...tops)-44),JL=Math.max(70,MX-172),JR=Math.min(352,MX+84);let k='';
+ k+=`<path d="M${MX-6} ${G}L${MX+60} ${G+10}L${MX+66} ${G+10}L${MX+2} ${G}Z" fill="${C.shadow}" opacity=".3" filter="url(#${u}bl)"/>`;
+ k+=`<rect x="${MX-5}" y="${cy+6}" width="10" height="${G-cy-6}" fill="none" stroke="${C.crane}" stroke-width="1.2"/>`;for(let y=cy+6;y<G;y+=7)k+=`<path d="M${MX-5} ${y}L${MX+5} ${y+7}M${MX+5} ${y}L${MX-5} ${y+7}" stroke="${C.crane}" stroke-width=".6"/><path d="M${MX-5} ${y}h10" stroke="${C.craneS}" stroke-width=".5"/>`;
+ k+=`<rect x="${MX-10}" y="${G-5}" width="20" height="5" fill="#5f6672"/><path d="M${JL} ${cy+6}H${JR}M${JL+4} ${cy}H${MX+6}" stroke="${C.crane}" stroke-width="1.2"/>`;
+ for(let x=JL+4;x<MX;x+=7)k+=`<path d="M${x} ${cy}L${x+3.5} ${cy+6}L${x+7} ${cy}" fill="none" stroke="${C.crane}" stroke-width=".6"/>`;
+ for(let x=MX;x<JR;x+=7)k+=`<path d="M${x} ${cy+6}L${x+3.5} ${cy+1}L${x+7} ${cy+6}" fill="none" stroke="${C.crane}" stroke-width=".6"/>`;
+ k+=`<path d="M${MX+6} ${cy+1}H${JR}" stroke="${C.crane}" stroke-width="1"/><path d="M${MX-4} ${cy}L${MX} ${cy-24}L${MX+4} ${cy}" fill="none" stroke="${C.crane}" stroke-width="1.6"/><path d="M${MX} ${cy-24}L${JL+20} ${cy}M${MX} ${cy-24}L${JR-6} ${cy+1}" stroke="#dfe3ea" stroke-width=".45" opacity=".75"/><circle cx="${MX}" cy="${cy-25}" r="1.6" fill="#ff3b30" class="lxblink"/><circle cx="${MX}" cy="${cy-25}" r="5" fill="#ff3b30" opacity=".25" filter="url(#${u}bl)" class="lxblink"/>`;
+ k+=`<rect x="${JR-24}" y="${cy+6}" width="16" height="15" rx="1" fill="#7c828c"/><path d="M${JR-24} ${cy+11}h16M${JR-24} ${cy+16}h16" stroke="#5f656e" stroke-width=".6"/><rect x="${MX-8}" y="${cy+6}" width="12" height="10" rx="1.6" fill="${C.crane}"/><rect x="${MX-6.5}" y="${cy+7.5}" width="6" height="5.5" rx="1" fill="${C.gRef}" opacity=".75"/><circle cx="${JL+1}" cy="${cy+6}" r="1.5" fill="#ff3b30" class="lxblink" style="animation-delay:.6s"/>`;
+ k+=`<g class="lxtrolley"><rect x="${MX-34}" y="${cy+6}" width="11" height="3.6" rx="1" fill="#2a2f3a"/><g class="lxhook"><path d="M${MX-30} ${cy+9.6}V${cy+74}M${MX-27} ${cy+9.6}V${cy+74}" stroke="#cfd5de" stroke-width=".45"/><g class="lxsway"><rect x="${MX-32}" y="${cy+74}" width="7" height="3.4" rx=".6" fill="${C.crane}"/><path d="M${MX-28.5} ${cy+77.4}L${MX-38} ${cy+85}M${MX-28.5} ${cy+77.4}L${MX-19} ${cy+85}" stroke="#cfd5de" stroke-width=".45"/><rect x="${MX-40}" y="${cy+85}" width="23" height="8" rx=".6" fill="#a7865e"/><rect x="${MX-40}" y="${cy+85}" width="23" height="1.8" fill="#caa77a"/></g></g></g>`;
+ k+=`<rect x="${MX+16}" y="${G-7}" width="24" height="7" fill="#a7865e"/><rect x="${MX+16}" y="${G-7}" width="24" height="1.6" fill="#caa77a"/><rect x="${MX+44}" y="${G-11}" width="14" height="11" fill="#5f6672"/><rect x="${MX+44}" y="${G-11}" width="14" height="2" fill="#7d8591"/>`;
+ // glass light sweep over the facades
+ const sweep=`<g clip-path="url(#${u}fr)"><rect class="lxsweep" x="0" y="0" width="70" height="${G}" fill="url(#${u}sw)" transform="skewX(-18)"/></g>`;
+ s+=`<g id="${u}scn">${body}${sweep}${k}</g>`;
+ // wet-road reflection of the real buildings
+ s+=`<g mask="url(#${u}rm)" opacity="${C.refl}"><use href="#${u}scn" transform="matrix(1 0 0 -1 0 ${2*G})" filter="url(#${u}rb)"/></g>`;
+ s+=`<rect x="0" y="${G}" width="360" height="5" fill="${C.ground}" opacity=".9"/>`;
+ for(let lx=12;lx<360;lx+=86){s+=`<rect x="${lx}" y="${G-30}" width="1.3" height="30" fill="#2b3142"/><path d="M${lx} ${G-30}h7" stroke="#2b3142" stroke-width="1.3"/><circle cx="${lx+7}" cy="${G-29}" r="1.7" fill="${C.lamp}"/><circle cx="${lx+7}" cy="${G-29}" r="8" fill="url(#${u}lp)"/><rect x="${lx+5.5}" y="${G+12}" width="3" height="22" fill="${C.lamp}" opacity="${C.refl*.6}" filter="url(#${u}bl)"/>`}
+ s+=`<path d="M0 ${G+30}H360" stroke="#fff" stroke-opacity=".2" stroke-width="1.1" stroke-dasharray="14 12"/>`;
+ const fw=bx-14;s+=`<rect x="10" y="${G-10}" width="${fw}" height="10" fill="#1c2a24" opacity=".92"/><rect x="10" y="${G-10}" width="${fw}" height="1.2" fill="#2f5c4a"/><text x="${f1(10+fw/2)}" y="${G-2.6}" text-anchor="middle" font-family="Heebo,sans-serif" font-size="6" font-weight="700" fill="#e9dcbc" letter-spacing="1">YH · ${D.n||''}</text>`;
+ for(const tx of [4,bx-8,352]){s+=`<rect x="${tx}" y="${G-14}" width="1.6" height="14" fill="${C.tree}"/><circle cx="${tx+.8}" cy="${G-18}" r="7" fill="${C.tree}"/><circle cx="${tx+4}" cy="${G-15}" r="5" fill="${C.tree}"/>`}
+ s+=labs;
+ s+=`<g class="lxcar"><rect x="0" y="${G+17}" width="20" height="6.5" rx="2.6" fill="#d6dde8"/><rect x="5" y="${G+13.5}" width="10" height="4.5" rx="1.6" fill="#7f97b8"/><circle cx="20" cy="${G+20}" r="1.3" fill="#fff6cf"/><path d="M21 ${G+20}l26 -3v6z" fill="#fff6cf" opacity=".18"/><circle cx="5" cy="${G+23.6}" r="1.8" fill="#0b0e15"/><circle cx="15.5" cy="${G+23.6}" r="1.8" fill="#0b0e15"/></g>`;
+ s+=`<g class="lxcar2"><rect x="0" y="${G+36}" width="22" height="7" rx="2.6" fill="#8e2f2a"/><rect x="6" y="${G+32.5}" width="10" height="4.5" rx="1.6" fill="#5d6f88"/><circle cx="0" cy="${G+39}" r="1.3" fill="#ff5a4f"/><circle cx="6" cy="${G+43}" r="1.8" fill="#0b0e15"/><circle cx="17" cy="${G+43}" r="1.8" fill="#0b0e15"/></g>`;
+ s+=`<rect width="360" height="300" fill="url(#${u}sun)" opacity=".3"/></g>`;
+ return '<svg class="ldscene" viewBox="0 0 360 300" aria-hidden="true">'+s+'</svg>'};
 
 const FSB='https://firestore.googleapis.com/v1/projects/'+CFG.projectId+'/databases/(default)/documents/sign/';
 const fsV=v=>'nullValue' in v?null:'booleanValue' in v?v.booleanValue:'integerValue' in v?+v.integerValue:'doubleValue' in v?v.doubleValue:'stringValue' in v?v.stringValue:'timestampValue' in v?Date.parse(v.timestampValue):'arrayValue' in v?(v.arrayValue.values||[]).map(fsV):'mapValue' in v?fsO(v.mapValue.fields||{}):null;
