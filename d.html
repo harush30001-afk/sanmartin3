@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>מערכת ניהול פרויקטים YH</title><meta name="description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:title" content="מערכת ניהול פרויקטים YH"><meta property="og:description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:image" content="https://harush30001-afk.github.io/sanmartin3/app-512.png"><meta property="og:type" content="website"><link rel="apple-touch-icon" href="app-180.png"><link rel="icon" type="image/png" href="app-180.png">
-<!-- v: d 484 -->
+<!-- v: d 485 -->
 <style>
 #ld{position:fixed;inset:0;z-index:50;background:#070b14;display:flex;align-items:center;justify-content:center;transition:opacity .35s}#ld.out{opacity:0;pointer-events:none}
 
@@ -47,6 +47,21 @@ details summary{padding:6px 0}
 .hosnd{display:flex!important;text-decoration:none;margin-top:8px;min-height:56px;font-size:16px}
 .hosnd.dn{border-color:#8cb296!important;color:#75766e!important}
 .hosnd.dn::after{content:' ✓';}
+.hpok{border:1.5px solid #2f5c4a;border-radius:16px;padding:12px;text-align:center;background:#faf9f6;margin-bottom:10px}
+.hpok b{display:block;font-size:20px;color:#2f5c4a}
+.hpok small{color:#75766e}
+.hpc{background:#f4f2ec;border:1px solid #dcd8ce;border-radius:16px;padding:12px;margin-bottom:10px;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.hpc h4{margin:0 0 2px;font-size:14px;color:#75766e;font-weight:600}
+.hpkv{display:flex;justify-content:space-between;gap:8px}
+.hpkv span:last-child{color:#75766e}
+.hpit{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.hpit small{display:block;color:#75766e;font-size:12.5px}
+.hpit em{font-style:normal;font-size:12px;border-radius:99px;padding:2px 10px;border:1px solid #e2b9b1;color:#b23a2a;flex:none}
+.hpit em.d{border-color:#8cb296;color:#2f5c4a}
+.hpsg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hpsg div{border:1px dashed #c9c3b6;border-radius:12px;background:#fff;padding:6px;text-align:center}
+.hpsg img{max-width:100%;height:56px;object-fit:contain;display:block;margin:0 auto}
+.hpsg small{font-size:11.5px;color:#75766e}
 .olb{background:transparent!important;border:1.5px solid #2f5c4a!important;color:#2f5c4a!important;font-weight:700!important}
 .hostep{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;text-align:center;font-size:11.5px;color:var(--mu,#75766e);margin:10px 0 4px}
 .hostep span{display:flex;flex-direction:column;align-items:center;gap:5px}
@@ -116,38 +131,49 @@ details summary{padding:6px 0}
 .ldbar{width:170px;height:3px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
 .ldbar i{display:block;height:100%;width:40%;border-radius:3px;background:linear-gradient(90deg,transparent,#e2a83a,transparent);animation:ldbar 1.3s ease-in-out infinite}
 @keyframes ldbar{0%{transform:translateX(260%)}100%{transform:translateX(-160%)}}
-.lxup{animation:ldxup .3s ease-out both;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxup{from{opacity:0}}
-.lxpop{animation:ldxpp .6s ease-out both;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxpp{from{opacity:0}}
-.lxtrolley{animation:ldxtr 9s cubic-bezier(.45,0,.25,1) infinite alternate;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxtr{to{transform:translateX(-110px)}}
-.lxhook{animation:ldxhk 4.5s cubic-bezier(.45,0,.25,1) infinite alternate;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxhk{to{transform:translateY(38px)}}
-.lxsway{transform-box:fill-box;transform-origin:50% 0;animation:ldxsw 2.6s ease-in-out infinite alternate;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxsw{0%{transform:rotate(-3deg)}100%{transform:rotate(3deg)}}
-.lxblink{animation:ldxbl 1.3s steps(1) infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxbl{50%{opacity:.1}}
-.lxlit{animation:ldxlt 7s ease-in-out infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxlt{0%,100%{opacity:.8}50%{opacity:1}}
-.lxwk{animation:ldxwk 2.2s ease-in-out infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxwk{0%,100%{opacity:.35}50%{opacity:.9}}
-.lxcar{animation:ldxcar 8s linear infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxcar{0%{transform:translateX(-50px)}100%{transform:translateX(420px)}}
-.lxcar2{animation:ldxcar2 11s linear infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxcar2{0%{transform:translateX(420px)}100%{transform:translateX(-60px)}}
-.lxweld{animation:ldxwd .9s steps(2) infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxwd{50%{opacity:0}}
-.lxdrift{animation:ldxdr 70s linear infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxdr{to{transform:translateX(-180px)}}
 .lxbirds{animation:ldxbd 18s linear infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
 @keyframes ldxbd{0%{transform:translate(380px,30px)}100%{transform:translate(-60px,-10px)}}
-.lxwing{transform-box:fill-box;transform-origin:50% 100%;animation:ldxwg .5s ease-in-out infinite alternate;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxwg{to{transform:scaleY(-.6)}}
-.lxsweep{animation:ldxswp 5.5s ease-in-out infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
-@keyframes ldxswp{0%{transform:translateX(-120px)}60%,100%{transform:translateX(320px)}}
+.lxblink{animation:ldxbl 1.3s steps(1) infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxbl{50%{opacity:.1}}
+.lxcar2{animation:ldxcar2 11s linear infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxcar2{0%{transform:translateX(420px)}100%{transform:translateX(-60px)}}
+.lxcar{animation:ldxcar 8s linear infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxcar{0%{transform:translateX(-50px)}100%{transform:translateX(420px)}}
+.lxdrift{animation:ldxdr 70s linear infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxdr{to{transform:translateX(-180px)}}
+.lxhook{animation:ldxhk 4.5s cubic-bezier(.45,0,.25,1) infinite alternate;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxhk{to{transform:translateY(38px)}}
+.lxlit{animation:ldxlt 7s ease-in-out infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxlt{0%,100%{opacity:.8}50%{opacity:1}}
+.lxpop{animation:ldxpp .6s ease-out both;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxpp{from{opacity:0;transform:translateY(4px)}}
 .lxrise{animation:ldxrs 6s ease-in-out infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
 @keyframes ldxrs{0%{opacity:0;transform:translateY(4px)}30%,70%{opacity:.9}100%{opacity:0;transform:translateY(-14px)}}
+.lxsway{transform-box:fill-box;transform-origin:50% 0;animation:ldxsw 2.6s ease-in-out infinite alternate;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxsw{0%{transform:rotate(-3deg)}100%{transform:rotate(3deg)}}
+.lxsweep{animation:ldxswp 5.5s ease-in-out infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxswp{0%{transform:translateX(-120px)}60%,100%{transform:translateX(320px)}}
+.lxtrolley{animation:ldxtr 9s cubic-bezier(.45,0,.25,1) infinite alternate;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxtr{to{transform:translateX(-110px)}}
+.lxup{transform-box:fill-box;animation:ldxup .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxup{from{opacity:0;transform:translateY(6px)}}
+.lxweld{animation:ldxwd .9s steps(2) infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxwd{50%{opacity:0}}
+.lxwing{transform-box:fill-box;transform-origin:50% 100%;animation:ldxwg .5s ease-in-out infinite alternate;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxwg{to{transform:scaleY(-.6)}}
+.lxwk{animation:ldxwk 2.2s ease-in-out infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxwk{0%,100%{opacity:.35}50%{opacity:.9}}
+.lxcl1{animation:ldxcl 90s linear infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxcl{to{transform:translateX(-200px)}}
+.lxcl2{animation:ldxcl 60s linear infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+.lxrain{animation:ldxrn .45s linear infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxrn{from{transform:translate(0,-24px)}to{transform:translate(-6px,0)}}
+.lxspl{transform-box:fill-box;transform-origin:50% 50%;animation:ldxsp .9s ease-out infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxsp{0%{opacity:.8;transform:scale(.2)}100%{opacity:0;transform:scale(1.4)}}
+.lxrays{transform-box:fill-box;transform-origin:50% 50%;animation:ldxry 40s linear infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxry{to{transform:rotate(360deg)}}
+.lxflash{animation:ldxfl 7s steps(1) infinite;animation-delay:calc(var(--d,0s) - var(--el,0s))}
+@keyframes ldxfl{0%,91%,94%,100%{opacity:0}92%,95%{opacity:.35}}
 .ldscene *{animation:none!important}
 .ldtx{font-size:13px;color:#9aa3b2;font-weight:600}
 .ldpr{display:flex;align-items:baseline;gap:8px;font-size:14px;color:#c9c2b5;font-weight:600;margin-top:-2px}
@@ -214,6 +240,17 @@ async function defPage(tok,pre){try{document.documentElement.dir=['ru','zh','hi'
   <p class="mu" style="font-size:13px">לשמירת תמונה: לחיצה ארוכה עליה.</p>
   <div class="li" style="display:block;background:#f9f8f6;border:1px solid #dedad4;border-radius:12px;padding:12px"><small>נשלח ע״י</small><div style="font-size:17px;font-weight:800">${esc(m.n||d.by||'')}${m.ro?' · '+esc(m.ro):''}</div><div class="mu">${esc(d.pn||'')}${m.co?' · '+esc(m.co):''}${d.t?' · '+new Date(d.t).toLocaleDateString('he-IL'):''}</div>
   ${ph?`<div class="row" style="gap:8px;margin-top:10px"><a class="btn wa" style="flex:1;text-align:center;text-decoration:none" href="https://wa.me/${ph}" target="_blank" rel="noopener">ענה בוואטסאפ</a><a class="btn sb" style="flex:1;text-align:center;text-decoration:none" href="tel:${esc(m.ph)}">התקשר</a></div>`:''}</div>`}
+async function hpPage(tok,pre){document.title='פרוטוקול מסירה · מערכת ניהול פרויקטים YH';document.documentElement.dataset.theme='tech';document.body.innerHTML='<div id="sgp" class="sgp"><div class="sgh"><div class="sglogo"><img src="app-180.png" alt="YH"><div><b>פרוטוקול מסירה</b><small>טוען…</small></div></div></div><div class="sgb"><div class="mu">טוען…</div></div></div>';const B=document.querySelector('#sgp .sgb');
+  let d=pre||null;try{if(!d)d=await (await window.signFS()).get(tok)}catch(e){}
+  if(!d||d.k!='hp'){B.innerHTML='<h2>הקישור לא בתוקף</h2>';return}
+  try{document.querySelector('.sglogo b').textContent='פרוטוקול מסירה · דירה '+(d.apt||'');document.querySelector('.sglogo small').textContent=(d.pn||'')+(d.loc?' · '+d.loc:'')}catch(e){}
+  const df=d.df||[],sv=d.sv||[],sg=d.sg||[],T=d.tns||[];
+  B.innerHTML=`<div class="hpok"><b>הדירה נמסרה</b><small>${esc(d.dn||'')}</small></div>
+  ${T.length?`<div class="hpc"><h4>בעלי הדירה</h4>${T.map(t=>`<div class="hpkv"><span>${esc(t.n)}${t.poa?' · מיופה כוח':''}</span><span>חתם</span></div>`).join('')}</div>`:''}
+  ${sv.length?`<div class="hpc"><h4>נמסר</h4>${sv.map(x=>`<div class="hpkv"><span>${esc(x.t)}</span><b>${esc(String(x.q))}</b></div>`).join('')}</div>`:''}
+  <div class="hpc"><h4>ליקויים במסירה · ${df.length}</h4>${df.length?df.map(x=>`<div class="hpit"><span>${esc(x.t)}<small>${esc(x.rn)}${x.n?' · '+esc(x.n):''}</small></span><em class="${x.ok?'d':''}">${x.ok?'טופל':'לטיפול'}</em></div>`).join(''):'<div class="mu">אין</div>'}</div>
+  ${sg.length?`<div class="hpsg">${sg.map(g=>`<div>${g.i?`<img src="${g.i}" alt="">`:''}<small>${esc(g.lb)} · ${esc(g.n)}</small></div>`).join('')}</div>`:''}
+  <button class="btn olb hppr" style="width:100%;margin-top:12px" onclick="const H=document.querySelectorAll('.hppr,.dbk');H.forEach(x=>x.style.visibility='hidden');setTimeout(()=>{window.print();H.forEach(x=>x.style.visibility='')},50)">הורדה כ־PDF</button>`}
 const hoLab=at=>{const d=new Date(at);return['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'][d.getDay()]+' '+d.getDate()+'.'+(d.getMonth()+1)+' בשעה '+at.slice(11,16)};
 async function hoPage(tok,pre){document.title='מסירת דירה · מערכת ניהול פרויקטים YH';document.documentElement.dataset.theme='tech';document.body.innerHTML='<div id="sgp" class="sgp"><div class="sgh"><div class="sglogo"><img src="app-180.png" alt="YH"><div><b>קבלת המפתח</b><small>טוען…</small></div></div></div><div class="sgb"><div class="mu">טוען…</div></div></div>';const B=document.querySelector('#sgp .sgb');
   let api=null,d=pre||null;try{api=await window.signFS();if(!d)d=await api.get(tok)}catch(e){}
@@ -248,15 +285,20 @@ Object.assign(DFL.ru,{op:'Открыто',wt:'Ждёт подтверждени�
 Object.assign(DFL.zh,{op:'未处理',wt:'等待确认',dn:'已处理',none:'没有未处理的缺陷。谢谢！',nw:'新',od:'已开',dd:'天'});
 Object.assign(DFL.hi,{op:'खुले',wt:'मंज़ूरी बाकी',dn:'ठीक किए',none:'कोई खुली खराबी नहीं। धन्यवाद!',nw:'नया',od:'खुला',dd:'दिन'});
 window.LDSCENE=function(D0){
-/* מסך פתיחה: הדמיית הבניינים לפי הנתונים — כל קומה לפי האחוז, חלון מואר = דירה מוכנה, פיגום = בעבודה. אווירה לפי שעה */
+/* מסך פתיחה: הדמיית הבניינים כמו באתר (לפי התמונות) ולפי הנתונים — כל קומה לפי האחוז, חלון מואר = דירה מוכנה, פיגום = בעבודה. אווירה לפי שעה ומזג אוויר */
 var P={
  dusk:{sky:['#1a1f3d','#4a3a63','#b8606a','#f1a15f','#ffd59a'],sun:['#ffd18a',.75,300,236,90],haze:'#f4b37a',far:['#5b4766','#3e3550'],stF:['#f2dfc4','#dcc4a3'],stS:['#b48c70','#8b6a56'],pier:'#c9ab88',roof:'#cdb59a',glass:['#3a4b6e','#1f2a44'],gRef:'#ffc98a',warm:'#ffd28a',road:['#2b2635','#151320'],refl:.5,crane:'#f2b705',craneS:'#b07f00',shadow:'#2b1f2a',stars:0,moon:0,lamp:'#ffc778',fog:.25,ground:'#3a2f3a',tree:'#2b2433',lab:'#0b1222'},
  night:{sky:['#03060f','#081430','#14244a','#24345c','#3a3f63'],sun:['#9fc3ff',.18,280,240,120],haze:'#5b7bd6',far:['#141d38','#0d1428'],stF:['#cfc6b8','#a99f92'],stS:['#6f6a6a','#4c4a50'],pier:'#9d968b',roof:'#8f8a86',glass:['#13213f','#0a1226'],gRef:'#5d86d6',warm:'#ffcf7a',road:['#0d1220','#05070d'],refl:.7,crane:'#f2b705',craneS:'#a87800',shadow:'#03050b',stars:1,moon:1,lamp:'#ffd48a',fog:.18,ground:'#0b1020',tree:'#070b16',lab:'#0b1222'},
  day:{sky:['#7fb3e6','#a9cdee','#d3e5f3','#eef3f2','#f6f1e6'],sun:['#fff6d8',.7,70,60,110],haze:'#eef2f2',far:['#b8c7d3','#9fb2c1'],stF:['#f6ecdb','#e3d4bb'],stS:['#c9b49a','#a9937b'],pier:'#d8c6a8',roof:'#ddd0bb',glass:['#7ea6c8','#4e7598'],gRef:'#ffffff',warm:'#fff1cf',road:['#5b6068','#41454c'],refl:.22,crane:'#f2b705',craneS:'#c08d00',shadow:'#6d6a66',stars:0,moon:0,lamp:'#ffffff',fog:.35,ground:'#8a8f86',tree:'#4e6a4c',lab:'#1b2a24'}};
 var known=!!(D0&&D0.b&&D0.b.length),A=function(n,v){var r=[];for(var i=0;i<n;i++)r.push(v);return r};
 var D=known?D0:{n:'',b:[{n:'',s:5,t:1,f:A(18,100)},{n:'',s:4,t:1,f:A(10,100)}]};
-var hr=new Date().getHours(),C=hr>=6&&hr<16?P.day:hr>=16&&hr<19?P.dusk:P.night;
+var hr=new Date().getHours(),C=hr>=6&&hr<16?P.day:hr>=16&&hr<19?P.dusk:P.night,W=(D0&&D0.w)||(window.ldW?window.ldW():'')||'sun';
+if(C===P.night&&(W=='pc'))W='sun';
 window.__ldn=(window.__ldn||0)+1;var id='lx'+window.__ldn;
+W=W||'sun';const dark=!!C.stars;C=Object.assign({},C,dark?{stF:['#cfcac0','#aaa59b'],stS:['#77736c','#55524d'],roof:'#8d8a84'}:{stF:['#efebe3','#d9d4c9'],stS:['#bdb7ab','#9e988c'],roof:'#d7d2c8'});
+ if(W=='pc')C=Object.assign({},C,{fog:C.fog+.05});
+ if(W=='cloud')C=Object.assign({},C,{sky:dark?['#0b0f17','#121824','#1a2230','#232c3a','#2c3542']:['#8f9aa6','#a5afb8','#bac2c8','#ccd1d4','#d8dbda'],sun:[C.sun[0],0,C.sun[2],C.sun[3],C.sun[4]],haze:dark?'#2a3342':'#d3d7d9',fog:.45,refl:C.refl+.05,far:dark?C.far:['#9aa5af','#8893a0']});
+ if(W=='rain')C=Object.assign({},C,{sky:dark?['#05070c','#0b1018','#121823','#19212c','#202935']:['#4e5864','#5e6873','#717b85','#848d95','#959ca2'],sun:[C.sun[0],0,C.sun[2],C.sun[3],C.sun[4]],haze:dark?'#1d2532':'#8a939b',fog:.55,refl:dark?.8:.55,far:dark?C.far:['#606b76','#525c67'],road:dark?C.road:['#3d434b','#2a2f36'],litP:1});
 let s='',sd=11;const R=()=>{sd=(sd*9301+49297)%233280;return sd/233280};const G=240,u=id,f1=n=>(+n).toFixed(1);
  const B=D.b.slice(0,3),maxL=Math.max(...B.map(b=>b.f.length+(b.t?1:0))),fh=Math.min(10,(G-66)/maxL),dx=14,dy=-8;
  s+=`<defs><linearGradient id="${u}sky" x1="0" y1="0" x2="0" y2="1">${C.sky.map((c,i)=>`<stop offset="${[0,.35,.62,.82,1][i]}" stop-color="${c}"/>`).join('')}</linearGradient>
@@ -285,22 +327,25 @@ let s='',sd=11;const R=()=>{sd=(sd*9301+49297)%233280;return sd/233280};const G=
   g+=`<path d="M${x} ${G}L${x+w+dx} ${G}L${x+w+dx+30} ${G+10}L${x+20} ${G+10}Z" fill="${C.shadow}" opacity=".35" filter="url(#${u}bl)"/>`;
   for(let i=0;i<L;i++){const p=Math.max(0,Math.min(100,+b.f[i]||0)),y=G-(i+1)*fh;let q='';
    const side=st=>`<path d="M${x+w} ${f1(y)}l${dx} ${dy}v${f1(fh)}l${-dx} ${-dy}z" fill="${st}"/>`;
-   if(i===0){ // lobby
+   const DK=C.stars?'#1d2024':'#33373b',ZA=x+w*.36,ZB=x+w*.64;
+   if(i===0){ // ground: dark storefronts like the real buildings
+    q+=`<rect x="${x}" y="${f1(y)}" width="${w}" height="${f1(fh)}" fill="${DK}"/>`+side(DK);
+    for(let k=0;k<4;k++){const gx=x+2+k*(w-4)/4;q+=`<rect x="${f1(gx+.6)}" y="${f1(y+1.8)}" width="${f1((w-4)/4-1.2)}" height="${f1(fh-1.8)}" fill="url(#${u}${k%2?'gl':'wm'})" opacity="${k%2?.9:(C.stars?.95:.55)}"/>`}
+    q+=`<rect x="${x-1}" y="${f1(y)}" width="${w+2}" height="1.6" fill="${DK}"/>`;
+   }else if(p>=85){
     q+=`<rect x="${x}" y="${f1(y)}" width="${w}" height="${f1(fh)}" fill="url(#${u}fF)"/>`+side(`url(#${u}fS)`);
-    q+=`<rect x="${x+3}" y="${f1(y+1.6)}" width="${w-6}" height="${f1(fh-1.6)}" fill="url(#${u}wm)" opacity="${C.stars?1:.85}"/>`;
-    for(let k=1;k<n*2;k++)q+=`<rect x="${f1(x+3+k*(w-6)/(n*2))}" y="${f1(y+1.6)}" width=".5" height="${f1(fh-1.6)}" fill="${C.stS[1]}" opacity=".7"/>`;
-    q+=`<rect x="${x-2}" y="${f1(y+.4)}" width="${w+4}" height="1.4" fill="${C.roof}"/><rect x="${f1(x+w/2-4)}" y="${f1(y+3)}" width="8" height="${f1(fh-3)}" fill="#3a2a1c" opacity=".55"/>`;
-   }else if(p>=85){ // facade done: lit window = ready apartment
-    q+=`<rect x="${x}" y="${f1(y)}" width="${w}" height="${f1(fh)}" fill="url(#${u}fF)"/>`+side(`url(#${u}fS)`);
-    const lit=Math.floor(n*p/100+1e-6),dk=new Set();while(dk.size<n-lit)dk.add(Math.floor(R()*n));
-    for(let k=0;k<n;k++){const wx=x+2+k*aw,on=!dk.has(k);
-     q+=`<rect x="${f1(wx+1.4)}" y="${f1(y+1.4)}" width="${aw-2.8}" height="${f1(fh-3.6)}" rx=".4" fill="${on?`url(#${u}wm)`:`url(#${u}gl)`}"${on?` class="lxlit" style="--d:${f1(R()*7)}s"`:''}/>`;
-     if(!on)q+=`<rect x="${f1(wx+aw/2-1)}" y="${f1(y+2.4)}" width="2" height="1.3" fill="#e9f4ff" class="lxwk" style="--d:${f1(R()*2)}s"/>`;
-     q+=`<rect x="${f1(wx)}" y="${f1(y)}" width="1.4" height="${f1(fh)}" fill="${C.pier}"/>`}
-    q+=`<rect x="${f1(x+w-2)}" y="${f1(y)}" width="2" height="${f1(fh)}" fill="${C.pier}"/>`;
-    for(let k=0;k<2;k++){const sx=x+w+3+k*6;q+=`<path d="M${sx} ${f1(y+1.6-(sx-x-w)*8/14)}l3.6 -2v${f1(fh-3.8)}l-3.6 2z" fill="${C.glass[1]}" opacity=".85"/>`}
-    q+=`<rect x="${x-1.6}" y="${f1(y+fh-1.3)}" width="${w+3.2}" height="1.3" fill="${C.roof}"/><path d="M${x+w+1.6} ${f1(y+fh-1.3)}l${dx} ${dy}v1.3l${-dx} ${-dy}z" fill="${C.stS[1]}"/>`;
-    q+=`<rect x="${x-1.6}" y="${f1(y+fh-3.6)}" width="${w+3.2}" height="2.3" fill="#cfe9ff" opacity=".18"/><rect x="${x}" y="${f1(y+fh)}" width="${w}" height="1.6" fill="url(#${u}ao)"/>`;
+    q+=`<path d="M${f1(x+w+4)} ${f1(y+1.2-4*8/14)}l2.4 -1.4v${f1(fh-2.6)}l-2.4 1.4z" fill="${DK}"/><path d="M${f1(x+w+9)} ${f1(y+1.2-9*8/14)}l2.4 -1.4v${f1(fh-2.6)}l-2.4 1.4z" fill="url(#${u}gl)"/>`;
+    for(let k=1;k<3;k++)q+=`<rect x="${x}" y="${f1(y+k*fh/3)}" width="${w}" height=".3" fill="#000" opacity=".06"/>`;
+    const lit=Math.floor(5*p/100+1e-6),dk=new Set();while(dk.size<5-lit)dk.add(Math.floor(R()*5));
+    const win=(k,wx,ww)=>{const on=!dk.has(k);return`<rect x="${f1(wx-.5)}" y="${f1(y+1.1)}" width="${f1(ww+1)}" height="${f1(fh-2.6)}" fill="${DK}"/><rect x="${f1(wx)}" y="${f1(y+1.6)}" width="${f1(ww)}" height="${f1(fh-3.6)}" fill="${on?`url(#${u}wm)`:`url(#${u}gl)`}"${on?` class="lxlit" style="--d:${f1(R()*7)}s"`:''}/>`+(on?'':`<rect x="${f1(wx+ww/2-.8)}" y="${f1(y+2.4)}" width="1.6" height="1.1" fill="#e9f4ff" class="lxwk" style="--d:${f1(R()*2)}s"/>`)};
+    const za=ZA-x;q+=win(0,x+za*.12,za*.3)+`<rect x="${f1(x+za*.47)}" y="${f1(y+1.1)}" width="${f1(za*.1)}" height="${f1(fh-2.6)}" fill="${DK}"/>`+win(1,x+za*.62,za*.28);
+    // recessed balcony column
+    q+=`<rect x="${f1(ZA)}" y="${f1(y)}" width="${f1(ZB-ZA)}" height="${f1(fh)}" fill="${DK}"/><rect x="${f1(ZA)}" y="${f1(y)}" width="${f1(ZB-ZA)}" height="${f1(fh*.35)}" fill="#000" opacity=".25"/>`;
+    {const on=!dk.has(2);q+=`<rect x="${f1(ZA+(ZB-ZA)*.18)}" y="${f1(y+1.4)}" width="${f1((ZB-ZA)*.64)}" height="${f1(fh-2.2)}" fill="${on?`url(#${u}wm)`:`url(#${u}gl)`}" opacity="${on?.85:.7}"${on?` class="lxlit" style="--d:${f1(R()*7)}s"`:''}/>`}
+    q+=`<rect x="${f1(ZA)}" y="${f1(y+fh*.55)}" width="${f1(ZB-ZA)}" height="${f1(fh*.45-1)}" fill="#dff0ff" opacity=".22"/><rect x="${f1(ZA)}" y="${f1(y+fh*.55)}" width="${f1(ZB-ZA)}" height=".4" fill="#e8eef2" opacity=".6"/><rect x="${f1(ZA-.6)}" y="${f1(y+fh-1)}" width="${f1(ZB-ZA+1.2)}" height="1" fill="${DK}"/>`;
+    const zb=x+w-ZB;q+=win(3,ZB+zb*.1,zb*.32)+win(4,ZB+zb*.52,zb*.26)+`<rect x="${f1(x+w-zb*.14)}" y="${f1(y)}" width="${f1(zb*.1)}" height="${f1(fh)}" fill="${DK}"/>`;
+    if(i%3==0)q+=`<rect x="${x-.8}" y="${f1(y+fh-1.5)}" width="${w+1.6}" height="1.5" fill="${DK}"/><path d="M${x+w+.8} ${f1(y+fh-1.5)}l${dx} ${dy}v1.5l${-dx} ${-dy}z" fill="${DK}"/>`;
+    q+=`<rect x="${x}" y="${f1(y+fh)}" width="${w}" height="1.2" fill="url(#${u}ao)"/>`;
    }else{ // still in construction: skeleton + net on the open part
     const dw=p>=35?w*p/100:0;
     q+=`<rect x="${x}" y="${f1(y)}" width="${w}" height="${f1(fh)}" fill="#1a2030" opacity=".5"/>`;
@@ -313,14 +358,12 @@ let s='',sd=11;const R=()=>{sd=(sd*9301+49297)%233280;return sd/233280};const G=
    g+=`<g class="lxup" style="--d:${f1(d0+i*.06)}s">${q}</g>`;
    fronts+=`<rect x="${x}" y="${f1(y)}" width="${w}" height="${f1(fh)}"/>`}
   let ty=G-L*fh;const dl=f1(d0+L*.07);let r='';
-  if(b.t){const tw=w*.62,tx=x+w*.19,y=ty-fh;
-   r+=`<rect x="${f1(tx)}" y="${f1(y)}" width="${f1(tw)}" height="${f1(fh)}" fill="url(#${u}fF)"/><path d="M${f1(tx+tw)} ${f1(y)}l${dx*.7} ${dy*.7}v${f1(fh)}l${-dx*.7} ${-dy*.7}z" fill="url(#${u}fS)"/>`;
-   for(let k=0;k<7;k++)r+=`<rect x="${f1(tx+2+k*(tw-4)/7)}" y="${f1(y+1.5)}" width="${f1((tw-4)/7-1)}" height="${f1(fh-3)}" fill="${C.stS[1]}" opacity=".55"/>`;
-   r+=`<path d="M${x} ${f1(ty)}l${dx} ${dy}h${w}l${-dx} ${-dy}z" fill="${C.roof}"/>`;
+  {const DK=C.stars?'#1d2024':'#33373b',y=ty-fh*1.15,hh=fh*1.15;
+   if(b.t)r+=`<rect x="${f1(x+w*.12)}" y="${f1(ty-fh*.8)}" width="${f1(w*.76)}" height="${f1(fh*.8)}" fill="url(#${u}fS)"/>`;
+   r+=`<path d="M${x} ${f1(ty)}l${dx} ${dy}h${w}l${-dx} ${-dy}z" fill="${C.roof}" opacity=".9"/>`;
+   // open frame on top, like the real roof
+   r+=`<rect x="${x}" y="${f1(y)}" width="1.6" height="${f1(hh)}" fill="${DK}"/><rect x="${f1(x+w-1.6)}" y="${f1(y)}" width="1.6" height="${f1(hh)}" fill="${DK}"/><rect x="${x}" y="${f1(y)}" width="${w}" height="1.6" fill="${DK}"/><path d="M${x+w} ${f1(y)}l${dx} ${dy}v1.6l${-dx} ${-dy}z" fill="${DK}"/><path d="M${x} ${f1(y)}l${dx} ${dy}h${w}" fill="none" stroke="${DK}" stroke-width="1.2"/><rect x="${f1(x+w+dx-1.4)}" y="${f1(y+dy)}" width="1.4" height="${f1(hh)}" fill="${DK}"/>`;
    ty=y}
-  r+=`<path d="M${f1(b.t?x+w*.19:x)} ${f1(ty)}l${dx*(b.t?.7:1)} ${dy*(b.t?.7:1)}h${f1(b.t?w*.62:w)}l${-dx*(b.t?.7:1)} ${-dy*(b.t?.7:1)}z" fill="${C.roof}" opacity=".9"/>`;
-  // roof: solar water heaters (Israeli roof) + pergola
-  for(let k=0;k<4;k++){const sx=x+w*.24+k*w*.13;r+=`<path d="M${f1(sx)} ${f1(ty-1)}l4 -3.4h3l-4 3.4z" fill="${C.glass[1]}"/><rect x="${f1(sx+3)}" y="${f1(ty-6)}" width="4" height="2.2" rx="1.1" fill="#d9dde2"/>`}
   r+=`<circle cx="${f1(x+w*.82)}" cy="${f1(ty-1.5)}" r="1.5" fill="#ffe2a8" class="lxweld" filter="url(#${u}bl)"/><circle cx="${f1(x+w*.82)}" cy="${f1(ty-1.5)}" r=".7" fill="#fff"/>`;
   r+=`<g class="lxrise"><circle cx="${f1(x+w*.3)}" cy="${f1(ty-4)}" r="2.6" fill="#cfc4b3" opacity=".5" filter="url(#${u}bl)"/></g>`;
   g+=`<g class="lxup" style="--d:${dl}s">${r}</g>`;
@@ -331,10 +374,15 @@ let s='',sd=11;const R=()=>{sd=(sd*9301+49297)%233280;return sd/233280};const G=
  s+=`<clipPath id="${u}fr">${fronts}</clipPath></defs><g clip-path="url(#${u}clip)">`;
  // ---- sky ----
  s+=`<rect width="360" height="300" fill="url(#${u}sky)"/><rect width="360" height="300" fill="url(#${u}sun)"/>`;
- if(C.stars)for(let i=0;i<70;i++)s+=`<circle cx="${f1(R()*360)}" cy="${f1(R()*150)}" r="${(R()*.7+.15).toFixed(2)}" fill="#fff" opacity="${(R()*.7+.1).toFixed(2)}"/>`;
- if(C.moon)s+=`<circle cx="300" cy="44" r="18" fill="#cfe0ff" opacity=".12" filter="url(#${u}bl3)"/><circle cx="300" cy="44" r="8.5" fill="#f1ecdf"/><circle cx="304" cy="41.5" r="7.8" fill="#081430"/>`;
- else s+=`<circle cx="${C.sun[2]}" cy="${C.sun[3]-22}" r="11" fill="${C.sun[0]}" opacity=".9" filter="url(#${u}bl)"/>`;
+ if(C.stars&&(W=='sun'||W=='pc'))for(let i=0;i<70;i++)s+=`<circle cx="${f1(R()*360)}" cy="${f1(R()*150)}" r="${(R()*.7+.15).toFixed(2)}" fill="#fff" opacity="${(R()*.7+.1).toFixed(2)}"/>`;
+ if(C.moon&&(W=='sun'||W=='pc'))s+=`<circle cx="300" cy="44" r="18" fill="#cfe0ff" opacity=".12" filter="url(#${u}bl3)"/><circle cx="300" cy="44" r="8.5" fill="#f1ecdf"/><circle cx="304" cy="41.5" r="7.8" fill="#081430"/>`;
+ else if(W=='sun'||W=='pc')s+=`<circle cx="${C.sun[2]}" cy="${C.sun[3]-22}" r="11" fill="${C.sun[0]}" opacity=".9" filter="url(#${u}bl)"/>`;
  s+=`<g class="lxdrift" opacity=".35">`+[[60,70,50,6],[150,52,38,4],[260,88,56,5],[420,60,48,5]].map(([x,y,w,h])=>`<ellipse cx="${x}" cy="${y}" rx="${w}" ry="${h}" fill="${C.haze}" opacity=".5"/><ellipse cx="${x+18}" cy="${y-3}" rx="${w*.5}" ry="${h*.8}" fill="${C.haze}" opacity=".4"/>`).join('')+`</g>`;
+ const cld=(x,y,k,col,op,sh)=>`<g opacity="${op}"><ellipse cx="${x}" cy="${y+8*k}" rx="${46*k}" ry="${9*k}" fill="${sh}"/><circle cx="${x-22*k}" cy="${y+2*k}" r="${12*k}" fill="${col}"/><circle cx="${x}" cy="${y-6*k}" r="${17*k}" fill="${col}"/><circle cx="${x+22*k}" cy="${y}" r="${13*k}" fill="${col}"/><ellipse cx="${x}" cy="${y+6*k}" rx="${42*k}" ry="${8*k}" fill="${col}"/><ellipse cx="${x-4*k}" cy="${y-12*k}" rx="${10*k}" ry="${5*k}" fill="#fff" opacity=".35"/></g>`;
+ if(W=='sun'&&!dark)s+=`<g class="lxrays" opacity=".25">${Array.from({length:12},(_,i)=>`<path d="M${C.sun[2]} ${C.sun[3]-22}l${(Math.cos(i*.5236)*140).toFixed(1)} ${(Math.sin(i*.5236)*140).toFixed(1)}l${(Math.cos(i*.5236+.08)*140-Math.cos(i*.5236)*140).toFixed(1)} ${(Math.sin(i*.5236+.08)*140-Math.sin(i*.5236)*140).toFixed(1)}z" fill="#fff8e0"/>`).join('')}</g>`;
+ if(W!='sun'){const n=W=='pc'?3:7,col=W=='rain'?(dark?'#2a3240':'#6f7882'):W=='cloud'?(dark?'#323b4a':'#c4cad0'):(dark?'#3a4458':'#ffffff'),sh=W=='rain'?(dark?'#1a212c':'#535c66'):W=='cloud'?(dark?'#222a36':'#9ea7b0'):(dark?'#2a3346':'#dfe6ee');
+  for(const [cls,y0,sc0] of [['cl1',W=='pc'?60:40,W=='pc'?.9:1.3],['cl2',W=='pc'?95:72,W=='pc'?.7:1.05]]){let g='';for(let k=0;k<(cls=='cl1'?n:Math.max(2,n-2));k++){const x=k*(560/n)+R()*30;g+=cld(x,y0+R()*14,sc0*(0.8+R()*.4),col,cls=='cl1'?.95:.8,sh)}s+=`<g class="${cls}">${g}<g transform="translate(560 0)">${g}</g></g>`}}
+ if(W=='rain'||W=='cloud')s+=`<rect width="360" height="${G}" fill="${C.haze}" opacity=".18"/>`;
  s+=`<g class="lxbirds">`+[0,8,15,22].map((d,i)=>`<g transform="translate(${d},${(i%2)*4})"><path class="lxwing" d="M0 0q3 -3 6 0q3 -3 6 0" fill="none" stroke="${C.stars?'#9fb0d6':'#3b3443'}" stroke-width=".9" style="--d:${i*.12}s"/></g>`).join('')+`</g>`;
  s+=`<path d="M0 ${G-40}Q60 ${G-62} 130 ${G-44}T260 ${G-48}T360 ${G-36}V${G}H0Z" fill="${C.far[0]}" opacity=".55"/>`;
  const sky=(op,col,seed,hmax)=>{sd=seed;let x=-4,p='';while(x<364){const w=8+R()*20,h=10+R()*hmax;p+=`<rect x="${f1(x)}" y="${f1(G-h)}" width="${f1(w)}" height="${f1(h)}" fill="${col}"/>`;if(R()>.4&&C.stars)for(let k=0;k<4;k++)p+=`<rect x="${f1(x+2+R()*(w-4))}" y="${f1(G-h+3+R()*(h-6))}" width="1.1" height="1.3" fill="${C.warm}" opacity="${(R()*.7+.2).toFixed(2)}"/>`;x+=w+.8}return`<g opacity="${op}">${p}</g>`};
@@ -366,6 +414,9 @@ let s='',sd=11;const R=()=>{sd=(sd*9301+49297)%233280;return sd/233280};const G=
  s+=labs;
  s+=`<g class="lxcar"><rect x="0" y="${G+17}" width="20" height="6.5" rx="2.6" fill="#d6dde8"/><rect x="5" y="${G+13.5}" width="10" height="4.5" rx="1.6" fill="#7f97b8"/><circle cx="20" cy="${G+20}" r="1.3" fill="#fff6cf"/><path d="M21 ${G+20}l26 -3v6z" fill="#fff6cf" opacity=".18"/><circle cx="5" cy="${G+23.6}" r="1.8" fill="#0b0e15"/><circle cx="15.5" cy="${G+23.6}" r="1.8" fill="#0b0e15"/></g>`;
  s+=`<g class="lxcar2"><rect x="0" y="${G+36}" width="22" height="7" rx="2.6" fill="#8e2f2a"/><rect x="6" y="${G+32.5}" width="10" height="4.5" rx="1.6" fill="#5d6f88"/><circle cx="0" cy="${G+39}" r="1.3" fill="#ff5a4f"/><circle cx="6" cy="${G+43}" r="1.8" fill="#0b0e15"/><circle cx="17" cy="${G+43}" r="1.8" fill="#0b0e15"/></g>`;
+ if(W=='rain'){let r='';sd=77;for(let k=0;k<150;k++){const x=R()*380,y=R()*324-24,l=6+R()*7;r+=`<path d="M${f1(x)} ${f1(y)}l-1.6 ${f1(l)}" stroke="${dark?'#9fb2cc':'#e6edf3'}" stroke-width=".55" opacity="${(R()*.4+.25).toFixed(2)}"/>`}
+  s+=`<g class="lxrain">${r}</g>`;for(let k=0;k<16;k++)s+=`<ellipse class="lxspl" style="--d:${f1(R()*.9)}s" cx="${f1(R()*360)}" cy="${f1(G+4+R()*54)}" rx="3" ry=".8" fill="none" stroke="${dark?'#9fb2cc':'#e6edf3'}" stroke-width=".4"/>`;
+  if(dark)s+=`<rect class="lxflash" width="360" height="300" fill="#dfe8ff" opacity="0"/>`}
  s+=`<rect width="360" height="300" fill="url(#${u}sun)" opacity=".3"/></g>`;
  var now=Date.now();if(!window.__ld0||now-window.__ld0>30000)window.__ld0=now;var el=((now-window.__ld0)/1000).toFixed(2);
  return '<svg class="ldscene" viewBox="0 0 360 300" aria-hidden="true" style="--el:'+el+'s">'+s+'</svg>'};
@@ -384,11 +435,11 @@ window.signFS=async()=>({
 });
 function dExtras(){try{const h=document.querySelector('#sgp .sgh');const sa=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone;if(h&&!h.querySelector('.dbk')&&(sa||history.length>1)){const b=document.createElement('button');b.className='dbk';b.textContent='→ חזרה';b.onclick=()=>{if(history.length>1)history.back();else location.href='./'};h.appendChild(b)}}catch(e){}
   if(!dExtras.on){dExtras.on=1;document.addEventListener('click',e=>{const im=e.target.closest&&e.target.closest('.sgb img');if(!im||!im.src||im.closest('#dpv'))return;const o=document.createElement('div');o.id='dpv';o.innerHTML='<button>✕ סגור</button><img alt="">';o.querySelector('img').src=im.src;o.onclick=()=>{o.remove();if(history.state&&history.state.dpv)history.back()};document.body.appendChild(o);try{history.pushState({dpv:1},'')}catch(x){}});window.addEventListener('popstate',()=>{const o=document.getElementById('dpv');if(o)o.remove()})}}
-(async function(){const Q=new URLSearchParams(location.search),H=Q.get('h'),v=Q.get('d')||H;if(!v||!/^[a-z0-9]{10,40}$/.test(v)){document.querySelector('#sgp .sgb').innerHTML='<h2>הקישור לא בתוקף</h2>';return}
+(async function(){const Q=new URLSearchParams(location.search),H=Q.get('h'),PP=Q.get('p'),v=Q.get('d')||H||PP;if(!v||!/^[a-z0-9]{10,40}$/.test(v)){document.querySelector('#sgp .sgb').innerHTML='<h2>הקישור לא בתוקף</h2>';return}
   if(H){document.title='מסירת דירה · מערכת ניהול פרויקטים YH';const m=document.querySelector('meta[property="og:description"]');if(m)m.content='קבלת המפתח · בחירת מועד'}
-  const ld=document.createElement('div');ld.id='ld';ld.innerHTML='<div class="ldbox">'+window.LDSCENE(null)+'<div class="ldbr"><b>YH</b><span>מערכת ניהול פרויקטים</span></div><div class="ldpr" id="ldpr"></div><div class="ldbar"><i></i></div><div class="ldtx">'+(H?'הבית שלכם מחכה…':'מכין את הליקויים…')+'</div></div>';document.body.appendChild(ld);
+  const ld=document.createElement('div');ld.id='ld';ld.innerHTML='<div class="ldbox">'+window.LDSCENE(null)+'<div class="ldbr"><b>YH</b><span>מערכת ניהול פרויקטים</span></div><div class="ldpr" id="ldpr"></div><div class="ldbar"><i></i></div><div class="ldtx">'+(PP?'מכין את הפרוטוקול…':H?'הבית שלכם מחכה…':'מכין את הליקויים…')+'</div></div>';document.body.appendChild(ld);
   const t0=Date.now();let d=null;try{d=await (await window.signFS()).get(v)}catch(e){}
   try{if(d&&d.sc){const o=ld.querySelector('svg.ldscene');if(o)o.outerHTML=window.LDSCENE(d.sc)}const pr=document.getElementById('ldpr');if(d&&pr)pr.innerHTML='<b>'+String(d.pn||'').replace(/[<&]/g,'')+'</b>'+(d.cn?' · '+String(d.cn).replace(/[<&]/g,''):'')}catch(e){}
   const w=Math.max(0,(d&&d.sc?1900:900)-(Date.now()-t0));await new Promise(r=>setTimeout(r,w));
-  if(H)await hoPage(v,d&&d.k=='ho'?d:null);else await defPage(v,d&&d.k=='df'?d:null);if(!ld.isConnected)document.body.appendChild(ld);dExtras();setInterval(dExtras,700);requestAnimationFrame(()=>{ld.classList.add('out');setTimeout(()=>ld.remove(),400)})})();
+  if(PP)await hpPage(v,d&&d.k=='hp'?d:null);else if(H)await hoPage(v,d&&d.k=='ho'?d:null);else await defPage(v,d&&d.k=='df'?d:null);if(!ld.isConnected)document.body.appendChild(ld);dExtras();setInterval(dExtras,700);requestAnimationFrame(()=>{ld.classList.add('out');setTimeout(()=>ld.remove(),400)})})();
 </script></body></html>
