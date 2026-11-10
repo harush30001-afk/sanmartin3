@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>מערכת ניהול פרויקטים YH</title><meta name="description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:title" content="מערכת ניהול פרויקטים YH"><meta property="og:description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:image" content="https://harush30001-afk.github.io/sanmartin3/app-512.png"><meta property="og:type" content="website"><link rel="apple-touch-icon" href="app-180.png"><link rel="icon" type="image/png" href="app-180.png">
-<!-- v: d 498 -->
+<!-- v: d 499 -->
 <style>
 #ld{position:fixed;inset:0;z-index:50;background:#070b14;display:flex;align-items:center;justify-content:center;transition:opacity .35s}#ld.out{opacity:0;pointer-events:none}
 
@@ -102,6 +102,14 @@ details summary{padding:6px 0}
 .wzs{background:#f1efeb;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:4px;font-size:17px;margin:6px 0 10px}
 .wzs b{font-size:19px}
 .wzgo{margin-top:12px;min-height:56px;font-size:19px!important}
+.hoau{display:flex;align-items:center;gap:10px;width:100%;border:1px solid rgba(128,128,128,.35);border-radius:14px;background:transparent;padding:8px 10px;font:inherit;color:inherit;cursor:pointer;margin-top:8px}
+.hoau i{width:34px;height:34px;border-radius:50%;border:1.5px solid #2f5c4a;color:#2f5c4a;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:12px;flex:none}
+.hoau i::before{content:"▶"}
+.hoau.on i::before{content:"❚❚";font-size:10px}
+.hoau.ld{opacity:.55}
+.hoauw{flex:1;height:20px;border-radius:4px;opacity:.5;background:repeating-linear-gradient(90deg,#2f5c4a 0 2px,transparent 2px 6px)}
+.hoau small{font-size:12.5px;opacity:.7}
+.btn.olb.rec{border-color:#b23a2a;color:#b23a2a}
 .hopk{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
 .hopk button{min-height:52px;border-radius:12px;border:1.5px solid #cfc6b8;background:#fff;color:#1e1f21;font-family:inherit;font-weight:700;font-size:14.5px;cursor:pointer;padding:6px}
 .hopk button.on{background:#2f5c4a;color:#fff;border-color:#2f5c4a}
@@ -191,6 +199,15 @@ const CFG={apiKey:"AIzaSyDaxJFkzVhV1yqsV_ue82a_l2f4ghkn9Eg",authDomain:"sanmarti
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const escJ=s=>esc(String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,'\\n'));
+const AUC={};
+let AUP=null;
+const auT=s=>{s=Math.max(0,Math.round(+s||0));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+const auGet=async(id,pub)=>{if(AUC[id])return AUC[id];let d='';if(pub){const x=window.signFS?await(await window.signFS()).get(id):(await DB.doc('sign/'+id).get()).data();d=(x&&x.d)||''}else d=await pGet(id)||'';if(d)AUC[id]=d;return d};
+function auBtn(id,sec,pub){setTimeout(()=>{auGet(id,pub).catch(()=>{})},200);return`<button type="button" class="hoau" onclick="event.stopPropagation();auPlay(this,'${escJ(id)}',${pub?1:0})"><i></i><span class="hoauw"></span><small>${sec?auT(sec):''}</small></button>`}
+async function auPlay(el,id,pub){if(AUP){const same=AUP.id==id;try{AUP.a.pause()}catch(e){}document.querySelectorAll('.hoau.on').forEach(x=>x.classList.remove('on'));AUP=null;if(same)return}
+  let d=AUC[id];if(!d){el.classList.add('ld');try{d=await auGet(id,pub)}catch(e){}el.classList.remove('ld')}
+  const sm=el.querySelector('small');if(!d){if(sm)sm.textContent='לא נטען · נסה שוב';return}
+  const a=new Audio(d);AUP={a,id};el.classList.add('on');a.onended=()=>{el.classList.remove('on');if(AUP&&AUP.a===a)AUP=null};try{await a.play()}catch(e){el.classList.remove('on');AUP=null;if(sm)sm.textContent='לחץ שוב'}}
 async function ptSigImg(id){const c=$(id),w=300,h=110,o=document.createElement('canvas');o.width=w;o.height=h;o.getContext('2d').drawImage(c,0,0,w,h);return o.toDataURL('image/png')}
 function gzPad(id){setTimeout(()=>{const c=$(id);if(!c)return;const x=c.getContext('2d');x.lineWidth=2.6;x.lineCap='round';x.strokeStyle='#1e1f21';let dr=0;const pt=ev=>{const r=c.getBoundingClientRect();return[(ev.clientX-r.left)*c.width/r.width,(ev.clientY-r.top)*c.height/r.height]};c.onpointerdown=ev=>{dr=1;c.setPointerCapture(ev.pointerId);const[p,q]=pt(ev);x.beginPath();x.moveTo(p,q)};c.onpointermove=ev=>{if(!dr)return;const[p,q]=pt(ev);x.lineTo(p,q);x.stroke()};c.onpointerup=()=>{dr=0}},40)}
 function gzInk(id){const c=$(id);if(!c)return 0;const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;for(let i=3;i<d.length;i+=4)if(d[i]>0)return 1;return 0}
@@ -227,7 +244,7 @@ function dfItemsC(tok,d){const T=DFL[DFLG]||DFL.he,R=d.r||{},I=d.it||[],now=Date
   return`<div class="row" style="gap:6px;justify-content:flex-end;flex-wrap:wrap">${[['he','עברית'],['ar','العربية'],['ru','Русский'],['zh','中文'],['hi','हिन्दी']].map(([k,n])=>`<button class="chip ${DFLG==k?'on':''}" onclick="dfLg('${tok}','${k}')">${n}</button>`).join('')}</div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center;margin:10px 0">${[[I.length-w,T.op],[w,T.wt],[D.length,T.dn]].map(([n,l])=>`<div style="background:#fff;border:1px solid #dedad4;border-radius:12px;padding:8px 2px"><b style="display:block;font-size:20px">${n}</b><small class="mu">${l}</small></div>`).join('')}</div>
   ${I.length?'':`<h3 style="text-align:center;margin:18px 0">${T.none}</h3>`}`
-  +I.map(x=>{const r=R[x.id]||null,open=!r||r.st=='x'||r.st=='q',age=Math.floor((now-(x.t0||now))/864e5),nw=age<3&&!r;return`<div class="dfcd" id="dfc${x.id}">${x.p?`<img src="${esc(x.p)}" alt="" style="width:100%;border-radius:10px;display:block;margin-bottom:8px">`:''}<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><b class="dfloc">${esc([(x.loc||'').trim(),x.r].filter(Boolean).join(' · ')||'—')}</b><span style="flex:none;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:800;background:#f6e4e0;color:#a8322a">${nw?T.nw:T.od+' '+age+' '+T.dd}</span></div><div class="dfdf">${esc(x.n||'')}</div>
+  +I.map(x=>{const r=R[x.id]||null,open=!r||r.st=='x'||r.st=='q',age=Math.floor((now-(x.t0||now))/864e5),nw=age<3&&!r;return`<div class="dfcd" id="dfc${x.id}">${x.p?`<img src="${esc(x.p)}" alt="" style="width:100%;border-radius:10px;display:block;margin-bottom:8px">`:''}<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><b class="dfloc">${esc([(x.loc||'').trim(),x.r].filter(Boolean).join(' · ')||'—')}</b><span style="flex:none;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:800;background:#f6e4e0;color:#a8322a">${nw?T.nw:T.od+' '+age+' '+T.dd}</span></div><div class="dfdf">${esc(x.n||'')}</div>${x.au?auBtn(x.au,x.aus,1):''}
   ${r?`<div style="margin-top:6px;font-weight:800;color:${r.st=='d'?'#2f5a3a':r.st=='x'?'#a8322a':'#8a5a12'}">${r.st=='d'?(r.sg?'✓ '+(T.tsd||DFL.he.tsd)+(r.tn?' · '+esc(r.tn):'')+' · '+fdt(r.t):T.w):r.st=='x'?T.re+(r.n?': '+esc(r.n):''):T.qs+(r.n?': '+esc(r.n):'')}${r.by&&r.st!='x'?' · '+esc(r.by):''}</div>${r.st=='d'&&(r.af||[])[0]?`<img src="${esc(r.af[0])}" alt="" style="width:55%;border-radius:8px;margin-top:6px;display:block">`:''}`:''}
   ${open&&x.ts?`<div id="dfts${x.id}" style="margin-top:8px"><button class="btn stgbig" style="width:100%" onclick="dfTsOpen('${tok}','${x.id}')">${T.ts||DFL.he.ts}</button></div>`:''}${open&&!x.ts?`<div class="row" style="gap:6px;margin-top:8px"><button class="btn stgbig" style="flex:1" onclick="dfRep('${tok}','${x.id}','d')">${T.dn2||DFL.he.dn2}</button><label class="btn sb" style="flex:1;text-align:center">${T.ph||DFL.he.ph}<input type="file" accept="image/*" capture="environment" hidden onchange="dfPhP('${x.id}',this)"></label></div><img id="dfpv${x.id}" alt="" style="display:none;width:40%;border-radius:8px;margin-top:6px"><input id="dfn${x.id}" placeholder="${T.nt2||T.nt}" style="margin-top:6px">`:''}</div>`}).join('')
   +(D.length?`<details style="margin-top:8px"><summary class="mu" style="cursor:pointer">${T.dn} (${D.length})</summary>${D.map(x=>`<div class="mu" style="padding:4px 0">✓ ${esc(x.n||'')}${x.loc?' · '+esc(x.loc):''}</div>`).join('')}</details>`:'')}
