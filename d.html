@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>מערכת ניהול פרויקטים YH</title><meta name="description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:title" content="מערכת ניהול פרויקטים YH"><meta property="og:description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:image" content="https://harush30001-afk.github.io/sanmartin3/app-512.png"><meta property="og:type" content="website"><link rel="apple-touch-icon" href="app-180.png"><link rel="icon" type="image/png" href="app-180.png">
-<!-- v: d 546 -->
+<!-- v: d 547 -->
 <style>
 #ld{position:fixed;inset:0;z-index:50;background:#070b14;display:flex;align-items:center;justify-content:center;transition:opacity .35s}#ld.out{opacity:0;pointer-events:none}
 
@@ -138,6 +138,16 @@ details summary{padding:6px 0}
 .ldbr b{font-size:26px;font-weight:900;letter-spacing:3px;background:linear-gradient(90deg,#e2a83a,#f7dfae,#e2a83a);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:ldsh 2.4s linear infinite}
 @keyframes ldsh{to{background-position:-200% 0}}
 .ldbr span{font-size:15px;font-weight:700;color:#d8d2c6;letter-spacing:.3px}
+/* גרסה 547: לוגו פתיחה — קו נפתח, האותיות עולות, הכיתוב אחריהן */
+.ldbr.ldlogo{flex-direction:column;align-items:center;gap:0;margin:0 0 30px;direction:ltr}
+.ldyhw{display:block;overflow:hidden;padding:0 4px}
+.ldyh{display:block;width:min(42vw,168px);height:auto;animation:ldl2 .65s cubic-bezier(.2,.7,.2,1) .35s both}
+.ldln{display:block;width:min(46vw,184px);height:1px;background:#c2a05a;margin:20px 0 15px;animation:ldl1 .6s cubic-bezier(.3,.8,.2,1) .1s both}
+.ldbr.ldlogo .ldsb{font:400 14.5px/1 Heebo,Rubik,Arial,sans-serif;color:#cdbd97;letter-spacing:.14em;direction:rtl;animation:ldl3 .55s ease .7s both}
+@keyframes ldl1{from{transform:scaleX(0);opacity:0}to{transform:none;opacity:1}}
+@keyframes ldl2{from{transform:translateY(34%);opacity:0}to{transform:none;opacity:1}}
+@keyframes ldl3{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.ldyh,.ldln,.ldbr.ldlogo .ldsb{animation:none}
 .ldbar{width:170px;height:3px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
 .ldbar i{display:block;height:100%;width:40%;border-radius:3px;background:linear-gradient(90deg,transparent,#e2a83a,transparent);animation:ldbar 1.3s ease-in-out infinite}
 @keyframes ldbar{0%{transform:translateX(260%)}100%{transform:translateX(-160%)}}
