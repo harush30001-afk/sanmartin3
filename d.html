@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>מערכת ניהול פרויקטים YH</title><meta name="description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:title" content="מערכת ניהול פרויקטים YH"><meta property="og:description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:image" content="https://harush30001-afk.github.io/sanmartin3/app-512.png"><meta property="og:type" content="website"><link rel="apple-touch-icon" href="app-180.png"><link rel="icon" type="image/png" href="app-180.png">
-<!-- v: d 576 -->
+<!-- v: d 577 -->
 <style>
 #ld{position:fixed;inset:0;z-index:50;background:#070b14;display:flex;align-items:center;justify-content:center;transition:opacity .35s}#ld.out{opacity:0;pointer-events:none}
 
@@ -263,7 +263,7 @@ function dfM3X(){try{window.DFM3&&window.DFM3.stop()}catch(e){}window.DFM3=null;
 async function dfM3(id){const d=window.DFD;if(!d)return;const x=(d.it||[]).find(q=>q.id==id);if(!x||!/^(p[A-Za-z0-9]{1,5})$/.test(x.m3||''))return;dfM3X();const L=(d.it||[]).filter(q=>q.m3==x.m3&&q.loc==x.loc),o=document.createElement('div');o.id='m3ov';o.style.cssText='position:fixed;inset:0;z-index:260;background:#eef0f2;color:#22262b;overflow-y:auto;direction:rtl';
   o.innerHTML='<div style="position:sticky;top:0;z-index:6;display:flex;align-items:center;gap:10px;padding:10px 14px;background:#eef0f2"><button class="chip" onclick="dfM3X()">← חזרה</button><b style="flex:1;font-size:15px">'+esc(x.loc||'')+'</b></div><div id="m3bd" style="max-width:560px;margin:0 auto"><div class="mu" style="padding:60px 20px;text-align:center">טוען את המודל…</div></div>';document.body.appendChild(o);
   const js=src=>new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)});
-  try{if(!window.THREE)await js('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');if(!window.M3D){await js('m3e.js?v=576');if(window.__m3p)await window.__m3p}if(!document.getElementById('m3ov'))return;
+  try{if(!window.THREE)await js('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');if(!window.M3D){await js('m3e.js?v=577');if(window.__m3p)await window.__m3p}if(!document.getElementById('m3ov'))return;
     window.DFM3=window.M3D(document.getElementById('m3bd'),{plan:x.m3,real:1,ct:1,defs:L.map(q=>({rm:q.mr||'',it:q.mi||0,t:(q.r?q.r+' · ':'')+(q.n||''),ps:q.p||''})),startIx:L.indexOf(x)})}
   catch(e){const b=document.getElementById('m3bd');if(b)b.innerHTML='<div class="mu" style="padding:60px 20px;text-align:center">לא הצלחתי לטעון את המודל. בדוק את החיבור ונסה שוב.</div>'}}
 function dfItemsC(tok,d){const T=DFL[DFLG]||DFL.he,R=d.r||{},I=d.it||[],now=Date.now(),w=I.filter(x=>(R[x.id]||{}).st=='d').length,D=d.dn||[];
