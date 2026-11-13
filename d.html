@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>מערכת ניהול פרויקטים YH</title><meta name="description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:title" content="מערכת ניהול פרויקטים YH"><meta property="og:description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:image" content="https://harush30001-afk.github.io/sanmartin3/app-512.png"><meta property="og:type" content="website"><link rel="apple-touch-icon" href="app-180.png"><link rel="icon" type="image/png" href="app-180.png">
-<!-- v: d 583 -->
+<!-- v: d 584 -->
 <style>
-#ld{position:fixed;inset:0;z-index:50;background:#070b14;display:flex;align-items:center;justify-content:center;transition:opacity .35s}#ld.out{opacity:0;pointer-events:none}
+#ld{position:fixed;inset:0;z-index:50;background:#15171b;display:flex;align-items:center;justify-content:center;transition:opacity .35s}#ld.out{opacity:0;pointer-events:none}
 
 :root{color-scheme:light}
 *{box-sizing:border-box}
@@ -329,142 +329,7 @@ Object.assign(DFL.ar,{op:'مفتوحة',wt:'بانتظار الموافقة',dn:
 Object.assign(DFL.ru,{op:'Открыто',wt:'Ждёт подтверждения',dn:'Исправлено',none:'Открытых дефектов нет. Спасибо!',nw:'Новое',od:'Открыто',dd:'дн.'});
 Object.assign(DFL.zh,{op:'未处理',wt:'等待确认',dn:'已处理',none:'没有未处理的缺陷。谢谢！',nw:'新',od:'已开',dd:'天'});
 Object.assign(DFL.hi,{op:'खुले',wt:'मंज़ूरी बाकी',dn:'ठीक किए',none:'कोई खुली खराबी नहीं। धन्यवाद!',nw:'नया',od:'खुला',dd:'दिन'});
-window.LDSCENE=function(D0){
-/* מסך פתיחה: הדמיית הבניינים כמו באתר (לפי התמונות) ולפי הנתונים — כל קומה לפי האחוז, חלון מואר = דירה מוכנה, פיגום = בעבודה. אווירה לפי שעה ומזג אוויר */
-var P={
- dusk:{sky:['#1a1f3d','#4a3a63','#b8606a','#f1a15f','#ffd59a'],sun:['#ffd18a',.75,300,236,90],haze:'#f4b37a',far:['#5b4766','#3e3550'],stF:['#f2dfc4','#dcc4a3'],stS:['#b48c70','#8b6a56'],pier:'#c9ab88',roof:'#cdb59a',glass:['#3a4b6e','#1f2a44'],gRef:'#ffc98a',warm:'#ffd28a',road:['#2b2635','#151320'],refl:.5,crane:'#f2b705',craneS:'#b07f00',shadow:'#2b1f2a',stars:0,moon:0,lamp:'#ffc778',fog:.25,ground:'#3a2f3a',tree:'#2b2433',lab:'#0b1222'},
- night:{sky:['#03060f','#081430','#14244a','#24345c','#3a3f63'],sun:['#9fc3ff',.18,280,240,120],haze:'#5b7bd6',far:['#141d38','#0d1428'],stF:['#cfc6b8','#a99f92'],stS:['#6f6a6a','#4c4a50'],pier:'#9d968b',roof:'#8f8a86',glass:['#13213f','#0a1226'],gRef:'#5d86d6',warm:'#ffcf7a',road:['#0d1220','#05070d'],refl:.7,crane:'#f2b705',craneS:'#a87800',shadow:'#03050b',stars:1,moon:1,lamp:'#ffd48a',fog:.18,ground:'#0b1020',tree:'#070b16',lab:'#0b1222'},
- day:{sky:['#7fb3e6','#a9cdee','#d3e5f3','#eef3f2','#f6f1e6'],sun:['#fff6d8',.7,70,60,110],haze:'#eef2f2',far:['#b8c7d3','#9fb2c1'],stF:['#f6ecdb','#e3d4bb'],stS:['#c9b49a','#a9937b'],pier:'#d8c6a8',roof:'#ddd0bb',glass:['#7ea6c8','#4e7598'],gRef:'#ffffff',warm:'#fff1cf',road:['#5b6068','#41454c'],refl:.22,crane:'#f2b705',craneS:'#c08d00',shadow:'#6d6a66',stars:0,moon:0,lamp:'#ffffff',fog:.35,ground:'#8a8f86',tree:'#4e6a4c',lab:'#1b2a24'}};
-var known=!!(D0&&D0.b&&D0.b.length),A=function(n,v){var r=[];for(var i=0;i<n;i++)r.push(v);return r};
-var D=known?D0:{n:'',b:[{n:'',s:5,t:1,f:A(18,100)},{n:'',s:4,t:1,f:A(10,100)}]};
-var hr=new Date().getHours(),C=hr>=6&&hr<16?P.day:hr>=16&&hr<19?P.dusk:P.night,W=(D0&&D0.w)||(window.ldW?window.ldW():'')||'sun';
-if(C===P.night&&(W=='pc'))W='sun';
-window.__ldn=(window.__ldn||0)+1;var id='lx'+window.__ldn;
-W=W||'sun';const dark=!!C.stars;C=Object.assign({},C,dark?{stF:['#cfcac0','#aaa59b'],stS:['#77736c','#55524d'],roof:'#8d8a84'}:{stF:['#efebe3','#d9d4c9'],stS:['#bdb7ab','#9e988c'],roof:'#d7d2c8'});
- if(W=='pc')C=Object.assign({},C,{fog:C.fog+.05});
- if(W=='cloud')C=Object.assign({},C,{sky:dark?['#0b0f17','#121824','#1a2230','#232c3a','#2c3542']:['#8f9aa6','#a5afb8','#bac2c8','#ccd1d4','#d8dbda'],sun:[C.sun[0],0,C.sun[2],C.sun[3],C.sun[4]],haze:dark?'#2a3342':'#d3d7d9',fog:.45,refl:C.refl+.05,far:dark?C.far:['#9aa5af','#8893a0']});
- if(W=='rain')C=Object.assign({},C,{sky:dark?['#05070c','#0b1018','#121823','#19212c','#202935']:['#4e5864','#5e6873','#717b85','#848d95','#959ca2'],sun:[C.sun[0],0,C.sun[2],C.sun[3],C.sun[4]],haze:dark?'#1d2532':'#8a939b',fog:.55,refl:dark?.8:.55,far:dark?C.far:['#606b76','#525c67'],road:dark?C.road:['#3d434b','#2a2f36'],litP:1});
-let s='',sd=11;const R=()=>{sd=(sd*9301+49297)%233280;return sd/233280};const G=240,u=id,f1=n=>(+n).toFixed(1);
- const B=D.b.slice(0,3),maxL=Math.max(...B.map(b=>b.f.length+(b.t?1:0))),fh=Math.min(10,(G-66)/maxL),dx=14,dy=-8;
- s+=`<defs><linearGradient id="${u}sky" x1="0" y1="0" x2="0" y2="1">${C.sky.map((c,i)=>`<stop offset="${[0,.35,.62,.82,1][i]}" stop-color="${c}"/>`).join('')}</linearGradient>
- <radialGradient id="${u}sun" cx="${C.sun[2]/360}" cy="${C.sun[3]/300}" r="${C.sun[4]/360}"><stop offset="0" stop-color="${C.sun[0]}" stop-opacity="${C.sun[1]}"/><stop offset="1" stop-color="${C.sun[0]}" stop-opacity="0"/></radialGradient>
- <linearGradient id="${u}fF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${C.stF[1]}"/><stop offset=".55" stop-color="${C.stF[0]}"/><stop offset="1" stop-color="${C.stF[1]}"/></linearGradient>
- <linearGradient id="${u}fS" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${C.stS[0]}"/><stop offset="1" stop-color="${C.stS[1]}"/></linearGradient>
- <linearGradient id="${u}gl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.glass[0]}"/><stop offset=".6" stop-color="${C.glass[1]}"/><stop offset="1" stop-color="${C.gRef}" stop-opacity=".85"/></linearGradient>
- <linearGradient id="${u}wm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff4d6"/><stop offset="1" stop-color="${C.warm}"/></linearGradient>
- <linearGradient id="${u}ao" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
- <linearGradient id="${u}rd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.road[0]}"/><stop offset="1" stop-color="${C.road[1]}"/></linearGradient>
- <linearGradient id="${u}fog" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.haze}" stop-opacity="0"/><stop offset="1" stop-color="${C.haze}" stop-opacity="${C.fog}"/></linearGradient>
- <linearGradient id="${u}cc" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9aa0a6"/><stop offset="1" stop-color="#c9ced3"/></linearGradient>
- <linearGradient id="${u}sw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
- <linearGradient id="${u}mk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset=".7" stop-color="#fff" stop-opacity="0"/></linearGradient>
- <mask id="${u}rm" maskUnits="userSpaceOnUse" x="0" y="${G}" width="360" height="${300-G}"><rect x="0" y="${G}" width="360" height="${300-G}" fill="url(#${u}mk)"/></mask>
- <radialGradient id="${u}lp" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="${C.lamp}" stop-opacity=".7"/><stop offset="1" stop-color="${C.lamp}" stop-opacity="0"/></radialGradient>
- <pattern id="${u}net" width="3" height="3" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="#2f6b52" opacity=".55"/><path d="M0 0L3 3M3 0L0 3" stroke="#57a07f" stroke-width=".25"/></pattern>
- <filter id="${u}bl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4"/></filter>
- <filter id="${u}bl3" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
- <filter id="${u}rb" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="0 1.6"/></filter>
- <clipPath id="${u}clip"><rect width="360" height="300"/></clipPath>`;
- // ---- buildings ----
- let bx=24,fronts='',body='',labs='',tops=[];
- B.forEach((b,bi)=>{const n=Math.max(2,Math.min(6,b.s||4)),aw=16,w=n*aw+4,x=bx,L=b.f.length;bx+=w+dx+18;
-  const avg=Math.round(b.f.reduce((a,c)=>a+(+c||0),0)/Math.max(1,L));let g='',d0=.15+bi*.3;
-  g+=`<path d="M${x} ${G}L${x+w+dx} ${G}L${x+w+dx+30} ${G+10}L${x+20} ${G+10}Z" fill="${C.shadow}" opacity=".35" filter="url(#${u}bl)"/>`;
-  for(let i=0;i<L;i++){const p=Math.max(0,Math.min(100,+b.f[i]||0)),y=G-(i+1)*fh;let q='';
-   const side=st=>`<path d="M${x+w} ${f1(y)}l${dx} ${dy}v${f1(fh)}l${-dx} ${-dy}z" fill="${st}"/>`;
-   const DK=C.stars?'#1d2024':'#33373b',ZA=x+w*.36,ZB=x+w*.64;
-   if(i===0){ // ground: dark storefronts like the real buildings
-    q+=`<rect x="${x}" y="${f1(y)}" width="${w}" height="${f1(fh)}" fill="${DK}"/>`+side(DK);
-    for(let k=0;k<4;k++){const gx=x+2+k*(w-4)/4;q+=`<rect x="${f1(gx+.6)}" y="${f1(y+1.8)}" width="${f1((w-4)/4-1.2)}" height="${f1(fh-1.8)}" fill="url(#${u}${k%2?'gl':'wm'})" opacity="${k%2?.9:(C.stars?.95:.55)}"/>`}
-    q+=`<rect x="${x-1}" y="${f1(y)}" width="${w+2}" height="1.6" fill="${DK}"/>`;
-   }else if(p>=85){
-    q+=`<rect x="${x}" y="${f1(y)}" width="${w}" height="${f1(fh)}" fill="url(#${u}fF)"/>`+side(`url(#${u}fS)`);
-    q+=`<path d="M${f1(x+w+4)} ${f1(y+1.2-4*8/14)}l2.4 -1.4v${f1(fh-2.6)}l-2.4 1.4z" fill="${DK}"/><path d="M${f1(x+w+9)} ${f1(y+1.2-9*8/14)}l2.4 -1.4v${f1(fh-2.6)}l-2.4 1.4z" fill="url(#${u}gl)"/>`;
-    for(let k=1;k<3;k++)q+=`<rect x="${x}" y="${f1(y+k*fh/3)}" width="${w}" height=".3" fill="#000" opacity=".06"/>`;
-    const lit=Math.floor(5*p/100+1e-6),dk=new Set();while(dk.size<5-lit)dk.add(Math.floor(R()*5));
-    const win=(k,wx,ww)=>{const on=!dk.has(k);return`<rect x="${f1(wx-.5)}" y="${f1(y+1.1)}" width="${f1(ww+1)}" height="${f1(fh-2.6)}" fill="${DK}"/><rect x="${f1(wx)}" y="${f1(y+1.6)}" width="${f1(ww)}" height="${f1(fh-3.6)}" fill="${on?`url(#${u}wm)`:`url(#${u}gl)`}"${on?` class="lxlit" style="--d:${f1(R()*7)}s"`:''}/>`+(on?'':`<rect x="${f1(wx+ww/2-.8)}" y="${f1(y+2.4)}" width="1.6" height="1.1" fill="#e9f4ff" class="lxwk" style="--d:${f1(R()*2)}s"/>`)};
-    const za=ZA-x;q+=win(0,x+za*.12,za*.3)+`<rect x="${f1(x+za*.47)}" y="${f1(y+1.1)}" width="${f1(za*.1)}" height="${f1(fh-2.6)}" fill="${DK}"/>`+win(1,x+za*.62,za*.28);
-    // recessed balcony column
-    q+=`<rect x="${f1(ZA)}" y="${f1(y)}" width="${f1(ZB-ZA)}" height="${f1(fh)}" fill="${DK}"/><rect x="${f1(ZA)}" y="${f1(y)}" width="${f1(ZB-ZA)}" height="${f1(fh*.35)}" fill="#000" opacity=".25"/>`;
-    {const on=!dk.has(2);q+=`<rect x="${f1(ZA+(ZB-ZA)*.18)}" y="${f1(y+1.4)}" width="${f1((ZB-ZA)*.64)}" height="${f1(fh-2.2)}" fill="${on?`url(#${u}wm)`:`url(#${u}gl)`}" opacity="${on?.85:.7}"${on?` class="lxlit" style="--d:${f1(R()*7)}s"`:''}/>`}
-    q+=`<rect x="${f1(ZA)}" y="${f1(y+fh*.55)}" width="${f1(ZB-ZA)}" height="${f1(fh*.45-1)}" fill="#dff0ff" opacity=".22"/><rect x="${f1(ZA)}" y="${f1(y+fh*.55)}" width="${f1(ZB-ZA)}" height=".4" fill="#e8eef2" opacity=".6"/><rect x="${f1(ZA-.6)}" y="${f1(y+fh-1)}" width="${f1(ZB-ZA+1.2)}" height="1" fill="${DK}"/>`;
-    const zb=x+w-ZB;q+=win(3,ZB+zb*.1,zb*.32)+win(4,ZB+zb*.52,zb*.26)+`<rect x="${f1(x+w-zb*.14)}" y="${f1(y)}" width="${f1(zb*.1)}" height="${f1(fh)}" fill="${DK}"/>`;
-    if(i%3==0)q+=`<rect x="${x-.8}" y="${f1(y+fh-1.5)}" width="${w+1.6}" height="1.5" fill="${DK}"/><path d="M${x+w+.8} ${f1(y+fh-1.5)}l${dx} ${dy}v1.5l${-dx} ${-dy}z" fill="${DK}"/>`;
-    q+=`<rect x="${x}" y="${f1(y+fh)}" width="${w}" height="1.2" fill="url(#${u}ao)"/>`;
-   }else{ // still in construction: skeleton + net on the open part
-    const dw=p>=35?w*p/100:0;
-    q+=`<rect x="${x}" y="${f1(y)}" width="${w}" height="${f1(fh)}" fill="#1a2030" opacity=".5"/>`;
-    if(dw)q+=`<rect x="${x}" y="${f1(y)}" width="${f1(dw)}" height="${f1(fh)}" fill="url(#${u}fF)"/>`;
-    for(let c=0;c<=n;c++)q+=`<rect x="${f1(x+c*(w-2)/n)}" y="${f1(y)}" width="2" height="${f1(fh)}" fill="url(#${u}cc)"/>`;
-    q+=`<rect x="${x}" y="${f1(y+fh-1.4)}" width="${w}" height="1.4" fill="url(#${u}cc)"/>`;
-    q+=`<rect x="${f1(x+dw-1)}" y="${f1(y)}" width="${f1(w-dw+3)}" height="${f1(fh)}" fill="url(#${u}net)"/>`+side(`url(#${u}net)`);
-    q+=`<rect x="${f1(x+dw+2)}" y="${f1(y+2)}" width="2" height="1.4" fill="#e9f4ff" class="lxwk"/>`;
-   }
-   g+=`<g class="lxup" style="--d:${f1(d0+i*.06)}s">${q}</g>`;
-   fronts+=`<rect x="${x}" y="${f1(y)}" width="${w}" height="${f1(fh)}"/>`}
-  let ty=G-L*fh;const dl=f1(d0+L*.07);let r='';
-  {const DK=C.stars?'#1d2024':'#33373b',y=ty-fh*1.15,hh=fh*1.15;
-   if(b.t)r+=`<rect x="${f1(x+w*.12)}" y="${f1(ty-fh*.8)}" width="${f1(w*.76)}" height="${f1(fh*.8)}" fill="url(#${u}fS)"/>`;
-   r+=`<path d="M${x} ${f1(ty)}l${dx} ${dy}h${w}l${-dx} ${-dy}z" fill="${C.roof}" opacity=".9"/>`;
-   // open frame on top, like the real roof
-   r+=`<rect x="${x}" y="${f1(y)}" width="1.6" height="${f1(hh)}" fill="${DK}"/><rect x="${f1(x+w-1.6)}" y="${f1(y)}" width="1.6" height="${f1(hh)}" fill="${DK}"/><rect x="${x}" y="${f1(y)}" width="${w}" height="1.6" fill="${DK}"/><path d="M${x+w} ${f1(y)}l${dx} ${dy}v1.6l${-dx} ${-dy}z" fill="${DK}"/><path d="M${x} ${f1(y)}l${dx} ${dy}h${w}" fill="none" stroke="${DK}" stroke-width="1.2"/><rect x="${f1(x+w+dx-1.4)}" y="${f1(y+dy)}" width="1.4" height="${f1(hh)}" fill="${DK}"/>`;
-   ty=y}
-  r+=`<circle cx="${f1(x+w*.82)}" cy="${f1(ty-1.5)}" r="1.5" fill="#ffe2a8" class="lxweld" filter="url(#${u}bl)"/><circle cx="${f1(x+w*.82)}" cy="${f1(ty-1.5)}" r=".7" fill="#fff"/>`;
-  r+=`<g class="lxrise"><circle cx="${f1(x+w*.3)}" cy="${f1(ty-4)}" r="2.6" fill="#cfc4b3" opacity=".5" filter="url(#${u}bl)"/></g>`;
-  g+=`<g class="lxup" style="--d:${dl}s">${r}</g>`;
-  body+=g;tops.push(ty);
-  // label
-  const lx=x+w/2+6,ly=ty-30,lw=64;
-  if(known)labs+=`<g class="lxpop" style="--d:${f1(+dl+.25)}s"><rect x="${f1(lx-lw/2)}" y="${f1(ly)}" width="${lw}" height="17" rx="8.5" fill="${C.lab}" fill-opacity=".62" stroke="#fff" stroke-opacity=".18"/><text x="${f1(lx+2)}" y="${f1(ly+11.3)}" text-anchor="middle" font-family="Heebo,sans-serif" font-size="8.2" font-weight="600" fill="#f6efe2">${b.n} · ${avg}%</text><rect x="${f1(lx-lw/2+9)}" y="${f1(ly+14)}" width="${lw-18}" height="1" rx=".5" fill="#fff" opacity=".18"/><rect x="${f1(lx-lw/2+9)}" y="${f1(ly+14)}" width="${f1((lw-18)*avg/100)}" height="1" rx=".5" fill="#57c08a"/></g>`});
- s+=`<clipPath id="${u}fr">${fronts}</clipPath></defs><g clip-path="url(#${u}clip)">`;
- // ---- sky ----
- s+=`<rect width="360" height="300" fill="url(#${u}sky)"/><rect width="360" height="300" fill="url(#${u}sun)"/>`;
- if(C.stars&&(W=='sun'||W=='pc'))for(let i=0;i<70;i++)s+=`<circle cx="${f1(R()*360)}" cy="${f1(R()*150)}" r="${(R()*.7+.15).toFixed(2)}" fill="#fff" opacity="${(R()*.7+.1).toFixed(2)}"/>`;
- if(C.moon&&(W=='sun'||W=='pc'))s+=`<circle cx="300" cy="44" r="18" fill="#cfe0ff" opacity=".12" filter="url(#${u}bl3)"/><circle cx="300" cy="44" r="8.5" fill="#f1ecdf"/><circle cx="304" cy="41.5" r="7.8" fill="#081430"/>`;
- else if(W=='sun'||W=='pc')s+=`<circle cx="${C.sun[2]}" cy="${C.sun[3]-22}" r="11" fill="${C.sun[0]}" opacity=".9" filter="url(#${u}bl)"/>`;
- s+=`<g class="lxdrift" opacity=".35">`+[[60,70,50,6],[150,52,38,4],[260,88,56,5],[420,60,48,5]].map(([x,y,w,h])=>`<ellipse cx="${x}" cy="${y}" rx="${w}" ry="${h}" fill="${C.haze}" opacity=".5"/><ellipse cx="${x+18}" cy="${y-3}" rx="${w*.5}" ry="${h*.8}" fill="${C.haze}" opacity=".4"/>`).join('')+`</g>`;
- const cld=(x,y,k,col,op,sh)=>`<g opacity="${op}"><ellipse cx="${x}" cy="${y+8*k}" rx="${46*k}" ry="${9*k}" fill="${sh}"/><circle cx="${x-22*k}" cy="${y+2*k}" r="${12*k}" fill="${col}"/><circle cx="${x}" cy="${y-6*k}" r="${17*k}" fill="${col}"/><circle cx="${x+22*k}" cy="${y}" r="${13*k}" fill="${col}"/><ellipse cx="${x}" cy="${y+6*k}" rx="${42*k}" ry="${8*k}" fill="${col}"/><ellipse cx="${x-4*k}" cy="${y-12*k}" rx="${10*k}" ry="${5*k}" fill="#fff" opacity=".35"/></g>`;
- if(W=='sun'&&!dark)s+=`<g class="lxrays" opacity=".25">${Array.from({length:12},(_,i)=>`<path d="M${C.sun[2]} ${C.sun[3]-22}l${(Math.cos(i*.5236)*140).toFixed(1)} ${(Math.sin(i*.5236)*140).toFixed(1)}l${(Math.cos(i*.5236+.08)*140-Math.cos(i*.5236)*140).toFixed(1)} ${(Math.sin(i*.5236+.08)*140-Math.sin(i*.5236)*140).toFixed(1)}z" fill="#fff8e0"/>`).join('')}</g>`;
- if(W!='sun'){const n=W=='pc'?3:7,col=W=='rain'?(dark?'#2a3240':'#6f7882'):W=='cloud'?(dark?'#323b4a':'#c4cad0'):(dark?'#3a4458':'#ffffff'),sh=W=='rain'?(dark?'#1a212c':'#535c66'):W=='cloud'?(dark?'#222a36':'#9ea7b0'):(dark?'#2a3346':'#dfe6ee');
-  for(const [cls,y0,sc0] of [['cl1',W=='pc'?60:40,W=='pc'?.9:1.3],['cl2',W=='pc'?95:72,W=='pc'?.7:1.05]]){let g='';for(let k=0;k<(cls=='cl1'?n:Math.max(2,n-2));k++){const x=k*(560/n)+R()*30;g+=cld(x,y0+R()*14,sc0*(0.8+R()*.4),col,cls=='cl1'?.95:.8,sh)}s+=`<g class="${cls}">${g}<g transform="translate(560 0)">${g}</g></g>`}}
- if(W=='rain'||W=='cloud')s+=`<rect width="360" height="${G}" fill="${C.haze}" opacity=".18"/>`;
- s+=`<g class="lxbirds">`+[0,8,15,22].map((d,i)=>`<g transform="translate(${d},${(i%2)*4})"><path class="lxwing" d="M0 0q3 -3 6 0q3 -3 6 0" fill="none" stroke="${C.stars?'#9fb0d6':'#3b3443'}" stroke-width=".9" style="--d:${i*.12}s"/></g>`).join('')+`</g>`;
- s+=`<path d="M0 ${G-40}Q60 ${G-62} 130 ${G-44}T260 ${G-48}T360 ${G-36}V${G}H0Z" fill="${C.far[0]}" opacity=".55"/>`;
- const sky=(op,col,seed,hmax)=>{sd=seed;let x=-4,p='';while(x<364){const w=8+R()*20,h=10+R()*hmax;p+=`<rect x="${f1(x)}" y="${f1(G-h)}" width="${f1(w)}" height="${f1(h)}" fill="${col}"/>`;if(R()>.4&&C.stars)for(let k=0;k<4;k++)p+=`<rect x="${f1(x+2+R()*(w-4))}" y="${f1(G-h+3+R()*(h-6))}" width="1.1" height="1.3" fill="${C.warm}" opacity="${(R()*.7+.2).toFixed(2)}"/>`;x+=w+.8}return`<g opacity="${op}">${p}</g>`};
- s+=sky(.6,C.far[0],5,52)+sky(.9,C.far[1],9,36);
- s+=`<rect x="0" y="${G-70}" width="360" height="70" fill="url(#${u}fog)"/>`;
- // ---- ground + road ----
- s+=`<rect x="0" y="${G}" width="360" height="${300-G}" fill="url(#${u}rd)"/>`;
- // ---- crane ----
- const MX=Math.min(300,bx+20),cy=Math.max(24,Math.min(...tops)-44),JL=Math.max(70,MX-172),JR=Math.min(352,MX+84);let k='';
- k+=`<path d="M${MX-6} ${G}L${MX+60} ${G+10}L${MX+66} ${G+10}L${MX+2} ${G}Z" fill="${C.shadow}" opacity=".3" filter="url(#${u}bl)"/>`;
- k+=`<rect x="${MX-5}" y="${cy+6}" width="10" height="${G-cy-6}" fill="none" stroke="${C.crane}" stroke-width="1.2"/>`;for(let y=cy+6;y<G;y+=7)k+=`<path d="M${MX-5} ${y}L${MX+5} ${y+7}M${MX+5} ${y}L${MX-5} ${y+7}" stroke="${C.crane}" stroke-width=".6"/><path d="M${MX-5} ${y}h10" stroke="${C.craneS}" stroke-width=".5"/>`;
- k+=`<rect x="${MX-10}" y="${G-5}" width="20" height="5" fill="#5f6672"/><path d="M${JL} ${cy+6}H${JR}M${JL+4} ${cy}H${MX+6}" stroke="${C.crane}" stroke-width="1.2"/>`;
- for(let x=JL+4;x<MX;x+=7)k+=`<path d="M${x} ${cy}L${x+3.5} ${cy+6}L${x+7} ${cy}" fill="none" stroke="${C.crane}" stroke-width=".6"/>`;
- for(let x=MX;x<JR;x+=7)k+=`<path d="M${x} ${cy+6}L${x+3.5} ${cy+1}L${x+7} ${cy+6}" fill="none" stroke="${C.crane}" stroke-width=".6"/>`;
- k+=`<path d="M${MX+6} ${cy+1}H${JR}" stroke="${C.crane}" stroke-width="1"/><path d="M${MX-4} ${cy}L${MX} ${cy-24}L${MX+4} ${cy}" fill="none" stroke="${C.crane}" stroke-width="1.6"/><path d="M${MX} ${cy-24}L${JL+20} ${cy}M${MX} ${cy-24}L${JR-6} ${cy+1}" stroke="#dfe3ea" stroke-width=".45" opacity=".75"/><circle cx="${MX}" cy="${cy-25}" r="1.6" fill="#ff3b30" class="lxblink"/><circle cx="${MX}" cy="${cy-25}" r="5" fill="#ff3b30" opacity=".25" filter="url(#${u}bl)" class="lxblink"/>`;
- k+=`<rect x="${JR-24}" y="${cy+6}" width="16" height="15" rx="1" fill="#7c828c"/><path d="M${JR-24} ${cy+11}h16M${JR-24} ${cy+16}h16" stroke="#5f656e" stroke-width=".6"/><rect x="${MX-8}" y="${cy+6}" width="12" height="10" rx="1.6" fill="${C.crane}"/><rect x="${MX-6.5}" y="${cy+7.5}" width="6" height="5.5" rx="1" fill="${C.gRef}" opacity=".75"/><circle cx="${JL+1}" cy="${cy+6}" r="1.5" fill="#ff3b30" class="lxblink" style="--d:.6s"/>`;
- k+=`<g class="lxtrolley"><rect x="${MX-34}" y="${cy+6}" width="11" height="3.6" rx="1" fill="#2a2f3a"/><g class="lxhook"><path d="M${MX-30} ${cy+9.6}V${cy+74}M${MX-27} ${cy+9.6}V${cy+74}" stroke="#cfd5de" stroke-width=".45"/><g class="lxsway"><rect x="${MX-32}" y="${cy+74}" width="7" height="3.4" rx=".6" fill="${C.crane}"/><path d="M${MX-28.5} ${cy+77.4}L${MX-38} ${cy+85}M${MX-28.5} ${cy+77.4}L${MX-19} ${cy+85}" stroke="#cfd5de" stroke-width=".45"/><rect x="${MX-40}" y="${cy+85}" width="23" height="8" rx=".6" fill="#a7865e"/><rect x="${MX-40}" y="${cy+85}" width="23" height="1.8" fill="#caa77a"/></g></g></g>`;
- k+=`<rect x="${MX+16}" y="${G-7}" width="24" height="7" fill="#a7865e"/><rect x="${MX+16}" y="${G-7}" width="24" height="1.6" fill="#caa77a"/><rect x="${MX+44}" y="${G-11}" width="14" height="11" fill="#5f6672"/><rect x="${MX+44}" y="${G-11}" width="14" height="2" fill="#7d8591"/>`;
- // glass light sweep over the facades
- const sweep=`<g clip-path="url(#${u}fr)"><rect class="lxsweep" style="--d:1.9s" x="0" y="0" width="70" height="${G}" fill="url(#${u}sw)" transform="skewX(-18)"/></g>`;
- s+=`<g id="${u}scn">${body}${sweep}${k}</g>`;
- // wet-road reflection of the real buildings
- s+=`<g mask="url(#${u}rm)" opacity="${C.refl}"><use href="#${u}scn" transform="matrix(1 0 0 -1 0 ${2*G})" filter="url(#${u}rb)"/></g>`;
- s+=`<rect x="0" y="${G}" width="360" height="5" fill="${C.ground}" opacity=".9"/>`;
- for(let lx=12;lx<360;lx+=86){s+=`<rect x="${lx}" y="${G-30}" width="1.3" height="30" fill="#2b3142"/><path d="M${lx} ${G-30}h7" stroke="#2b3142" stroke-width="1.3"/><circle cx="${lx+7}" cy="${G-29}" r="1.7" fill="${C.lamp}"/><circle cx="${lx+7}" cy="${G-29}" r="8" fill="url(#${u}lp)"/><rect x="${lx+5.5}" y="${G+12}" width="3" height="22" fill="${C.lamp}" opacity="${C.refl*.6}" filter="url(#${u}bl)"/>`}
- s+=`<path d="M0 ${G+30}H360" stroke="#fff" stroke-opacity=".2" stroke-width="1.1" stroke-dasharray="14 12"/>`;
- const fw=bx-14;s+=`<rect x="10" y="${G-10}" width="${fw}" height="10" fill="#1c2a24" opacity=".92"/><rect x="10" y="${G-10}" width="${fw}" height="1.2" fill="#2f5c4a"/><text x="${f1(10+fw/2)}" y="${G-2.6}" text-anchor="middle" font-family="Heebo,sans-serif" font-size="6" font-weight="700" fill="#e9dcbc" letter-spacing="1">YH · ${D.n||''}</text>`;
- for(const tx of [4,bx-8,352]){s+=`<rect x="${tx}" y="${G-14}" width="1.6" height="14" fill="${C.tree}"/><circle cx="${tx+.8}" cy="${G-18}" r="7" fill="${C.tree}"/><circle cx="${tx+4}" cy="${G-15}" r="5" fill="${C.tree}"/>`}
- s+=labs;
- s+=`<g class="lxcar"><rect x="0" y="${G+17}" width="20" height="6.5" rx="2.6" fill="#d6dde8"/><rect x="5" y="${G+13.5}" width="10" height="4.5" rx="1.6" fill="#7f97b8"/><circle cx="20" cy="${G+20}" r="1.3" fill="#fff6cf"/><path d="M21 ${G+20}l26 -3v6z" fill="#fff6cf" opacity=".18"/><circle cx="5" cy="${G+23.6}" r="1.8" fill="#0b0e15"/><circle cx="15.5" cy="${G+23.6}" r="1.8" fill="#0b0e15"/></g>`;
- s+=`<g class="lxcar2"><rect x="0" y="${G+36}" width="22" height="7" rx="2.6" fill="#8e2f2a"/><rect x="6" y="${G+32.5}" width="10" height="4.5" rx="1.6" fill="#5d6f88"/><circle cx="0" cy="${G+39}" r="1.3" fill="#ff5a4f"/><circle cx="6" cy="${G+43}" r="1.8" fill="#0b0e15"/><circle cx="17" cy="${G+43}" r="1.8" fill="#0b0e15"/></g>`;
- if(W=='rain'){let r='';sd=77;for(let k=0;k<150;k++){const x=R()*380,y=R()*324-24,l=6+R()*7;r+=`<path d="M${f1(x)} ${f1(y)}l-1.6 ${f1(l)}" stroke="${dark?'#9fb2cc':'#e6edf3'}" stroke-width=".55" opacity="${(R()*.4+.25).toFixed(2)}"/>`}
-  s+=`<g class="lxrain">${r}</g>`;for(let k=0;k<16;k++)s+=`<ellipse class="lxspl" style="--d:${f1(R()*.9)}s" cx="${f1(R()*360)}" cy="${f1(G+4+R()*54)}" rx="3" ry=".8" fill="none" stroke="${dark?'#9fb2cc':'#e6edf3'}" stroke-width=".4"/>`;
-  if(dark)s+=`<rect class="lxflash" width="360" height="300" fill="#dfe8ff" opacity="0"/>`}
- s+=`<rect width="360" height="300" fill="url(#${u}sun)" opacity=".3"/></g>`;
- var now=Date.now();if(!window.__ld0||now-window.__ld0>30000)window.__ld0=now;var el=((now-window.__ld0)/1000).toFixed(2);
- return '<svg class="ldscene" viewBox="0 0 360 300" aria-hidden="true" style="--el:'+el+'s">'+s+'</svg>'};
+window.LDSCENE=function(){return''};
 
 const FSB='https://firestore.googleapis.com/v1/projects/'+CFG.projectId+'/databases/(default)/documents/sign/';
 const fsV=v=>'nullValue' in v?null:'booleanValue' in v?v.booleanValue:'integerValue' in v?+v.integerValue:'doubleValue' in v?v.doubleValue:'stringValue' in v?v.stringValue:'timestampValue' in v?Date.parse(v.timestampValue):'arrayValue' in v?(v.arrayValue.values||[]).map(fsV):'mapValue' in v?fsO(v.mapValue.fields||{}):null;
@@ -482,9 +347,9 @@ function dExtras(){try{const h=document.querySelector('#sgp .sgh');const sa=(win
   if(!dExtras.on){dExtras.on=1;document.addEventListener('click',e=>{const im=e.target.closest&&e.target.closest('.sgb img');if(!im||!im.src||im.closest('#dpv'))return;const o=document.createElement('div');o.id='dpv';o.innerHTML='<button>✕ סגור</button><img alt="">';o.querySelector('img').src=im.src;o.onclick=()=>{o.remove();if(history.state&&history.state.dpv)history.back()};document.body.appendChild(o);try{history.pushState({dpv:1},'')}catch(x){}});window.addEventListener('popstate',()=>{const o=document.getElementById('dpv');if(o)o.remove()})}}
 (async function(){const Q=new URLSearchParams(location.search),H=Q.get('h'),PP=Q.get('p'),v=Q.get('d')||H||PP;if(!v||!/^[a-z0-9]{10,40}$/.test(v)){document.querySelector('#sgp .sgb').innerHTML='<h2>הקישור לא בתוקף</h2>';return}
   if(H){document.title='מסירת דירה · מערכת ניהול פרויקטים YH';const m=document.querySelector('meta[property="og:description"]');if(m)m.content='קבלת המפתח · בחירת מועד'}
-  const ld=document.createElement('div');ld.id='ld';ld.innerHTML='<div class="ldbox">'+window.LDSCENE(null)+'<div class="ldbr"><b>YH</b><span>מערכת ניהול פרויקטים</span></div><div class="ldpr" id="ldpr"></div><div class="ldbar"><i></i></div><div class="ldtx">'+(PP?'מכין את הפרוטוקול…':H?'הבית שלכם מחכה…':'מכין את הליקויים…')+'</div></div>';document.body.appendChild(ld);
+  const ld=document.createElement('div');ld.id='ld';ld.innerHTML='<div class="ldbox"><div class="ldbr ldlogo"><span class="ldyhw"><svg class="ldyh" viewBox="0 0 182 100" role="img" aria-label="YH"><defs><linearGradient id="ldgd" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="182" y2="30"><stop offset="0" stop-color="#9a7836"/><stop offset=".45" stop-color="#dcc07c"/><stop offset=".7" stop-color="#b8924a"/><stop offset="1" stop-color="#8d6c2f"/></linearGradient></defs><g fill="url(#ldgd)"><path d="M0 0H15L42 44L69 0H84L48.5 58V100H35.5V58Z"/><path d="M104 0h13v43.5h52V0h13v100h-13V56.5h-52V100h-13Z"/></g></svg></span><i class="ldln"></i><span class="ldsb">מערכת ניהול פרויקטים</span></div><div class="ldpr" id="ldpr"></div><div class="ldbar"><i></i></div><div class="ldtx">'+(PP?'מכין את הפרוטוקול…':H?'הבית שלכם מחכה…':'מכין את הליקויים…')+'</div></div>';document.body.appendChild(ld);
   const t0=Date.now();let d=null;try{d=await (await window.signFS()).get(v)}catch(e){}
-  try{if(d&&d.sc){const o=ld.querySelector('svg.ldscene');if(o)o.outerHTML=window.LDSCENE(d.sc)}const pr=document.getElementById('ldpr');if(d&&pr)pr.innerHTML='<b>'+String(d.pn||'').replace(/[<&]/g,'')+'</b>'+(d.cn?' · '+String(d.cn).replace(/[<&]/g,''):'')}catch(e){}
-  const w=Math.max(0,(d&&d.sc?1900:900)-(Date.now()-t0));await new Promise(r=>setTimeout(r,w));
+  try{const pr=document.getElementById('ldpr');if(d&&pr)pr.innerHTML='<b>'+String(d.pn||'').replace(/[<&]/g,'')+'</b>'+(d.cn?' · '+String(d.cn).replace(/[<&]/g,''):'')}catch(e){}
+  const w=Math.max(0,1100-(Date.now()-t0));await new Promise(r=>setTimeout(r,w));
   if(PP)await hpPage(v,d&&d.k=='hp'?d:null);else if(H)await hoPage(v,d&&d.k=='ho'?d:null);else await defPage(v,d&&d.k=='df'?d:null);if(!ld.isConnected)document.body.appendChild(ld);dExtras();setInterval(dExtras,700);requestAnimationFrame(()=>{ld.classList.add('out');setTimeout(()=>ld.remove(),400)})})();
 </script></body></html>
