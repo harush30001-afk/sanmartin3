@@ -1,0 +1,110 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>כללי אבטחה</title>
+<style>body{margin:0;padding:16px;background:#0b1020;color:#fff;font-family:system-ui,sans-serif}button{width:100%;padding:16px;font-size:18px;font-weight:700;border:0;border-radius:14px;background:#f97316;color:#fff;margin-bottom:12px}pre{direction:ltr;text-align:left;background:#111936;padding:12px;border-radius:12px;font-size:12px;overflow:auto;white-space:pre-wrap}</style></head><body>
+<button id="b">העתק את כל הכללים</button><div id="m" style="text-align:center;margin-bottom:10px;color:#6ee7b7;min-height:20px"></div><pre id="t">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signed() { return request.auth != null &amp;&amp; request.auth.token.email_verified == true; }
+    function isOwner() { return signed() &amp;&amp; request.auth.token.email == 'harush30001@gmail.com'; }
+    function member() { return signed() &amp;&amp; exists(/databases/$(database)/documents/team/$(request.auth.token.email)); }
+    // הפרויקטים שהמשתמש מורשה אליהם. משתמש ישן בלי שדה projects מקבל רק את סאן מרטין 3
+    function projs() { return get(/databases/$(database)/documents/team/$(request.auth.token.email)).data.get('projects', ['sm3']); }
+    function hasProj(p) { return isOwner() || (member() &amp;&amp; p in projs()); }
+    // גרסה 632: בוט בניית המודלים (משימה מתוזמנת של Claude). רק תור המודלים ותמונות
+    function isBot() { return request.auth != null &amp;&amp; request.auth.token.email == 'harush30001+yhbot@gmail.com'; }
+
+    // הנהלה: מנהל פרויקט, מנהל פרויקט בכיר, מנהל אזור, מהנדס ראשי — יכולים לשנות הרשאות מפקח בפרויקט שלהם
+    function myJr() { return get(/databases/$(database)/documents/team/$(request.auth.token.email)).data.get('jr', ''); }
+    function mgr() { return member() &amp;&amp; myJr() in ['pm', 'spm', 'area', 'chief']; }
+    function supMine(d) { return d.get('jr', '') == 'sup' &amp;&amp; d.get('projects', ['sm3']).hasAny(projs()); }
+    function invOk(email) {
+      let d = request.resource.data;
+      let i = get(/databases/$(database)/documents/sign/$(d.inv)).data;
+      return signed() &amp;&amp; request.auth.token.email == email &amp;&amp; d.email == email
+        &amp;&amp; i.get('t', '') == 'inv' &amp;&amp; i.get('st', '') == 'p' &amp;&amp; i.get('exp', 0) &gt; request.time.toMillis()
+        &amp;&amp; d.get('jr', '') == i.get('jr', '') &amp;&amp; d.role == i.role &amp;&amp; d.projects == i.prj
+        &amp;&amp; d.keys().hasOnly(['email', 'name', 'ph', 'jr', 'role', 'projects', 'inv', 'by']);
+    }
+    match /team/{email} {
+      allow read: if signed() &amp;&amp; (request.auth.token.email == email || isOwner() || (mgr() &amp;&amp; supMine(resource.data)));
+      allow write: if isOwner();
+      // גרסה 376: הצטרפות רק באישור הבעלים — המוזמן לא יוצר לעצמו הרשאה
+      allow update: if mgr() &amp;&amp; supMine(resource.data) &amp;&amp; request.resource.data.get('jr', '') == 'sup'
+        &amp;&amp; request.resource.data.diff(resource.data).affectedKeys().hasOnly(['cols']);
+    }
+    // חתימה מרחוק: מי שיש לו את הקישור (מזהה אקראי) יכול לקרוא את הבקשה ולחתום פעם אחת בלבד
+    // גרסה 377: הזמנות (t == 'inv') — רק הבעלים יוצר, משנה ומוחק. חבר צוות לא נוגע בהן ולא יכול להתחזות להזמנה
+    function isInv(d) { return d.get('t', '') == 'inv'; }
+    match /sign/{tok} {
+      allow get: if true;
+      allow list: if isOwner() || member() || isBot();
+      allow create: if isOwner() || (member() &amp;&amp; !isInv(request.resource.data)) || (isBot() &amp;&amp; request.resource.data.get('k', '') == 'mdl');
+      allow delete: if isOwner() || (member() &amp;&amp; !isInv(resource.data));
+      allow update: if isOwner()
+        || (isBot() &amp;&amp; resource.data.get('k', '') == 'mq' &amp;&amp; request.resource.data.k == 'mq')
+        || (member() &amp;&amp; !isInv(resource.data) &amp;&amp; !isInv(request.resource.data))
+        // קבלן מהקישור: רק תשובות (טופל / שאלה) על הליקויים שנשלחו אליו. שום שדה אחר
+        || (
+          resource.data.get('k', '') == 'df' &amp;&amp; resource.data.st == 'v' &amp;&amp;
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['r', 'rt']) &amp;&amp;
+          request.resource.data.r is map &amp;&amp; request.resource.data.r.size() &lt;= 60
+        )
+        // גרסה 591: דייר אחרי מסירה (k == 'tw'): רק מוסיף דיווחים לרשימה q (עד 30), שום שדה אחר
+        || (
+          resource.data.get('k', '') == 'tw' &amp;&amp; resource.data.st == 'v' &amp;&amp;
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['q', 'qt']) &amp;&amp;
+          request.resource.data.q is list &amp;&amp; request.resource.data.q.size() &lt;= 30 &amp;&amp;
+          request.resource.data.q.size() &gt;= resource.data.get('q', []).size()
+        )
+        || (
+          resource.data.st == 'p' &amp;&amp; request.resource.data.st == 's' &amp;&amp;
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'sg', 'nm', 'ts']) &amp;&amp;
+          request.resource.data.sg is string &amp;&amp; request.resource.data.sg.size() &lt; 400000 &amp;&amp;
+          request.resource.data.nm is string &amp;&amp; request.resource.data.nm.size() &lt; 120 &amp;&amp;
+          // מי שמגיש בקשת הצטרפות — רק בשם המייל שאיתו נכנס בפועל, ורק לפני שפג התוקף
+          (!isInv(resource.data) || (signed() &amp;&amp; request.resource.data.nm == request.auth.token.email.lower() &amp;&amp; resource.data.get('exp', 0) &gt; request.time.toMillis()))
+        );
+    }
+    match /backups/{d} {
+      allow read, write: if isOwner();
+    }
+    // הגדרת פרויקט: רק מי שמורשה קורא, רק הבעלים כותב
+    match /projects/{pid} {
+      allow read: if hasProj(pid);
+      allow write: if isOwner();
+      // סיכום חי של הפרויקט (למנהלי אזור ולמהנדס הראשי) — כל חבר צוות בפרויקט מעדכן רק את שדה הסיכום
+      allow update: if hasProj(pid) &amp;&amp; request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sum']);
+    }
+    // תפקידים: editor = צוות האתר, store = מחסנאי, viewer = מפקח (צפייה), contractor = קבלן (ישן). מנהל = רק המייל של הבעלים
+    function role() { return get(/databases/$(database)/documents/team/$(request.auth.token.email)).data.get('role', 'editor'); }
+    function canEd(p) { return isOwner() || (hasProj(p) &amp;&amp; role() == 'editor'); }
+    function canTask(p) { return isOwner() || (hasProj(p) &amp;&amp; role() in ['editor', 'contractor']); }
+    function canMat(p) { return isOwner() || (hasProj(p) &amp;&amp; role() in ['editor', 'store']); }
+    function canPh(p) { return isOwner() || (hasProj(p) &amp;&amp; role() in ['editor', 'contractor', 'store']); }
+    function shape() { return request.resource.data.keys().hasOnly(['j', 'd', 'del', 't', 'by']); }
+    function okw(p, c) {
+      return shape() &amp;&amp; (
+        (c in ['cl', 'lists', 'appts', 'meta', 'log', 'dmg', 'x'] &amp;&amp; canEd(p)) ||
+        (c == 'tasks' &amp;&amp; canTask(p)) ||
+        (c == 'mat' &amp;&amp; canMat(p)) ||
+        (c == 'photos' &amp;&amp; canPh(p) &amp;&amp; (!('d' in request.resource.data) || request.resource.data.d.size() &lt; 900000))
+      );
+    }
+    // נתוני פרויקט חדש
+    match /projects/{pid}/{pc}/{pd} {
+      allow read: if (hasProj(pid) &amp;&amp; pc in ['cl','lists','tasks','log','appts','meta','photos','mat','dmg','x']) || (isBot() &amp;&amp; pc == 'photos');
+      allow create: if okw(pid, pc);
+      // גרסה 422: פרוטוקול מסירה חתום (x/hoS_*) — רק הבעלים משנה או מוחק. אחרי שהבעלים פתח אותו אפשר לחתום מחדש
+      allow update: if okw(pid, pc) &amp;&amp; (!(pc == 'x' &amp;&amp; pd.matches('hoS_.*')) || isOwner() || resource.data.get('del', 0) == 1);
+      allow delete: if isOwner() &amp;&amp; pc in ['cl','lists','tasks','log','appts','meta','photos','mat','dmg','x'];
+    }
+    // סאן מרטין 3 (הנתונים הקיימים, בלי שינוי מיקום)
+    match /{col}/{d} {
+      allow read: if (hasProj('sm3') &amp;&amp; col in ['cl','lists','tasks','log','appts','meta','photos','mat','dmg','x']) || (isBot() &amp;&amp; col == 'photos');
+      allow create: if okw('sm3', col);
+      allow update: if okw('sm3', col) &amp;&amp; (!(col == 'x' &amp;&amp; d.matches('hoS_.*')) || isOwner() || resource.data.get('del', 0) == 1);
+      allow delete: if isOwner() &amp;&amp; col in ['cl','lists','tasks','log','appts','meta','photos','mat','dmg','x'];
+    }
+  }
+}
+</pre>
+<script>b.onclick=async()=>{try{await navigator.clipboard.writeText(t.textContent);m.textContent='הועתק. עכשיו חזור ל-Firebase והדבק'}catch(e){const g=document.createRange();g.selectNodeContents(t);getSelection().removeAllRanges();getSelection().addRange(g);m.textContent='סומן. לחץ "העתק" בתפריט'}}</script></body></html>
