@@ -1,4 +1,4 @@
-/* גרסה 636: מנוע הדמיית שלד ומערכות (MDV). מצייר מודל קומה מקובץ JSON קטן — הכל מספריית אלמנטים קבועה.
+/* גרסה 636-637: מנוע הדמיית שלד ומערכות (MDV). מצייר מודל קומה מקובץ JSON קטן — הכל מספריית אלמנטים קבועה.
  מבנה המודל: {v:1,n,fh,
    walls:[{a:[x,z],b:[x,z],t,m:'c'|'blk'|'stone'|'alu',o?,h?, ops?:[{k:'win'|'door'|'ldoor'|'x',at,w,h,s?}]}]   ← ops = פתחים בקיר: at = מרחק מרכז הפתח מנקודה a, w רוחב, h גובה, s גובה אדן (דלת 0)
    cols:[{x,z,w,d}], slab:{t,holes?:[{k:'shaft'|'stair'|'x',x,z,w,d}]}|null,
@@ -40,7 +40,7 @@ function open(el,M,o){o=o||{};const W=el.clientWidth||360,H=el.clientHeight||480
   const mat=p=>new THREE.MeshStandardMaterial(Object.assign({roughness:.9,metalness:0},p));
   const tC=texConcrete(),tS=texStone(),tB=texBlock();
   const MC=mat({map:tC,bumpMap:tC,bumpScale:.04,color:0xa9a7a1}),MStone=mat({map:tS,roughness:.95}),MBlk=mat({map:tB,roughness:.95}),MAlu=mat({color:0xb9c3cc,metalness:.6,roughness:.35}),MRb=mat({color:0x3d2214,metalness:.5,roughness:.5}),MHole=mat({color:0x0d0d0e}),MRing=mat({color:0xf2c230,emissive:0x5a4200}),MMiss=mat({color:0xc0392b,emissive:0x770000});
-  const MGl=mat({color:0x8fc3e6,transparent:true,opacity:.32,roughness:.1,metalness:.2,depthWrite:false}),MDr=mat({color:0x2f6b43,transparent:true,opacity:.16,depthWrite:false}),MHl=mat({color:0xf2c230,transparent:true,opacity:.13,depthWrite:false});
+  const MFr=mat({color:0x5b6168,metalness:.65,roughness:.42}),MGl=mat({color:0x8fc3e6,transparent:true,opacity:.32,roughness:.1,metalness:.2,depthWrite:false}),MDr=mat({color:0x2f6b43,transparent:true,opacity:.16,depthWrite:false}),MHl=mat({color:0xf2c230,transparent:true,opacity:.13,depthWrite:false});
   const fh=M.fh||3,st=(M.slab&&M.slab.t)||.25,L={shell:new THREE.Group(),rebar:new THREE.Group(),sw:new THREE.Group(),sp:new THREE.Group(),el:new THREE.Group(),wt:new THREE.Group(),x:new THREE.Group(),slab:new THREE.Group()};Object.values(L).forEach(g=>S.add(g));
   const PK=[];const box=(g,w,h,d,x,y,z,m,ry)=>{const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);b.position.set(x,y,z);if(ry)b.rotation.y=ry;b.castShadow=b.receiveShadow=m.transparent?false:true;g.add(b);return b};
   const fm=n=>(+n).toFixed(2),dm=(a,b)=>'\u2066'+fm(a)+'×'+fm(b)+'\u2069';
@@ -50,7 +50,11 @@ function open(el,M,o){o=o||{};const W=el.clientWidth||360,H=el.clientHeight||480
     const piece=(s,e,y0,y1)=>{if(e-s<.01||y1-y0<.01)return;const c=(s+e)/2,px=x1+ux*c,pz=z1+uz*c;box(L.shell,e-s,y1-y0,t,px,(y0+y1)/2,pz,m,ang);if(cl)box(L.shell,e-s,y1-y0,.07,px-nx,(y0+y1)/2,pz+nz,cl,ang)};
     const ops=(w.ops||[]).map(p=>({p,s:Math.max(0,p.at-p.w/2),e:Math.min(len,p.at+p.w/2),y0:p.s!=null?p.s:(p.k=='win'?.9:0),y1:(p.s!=null?p.s:(p.k=='win'?.9:0))+p.h})).sort((a,b)=>a.s-b.s);
     let cur=0;ops.forEach(q=>{piece(cur,q.s,0,h);piece(q.s,q.e,0,q.y0);piece(q.s,q.e,Math.min(h,q.y1),h);cur=Math.max(cur,q.e);
-      const c=(q.s+q.e)/2,g=box(L.shell,q.e-q.s,Math.min(h,q.y1)-q.y0,t*.6,x1+ux*c,(q.y0+Math.min(h,q.y1))/2,z1+uz*c,q.p.k=='win'?MGl:MDr,ang);g.userData.info=(OPN[q.p.k]||'פתח')+' · '+dm(q.p.w,q.p.h)+(q.p.k=='win'?' · אדן '+fm(q.y0):'');PK.push(g)});
+      const c=(q.s+q.e)/2,g=box(L.shell,q.e-q.s,Math.min(h,q.y1)-q.y0,t*.6,x1+ux*c,(q.y0+Math.min(h,q.y1))/2,z1+uz*c,q.p.k=='win'?MGl:MDr,ang);g.userData.info=(OPN[q.p.k]||'פתח')+' · '+dm(q.p.w,q.p.h)+(q.p.k=='win'?' · אדן '+fm(q.y0):'')+(q.p.k=='door'?' · משקוף פלדה נוצק עם הקיר':'');PK.push(g);
+      /* גרסה 637: משקוף כניסה לדירה — נוצק עם הקיר. שתי מזוזות ומשקוף עליון, פרופיל שעוטף את עובי הקיר */
+      if(q.p.k=='door'){const fw=.055,fd=t+.05,yt=Math.min(h,q.y1),hh=yt-q.y0;[q.s+fw/2,q.e-fw/2].forEach(a=>{const f=box(L.shell,fw,hh,fd,x1+ux*a,q.y0+hh/2,z1+uz*a,MFr,ang);f.userData.info=g.userData.info;PK.push(f)});
+        const hd=box(L.shell,q.e-q.s,fw,fd,x1+ux*c,yt-fw/2,z1+uz*c,MFr,ang);hd.userData.info=g.userData.info;PK.push(hd);
+        [-1,1].forEach(sd=>{const nx2=Math.sin(-ang)*sd*(fd/2),nz2=Math.cos(-ang)*sd*(fd/2);[q.s-.012,q.e+.012].forEach(a=>box(L.shell,.024,hh+.024,.012,x1+ux*a-nx2,q.y0+(hh+.024)/2,z1+uz*a+nz2,MFr,ang));box(L.shell,q.e-q.s+.048,.024,.012,x1+ux*c-nx2,yt+.012,z1+uz*c+nz2,MFr,ang)})}});
     piece(cur,len,0,h)});
   (M.cols||[]).forEach(c=>box(L.shell,c.w||.4,fh,c.d||.4,c.x,fh/2,c.z,MC));
   (M.shaft||[]).forEach(c=>{const g=new THREE.Mesh(new THREE.BoxGeometry(c.w,.02,c.d),mat({color:0x22262b}));g.position.set(c.x,.02,c.z);L.shell.add(g)});
