@@ -10,11 +10,26 @@
  מטרים, מרכז הקומה ב-0,0 */
 (function(){
 const rnd=(()=>{let s=7;return()=>{s=(s*16807)%2147483647;return s/2147483647}})();
-function cnv(fn,s){s=s||256;const c=document.createElement('canvas');c.width=c.height=s;fn(c.getContext('2d'),s);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=4;return t}
-function texConcrete(){return cnv((g,s)=>{g.fillStyle='#9b9993';g.fillRect(0,0,s,s);for(let i=0;i<40;i++){const x=rnd()*s,y=rnd()*s,r=10+rnd()*50,gr=g.createRadialGradient(x,y,0,x,y,r),v=rnd()<.5?'255,255,255':'40,40,40';gr.addColorStop(0,`rgba(${v},${.05+rnd()*.06})`);gr.addColorStop(1,`rgba(${v},0)`);g.fillStyle=gr;g.fillRect(x-r,y-r,2*r,2*r)}for(let i=0;i<3000;i++){const v=rnd()<.5?255:0;g.fillStyle=`rgba(${v},${v},${v},${rnd()*.12})`;g.fillRect(rnd()*s,rnd()*s,1.5,1.5)}g.strokeStyle='rgba(60,60,60,.3)';g.lineWidth=2;g.strokeRect(1,1,s-2,s-2);g.fillStyle='rgba(35,35,35,.6)';for(const x of[.25,.75])for(const y of[.3,.7]){g.beginPath();g.arc(x*s,y*s,4,0,7);g.fill()}})}
-function texStone(){return cnv((g,s)=>{g.fillStyle='#bfb5a2';g.fillRect(0,0,s,s);const rows=6,rh=s/rows;for(let r=0;r<rows;r++){let x=-(r%2)*s/6;while(x<s){const w=s/4+rnd()*s/5,L=200+rnd()*25|0;g.fillStyle=`rgb(${L},${L-12|0},${L-34|0})`;g.fillRect(x+2,r*rh+2,w-4,rh-4);x+=w}}})}
-function texBlock(){return cnv((g,s)=>{g.fillStyle='#8f8f8b';g.fillRect(0,0,s,s);const rh=s/4;for(let r=0;r<4;r++)for(let k=-1;k<3;k++){g.fillStyle='#a7a6a1';g.fillRect(k*s/2+(r%2)*s/4+3,r*rh+3,s/2-6,rh-6)}})}
-const SYS={sw:[0x5d6166,'ביוב'],sp:[0xc0392b,'ספרינקלרים'],el:[0xff7a12,'חשמל'],wt:[0x2f7fd0,'מים'],x:[0x7c5cbf,'אחר']};
+function cnv(fn,s){s=s||256;const c=document.createElement('canvas');c.width=c.height=s;fn(c.getContext('2d'),s);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=8;t.encoding=THREE.sRGBEncoding;return t}
+/* גרסה 641: מרקמים בקנה מידה אמיתי — כל מרקם מכסה 2.44 מ' (לוח טפסנות), מוחל לפי מידות האלמנט (בלי מתיחה) */
+const TILE=2.44;
+function texConcrete(){return cnv((g,s)=>{g.fillStyle='#a6a39c';g.fillRect(0,0,s,s);
+  for(let i=0;i<90;i++){const x=rnd()*s,y=rnd()*s,r=20+rnd()*90,gr=g.createRadialGradient(x,y,0,x,y,r),v=rnd()<.5?'255,255,250':'60,58,55';gr.addColorStop(0,`rgba(${v},${.04+rnd()*.05})`);gr.addColorStop(1,`rgba(${v},0)`);g.fillStyle=gr;g.fillRect(x-r,y-r,2*r,2*r)}
+  for(let i=0;i<14000;i++){const v=rnd()<.5?255:0;g.fillStyle=`rgba(${v},${v},${v},${rnd()*.09})`;g.fillRect(rnd()*s,rnd()*s,1.2,1.2)}
+  for(let i=0;i<220;i++){g.fillStyle=`rgba(60,58,55,${.15+rnd()*.2})`;g.beginPath();g.arc(rnd()*s,rnd()*s,.4+rnd()*.8,0,7);g.fill()}  // בועות אוויר
+  g.strokeStyle='rgba(70,68,64,.35)';g.lineWidth=1.5;g.beginPath();g.moveTo(s/2,0);g.lineTo(s/2,s);g.moveTo(0,1);g.lineTo(s,1);g.moveTo(1,0);g.lineTo(1,s);g.stroke();  // מישקי לוחות טפסנות 1.22×2.44
+  g.fillStyle='rgba(45,43,40,.75)';for(let ix=0;ix<4;ix++)for(let iy=0;iy<4;iy++){const x=(ix+.5)*s/4,y=(iy+.5)*s/4;g.beginPath();g.arc(x,y,3.2,0,7);g.fill();g.fillStyle='rgba(120,118,112,.5)';g.beginPath();g.arc(x+.8,y+.8,1.6,0,7);g.fill();g.fillStyle='rgba(45,43,40,.75)'}  // חורי מותחנים
+ },512)}
+function texStone(){return cnv((g,s)=>{g.fillStyle='#8f8676';g.fillRect(0,0,s,s);const rows=8,rh=s/rows;  // נדבכים של 30 ס"מ
+  for(let r=0;r<rows;r++){let x=-rnd()*s/4;while(x<s){const w=s/6+rnd()*s/5,L=196+rnd()*30|0,t=rnd()*10;g.fillStyle=`rgb(${L},${L-10-t|0},${L-30-t|0})`;g.fillRect(x+2,r*rh+2,w-4,rh-4);
+      for(let k=0;k<60;k++){const v=rnd()<.5?255:0;g.fillStyle=`rgba(${v},${v},${v},${rnd()*.08})`;g.fillRect(x+2+rnd()*(w-4),r*rh+2+rnd()*(rh-4),2,2)}
+      const gr=g.createLinearGradient(0,r*rh,0,(r+1)*rh);gr.addColorStop(0,'rgba(255,255,255,.08)');gr.addColorStop(1,'rgba(0,0,0,.08)');g.fillStyle=gr;g.fillRect(x+2,r*rh+2,w-4,rh-4);x+=w}}
+},512)}
+function texBlock(){return cnv((g,s)=>{g.fillStyle='#8a8985';g.fillRect(0,0,s,s);const rows=12,rh=s/rows,bw=s/6;  // בלוק 40×20 בערך
+  for(let r=0;r<rows;r++)for(let k=-1;k<7;k++){const L=158+rnd()*18|0;g.fillStyle=`rgb(${L},${L-1},${L-5})`;g.fillRect(k*bw+(r%2)*bw/2+2,r*rh+2,bw-4,rh-4);for(let q=0;q<40;q++){const v=rnd()<.5?255:0;g.fillStyle=`rgba(${v},${v},${v},${rnd()*.1})`;g.fillRect(k*bw+(r%2)*bw/2+2+rnd()*(bw-4),r*rh+2+rnd()*(rh-4),2,2)}}},512)}
+/* UV לפי מידות: כל פאה של קופסה מקבלת מרקם ביחס למטרים האמיתיים שלה */
+function boxUV(geo,w,h,d,tile){const uv=geo.attributes.uv,dims=[[d,h],[d,h],[w,d],[w,d],[w,h],[w,h]];for(let f=0;f<6;f++)for(let i=0;i<4;i++){const k=f*4+i;uv.setXY(k,uv.getX(k)*dims[f][0]/tile,uv.getY(k)*dims[f][1]/tile)}uv.needsUpdate=true;return geo}
+const SYS={sw:[0x5d6166,'ביוב'],sp:[0xc0392b,'ספרינקלרים'],el:[0x1f5a2b,'חשמל'],wt:[0x2f7fd0,'מים'],x:[0x7c5cbf,'אחר']};
 const RW={8:.395,10:.617,12:.888,14:1.21,16:1.58,18:2.0,20:2.47,22:2.98,25:3.85,28:4.83,32:6.31};
 const OPN={win:'חלון',door:'דלת כניסה',ldoor:'דלת מעלית',x:'פתח'},HLN={shaft:'פיר מעלית',stair:'חלל מדרגות',x:'חור בתקרה'};
 function clipSeg(a,b,Z){let t0=0,t1=1;const dx=b[0]-a[0],dz=b[1]-a[1];for(const[p,q]of[[-dx,a[0]-Z[0]],[dx,Z[1]-a[0]],[-dz,a[1]-Z[2]],[dz,Z[3]-a[1]]]){if(p==0){if(q<0)return null}else{const r=q/p;if(p<0){if(r>t1)return null;if(r>t0)t0=r}else{if(r<t0)return null;if(r<t1)t1=r}}}if(t1-t0<.001)return null;return[t0,t1]}
@@ -35,15 +50,29 @@ function holes(M){const H=((M.slab||{}).holes||[]).slice();(M.shaft||[]).forEach
 /* חיסור קטעים: [a,b] פחות רשימת חורים */
 function sub(a,b,cut){let I=[[a,b]];cut.forEach(([c,d])=>{const N=[];I.forEach(([x,y])=>{if(d<=x||c>=y){N.push([x,y]);return}if(c>x)N.push([x,c]);if(d<y)N.push([d,y])});I=N});return I.filter(([x,y])=>y-x>.05)}
 
-function open(el,M,o){o=o||{};const W=el.clientWidth||360,H=el.clientHeight||480;const R=new THREE.WebGLRenderer({antialias:true});R.setPixelRatio(Math.min(2,window.devicePixelRatio||1));R.setSize(W,H);R.shadowMap.enabled=true;R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=.85;el.appendChild(R.domElement);
-  const S=new THREE.Scene();S.background=new THREE.Color(0xdfe3e6);const C=new THREE.PerspectiveCamera(38,W/H,.1,400);
-  S.add(new THREE.HemisphereLight(0xeef3ff,0x8a8378,.65));const sun=new THREE.DirectionalLight(0xfff0d8,1);sun.position.set(-18,30,14);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-25,right:25,top:25,bottom:-25,far:90});S.add(sun);
-  const mat=p=>new THREE.MeshStandardMaterial(Object.assign({roughness:.9,metalness:0},p));
+function open(el,M,o){o=o||{};const W=el.clientWidth||360,H=el.clientHeight||480;const R=new THREE.WebGLRenderer({antialias:true});R.setPixelRatio(Math.min(2,window.devicePixelRatio||1));R.setSize(W,H);R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=.9;el.appendChild(R.domElement);if(getComputedStyle(el).position=='static')el.style.position='relative';{const vg=document.createElement('div');vg.className='mdv-vg';vg.style.cssText='position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 45%,transparent 60%,rgba(20,22,26,.18))';el.appendChild(vg)};
+  const S=new THREE.Scene();const C=new THREE.PerspectiveCamera(36,W/H,.1,600);
+  /* גרסה 641: שמיים ותאורה סביבתית — השתקפויות אמיתיות באלומיניום ובזכוכית, צל רך מהשמש */
+  const skyC=document.createElement('canvas');skyC.width=4;skyC.height=256;{const g=skyC.getContext('2d'),gr=g.createLinearGradient(0,0,0,256);gr.addColorStop(0,'#b9cce0');gr.addColorStop(.55,'#e4eaef');gr.addColorStop(.62,'#eceae4');gr.addColorStop(1,'#cfcac0');g.fillStyle=gr;g.fillRect(0,0,4,256)}
+  const skyT=new THREE.CanvasTexture(skyC);skyT.encoding=THREE.sRGBEncoding;S.background=skyT;
+  try{const es=new THREE.Scene(),sph=new THREE.Mesh(new THREE.SphereGeometry(50,32,16),new THREE.MeshBasicMaterial({map:skyT,side:THREE.BackSide}));es.add(sph);const sunB=new THREE.Mesh(new THREE.SphereGeometry(4,16,8),new THREE.MeshBasicMaterial({color:0xfff6e0}));sunB.position.set(-25,32,20);es.add(sunB);
+    const pm=new THREE.PMREMGenerator(R);S.environment=pm.fromScene(es,.02).texture;pm.dispose()}catch(e){}
+  S.add(new THREE.HemisphereLight(0xe8f0ff,0x8a8374,.3));const sun=new THREE.DirectionalLight(0xffe8c8,1.85);sun.castShadow=true;sun.shadow.mapSize.set((window.devicePixelRatio||1)>=2&&R.capabilities.maxTextureSize>=8192?4096:2048,(window.devicePixelRatio||1)>=2&&R.capabilities.maxTextureSize>=8192?4096:2048);sun.shadow.bias=-.0004;sun.shadow.normalBias=.03;S.add(sun);S.add(sun.target);
+  const fill=new THREE.DirectionalLight(0xdce8ff,.28);S.add(fill);
+  const mat=p=>{const m=new THREE.MeshStandardMaterial(Object.assign({roughness:.9,metalness:0},p));if(p&&p.color!=null&&!p.map)m.color.convertSRGBToLinear();if(p&&p.emissive!=null)m.emissive.convertSRGBToLinear();return m};
   const tC=texConcrete(),tS=texStone(),tB=texBlock();
-  const MC=mat({map:tC,bumpMap:tC,bumpScale:.04,color:0xa9a7a1}),MStone=mat({map:tS,roughness:.95}),MBlk=mat({map:tB,roughness:.95}),MAlu=mat({color:0xb9c3cc,metalness:.6,roughness:.35}),MRb=mat({color:0x3d2214,metalness:.5,roughness:.5}),MHole=mat({color:0x0d0d0e}),MRing=mat({color:0xf2c230,emissive:0x5a4200}),MMiss=mat({color:0xc0392b,emissive:0x770000});
-  const MFr=mat({color:0x5b6168,metalness:.65,roughness:.42}),MGl=mat({color:0x8fc3e6,transparent:true,opacity:.32,roughness:.1,metalness:.2,depthWrite:false}),MDr=mat({color:0x2f6b43,transparent:true,opacity:.16,depthWrite:false}),MHl=mat({color:0xf2c230,transparent:true,opacity:.13,depthWrite:false});
+  const MC=mat({map:tC,bumpMap:tC,bumpScale:.025,roughness:.88,envMapIntensity:.55}),MStone=mat({map:tS,bumpMap:tS,bumpScale:.02,roughness:.82,envMapIntensity:.5}),MBlk=mat({map:tB,bumpMap:tB,bumpScale:.02,roughness:.95,envMapIntensity:.4}),MAlu=mat({color:0xc9d1d7,metalness:.9,roughness:.26,envMapIntensity:1.2}),MRb=mat({color:0x4a2416,metalness:.25,roughness:.6,envMapIntensity:.25}),MHole=mat({color:0x0d0d0e}),MRing=mat({color:0xf2c230,emissive:0x5a4200}),MMiss=mat({color:0xc0392b,emissive:0x770000});
+  const tGv=cnv((g,q)=>{g.fillStyle='#b8bdc1';g.fillRect(0,0,q,q);for(let i=0;i<900;i++){const x=rnd()*q,y=rnd()*q,r=4+rnd()*10,L=170+rnd()*60|0;g.fillStyle=`rgba(${L},${L+3},${L+6},.55)`;g.beginPath();const n=5+(rnd()*3|0);for(let k=0;k<n;k++){const a=k/n*6.283+rnd()*.5,rr=r*(.6+rnd()*.5);g.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}g.fill()}},512);
+  tGv.wrapS=tGv.wrapT=THREE.RepeatWrapping;
+  /* גרסה 642: משקוף פלדה מגולוון — כסוף עם "פרחי" גלוון, לא אפור כהה */
+  const MFr=mat({map:tGv,color:0xd8dde0,metalness:.8,roughness:.42,envMapIntensity:1.15}),MGl=mat({color:0xa8cbe0,transparent:true,opacity:.38,roughness:.04,metalness:.35,envMapIntensity:1.6,depthWrite:false}),MDr=mat({color:0x2f6b43,transparent:true,opacity:.16,depthWrite:false}),MHl=mat({color:0xf2c230,transparent:true,opacity:.13,depthWrite:false});
+  /* גרסה 642: הצללה במפגשים (AO) — כהות עדינה איפה שקיר פוגש רצפה. זה מה שהופך הדמיה ל"אמיתית" */
+  const aoT=cnv((g,s)=>{const gr=g.createLinearGradient(0,0,0,s);gr.addColorStop(0,'rgba(0,0,0,.55)');gr.addColorStop(.25,'rgba(0,0,0,.22)');gr.addColorStop(.6,'rgba(0,0,0,.05)');gr.addColorStop(1,'rgba(0,0,0,0)');g.clearRect(0,0,s,s);g.fillStyle=gr;g.fillRect(0,0,s,s)},64);aoT.encoding=THREE.LinearEncoding;
+  const MAO=new THREE.MeshBasicMaterial({map:aoT,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2}),MEd=new THREE.LineBasicMaterial({color:0x2c2f33,transparent:true,opacity:.28});
+  const E0=ext(M),inE=(x,z)=>!E0||(x>E0[0]+.05&&x<E0[1]-.05&&z>E0[2]+.05&&z<E0[3]-.05);
+  const aoStrip=(g,len,cx,cz,ang,ox,oz,wd)=>{if(!inE(cx+ox,cz+oz))return null;const m=new THREE.Mesh(new THREE.PlaneGeometry(len,wd),MAO);m.rotation.set(-Math.PI/2,0,0);const o=new THREE.Group();o.add(m);m.position.set(0,0,0);o.position.set(cx+ox,.004,cz+oz);o.rotation.y=ang;g.add(o);return o};
   const fh=M.fh||3,st=(M.slab&&M.slab.t)||.25,L={shell:new THREE.Group(),rebar:new THREE.Group(),sw:new THREE.Group(),sp:new THREE.Group(),el:new THREE.Group(),wt:new THREE.Group(),x:new THREE.Group(),slab:new THREE.Group()};Object.values(L).forEach(g=>S.add(g));
-  const PK=[];const box=(g,w,h,d,x,y,z,m,ry)=>{const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);b.position.set(x,y,z);if(ry)b.rotation.y=ry;b.castShadow=b.receiveShadow=m.transparent?false:true;g.add(b);return b};
+  const PK=[];const box=(g,w,h,d,x,y,z,m,ry)=>{const geo=new THREE.BoxGeometry(w,h,d);if(m.map)boxUV(geo,w,h,d,m===MBlk?TILE*.66:TILE);const b=new THREE.Mesh(geo,m);b.position.set(x,y,z);if(ry)b.rotation.y=ry;if((m===MC||m===MStone||m===MBlk)&&Math.max(w,h,d)>.3)b.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo),MEd));b.castShadow=b.receiveShadow=m.transparent?false:true;g.add(b);return b};
   const fm=n=>(+n).toFixed(2),dm=(a,b)=>'\u2066'+fm(a)+'×'+fm(b)+'\u2069';
   /* קיר עם פתחים: חלקים מלאים בין הפתחים, מעל ומתחת לכל פתח */
   (M.walls||[]).forEach(w=>{const[x1,z1]=w.a,[x2,z2]=w.b,len=Math.hypot(x2-x1,z2-z1),t=w.t||.25,h=w.h||fh,ang=-Math.atan2(z2-z1,x2-x1),cx=(x1+x2)/2,cz=(z1+z2)/2,ux=(x2-x1)/len,uz=(z2-z1)/len;
@@ -52,11 +81,18 @@ function open(el,M,o){o=o||{};const W=el.clientWidth||360,H=el.clientHeight||480
     const ops=(w.ops||[]).map(p=>({p,s:Math.max(0,p.at-p.w/2),e:Math.min(len,p.at+p.w/2),y0:p.s!=null?p.s:(p.k=='win'?.9:0),y1:(p.s!=null?p.s:(p.k=='win'?.9:0))+p.h})).sort((a,b)=>a.s-b.s);
     let cur=0;ops.forEach(q=>{piece(cur,q.s,0,h);piece(q.s,q.e,0,q.y0);piece(q.s,q.e,Math.min(h,q.y1),h);cur=Math.max(cur,q.e);
       const c=(q.s+q.e)/2,g=box(L.shell,q.e-q.s,Math.min(h,q.y1)-q.y0,t*.6,x1+ux*c,(q.y0+Math.min(h,q.y1))/2,z1+uz*c,q.p.k=='win'?MGl:MDr,ang);g.userData.info=(OPN[q.p.k]||'פתח')+' · '+dm(q.p.w,q.p.h)+(q.p.k=='win'?' · אדן '+fm(q.y0):'')+(q.p.k=='door'?' · משקוף פלדה נוצק עם הקיר':'');PK.push(g);
+      /* גרסה 642: חלון — מסגרת אלומיניום, מחיצה באמצע ואדן אבן */
+      if(q.p.k=='win'){const yt=Math.min(h,q.y1),hh=yt-q.y0,fw=.05,fd=.07,wd=q.e-q.s;[q.s+fw/2,q.e-fw/2,c].forEach((a,i)=>{if(i==2&&wd<1)return;box(L.shell,fw*(i==2?.8:1),hh,fd,x1+ux*a,q.y0+hh/2,z1+uz*a,MAlu,ang)});
+        [q.y0+fw/2,yt-fw/2].forEach(y=>box(L.shell,wd,fw,fd,x1+ux*c,y,z1+uz*c,MAlu,ang));
+        box(L.shell,wd+.08,.04,t+.08,x1+ux*c,q.y0-.02,z1+uz*c,MStone,ang)}
       /* גרסה 637: משקוף כניסה לדירה — נוצק עם הקיר. שתי מזוזות ומשקוף עליון, פרופיל שעוטף את עובי הקיר */
       if(q.p.k=='door'){const fw=.055,fd=t+.05,yt=Math.min(h,q.y1),hh=yt-q.y0;[q.s+fw/2,q.e-fw/2].forEach(a=>{const f=box(L.shell,fw,hh,fd,x1+ux*a,q.y0+hh/2,z1+uz*a,MFr,ang);f.userData.info=g.userData.info;PK.push(f)});
         const hd=box(L.shell,q.e-q.s,fw,fd,x1+ux*c,yt-fw/2,z1+uz*c,MFr,ang);hd.userData.info=g.userData.info;PK.push(hd);
         [-1,1].forEach(sd=>{const nx2=Math.sin(-ang)*sd*(fd/2),nz2=Math.cos(-ang)*sd*(fd/2);[q.s-.012,q.e+.012].forEach(a=>box(L.shell,.024,hh+.024,.012,x1+ux*a-nx2,q.y0+(hh+.024)/2,z1+uz*a+nz2,MFr,ang));box(L.shell,q.e-q.s+.048,.024,.012,x1+ux*c-nx2,yt+.012,z1+uz*c+nz2,MFr,ang)})}});
-    piece(cur,len,0,h)});
+    piece(cur,len,0,h);
+    [-1,1].forEach(sd=>{const off=t/2+.22,o=aoStrip(L.shell,len+.2,cx,cz,ang,Math.sin(-ang)*sd*off,Math.cos(-ang)*sd*off,.44);if(o)o.children[0].rotation.z=sd>0?Math.PI:0})});
+  const aoR=cnv((g,q)=>{g.clearRect(0,0,q,q);const r=q/2,gr=g.createRadialGradient(r,r,r*.3,r,r,r);gr.addColorStop(0,'rgba(0,0,0,.5)');gr.addColorStop(.35,'rgba(0,0,0,.2)');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,0,q,q)},128),MAOr=new THREE.MeshBasicMaterial({map:aoR,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});
+  (M.cols||[]).forEach(c=>{const m=new THREE.Mesh(new THREE.PlaneGeometry((c.w||.4)+.9,(c.d||.4)+.9),MAOr);m.rotation.x=-Math.PI/2;m.position.set(c.x,.004,c.z);L.shell.add(m)});
   (M.cols||[]).forEach(c=>box(L.shell,c.w||.4,fh,c.d||.4,c.x,fh/2,c.z,MC));
   (M.shaft||[]).forEach(c=>{const g=new THREE.Mesh(new THREE.BoxGeometry(c.w,.02,c.d),mat({color:0x22262b}));g.position.set(c.x,.02,c.z);L.shell.add(g)});
   (M.stair||[]).forEach(c=>{const n=12;for(let i=0;i<n;i++)box(L.shell,c.w,(i+1)*fh/n/2,c.d/n,c.x,(i+1)*fh/n/4,c.z-c.d/2+(i+.5)*c.d/n,MC)});
@@ -65,19 +101,52 @@ function open(el,M,o){o=o||{};const W=el.clientWidth||360,H=el.clientHeight||480
     /* תקרה (ורצפת הקומה) עם חורים אמיתיים לפיר ולמדרגות */
     const slabG=th=>{const sh=new THREE.Shape();sh.moveTo(mnx,-mnz);sh.lineTo(mxx,-mnz);sh.lineTo(mxx,-mxz);sh.lineTo(mnx,-mxz);sh.lineTo(mnx,-mnz);
       HL.forEach(h=>{const p=new THREE.Path(),a=h.x-h.w/2,b=h.x+h.w/2,c=-(h.z-h.d/2),d=-(h.z+h.d/2);p.moveTo(a,c);p.lineTo(a,d);p.lineTo(b,d);p.lineTo(b,c);p.lineTo(a,c);sh.holes.push(p)});
-      const g=new THREE.ExtrudeGeometry(sh,{depth:th,bevelEnabled:false});g.rotateX(-Math.PI/2);const uv=g.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)/3,uv.getY(i)/3);return g};
+      const g=new THREE.ExtrudeGeometry(sh,{depth:th,bevelEnabled:false});g.rotateX(-Math.PI/2);const uv=g.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)/TILE,uv.getY(i)/TILE);return g};
     tC.wrapS=tC.wrapT=THREE.RepeatWrapping;
     const fl=new THREE.Mesh(slabG(.3),MC);fl.position.y=-.3;fl.receiveShadow=true;L.shell.add(fl);
     if(M.slab!==null){const sl=new THREE.Mesh(slabG(st),mat({map:tC,color:0xa9a7a1,transparent:true,opacity:.55}));sl.position.y=fh;L.slab.add(sl)}
     HL.forEach(h=>{const g=box(L.slab,h.w,st,h.d,h.x,fh+st/2,h.z,MHl);g.userData.info=(HLN[h.k]||'חור בתקרה')+' · '+dm(h.w,h.d);PK.push(g)});
     /* רשת ברזל תקרה — המוטות נקטעים בחורים */
-    const bar=new THREE.CylinderGeometry(.009,.009,1,6),o2=new THREE.Object3D(),seg=[];
+    const bar=new THREE.CylinderGeometry(.009,.009,1,8),o2=new THREE.Object3D(),seg=[];
     for(let x=mnx+.15;x<mxx;x+=.3){const cut=HL.filter(h=>Math.abs(h.x-x)<h.w/2).map(h=>[h.z-h.d/2,h.z+h.d/2]);sub(mnz+.1,mxz-.1,cut).forEach(([a,b])=>seg.push([x,(a+b)/2,b-a,0]))}
     for(let z=mnz+.15;z<mxz;z+=.3){const cut=HL.filter(h=>Math.abs(h.z-z)<h.d/2).map(h=>[h.x-h.w/2,h.x+h.w/2]);sub(mnx+.1,mxx-.1,cut).forEach(([a,b])=>seg.push([(a+b)/2,z,b-a,1]))}
     const im=new THREE.InstancedMesh(bar,MRb,seg.length);seg.forEach((s,k)=>{if(s[3]){o2.position.set(s[0],fh+.08,s[1]);o2.rotation.set(0,0,Math.PI/2)}else{o2.position.set(s[0],fh+.06,s[1]);o2.rotation.set(Math.PI/2,0,0)}o2.scale.set(1.6,s[2],1.6);o2.updateMatrix();im.setMatrixAt(k,o2.matrix)});L.rebar.add(im);
-    (M.starters||[]).forEach(s=>{const[x1,z1]=s.a,[x2,z2]=s.b,len=Math.hypot(x2-x1,z2-z1),n=Math.max(1,Math.floor(len/.2));for(let i=0;i<=n;i++){const t=i/n;const r=new THREE.Mesh(bar,MRb);r.scale.set(1.8,1,1.8);r.position.set(x1+(x2-x1)*t,fh+.6,z1+(z2-z1)*t);L.rebar.add(r)}})}
+    /* גרסה 642: קשירות חוט בצמתים וספייסרים (כיסאות) מתחת לרשת */
+    {const knot=new THREE.SphereGeometry(.014,6,4),MTie=mat({color:0x2a2a2a,metalness:.6,roughness:.5}),pts=[];
+     for(let x=mnx+.15;x<mxx;x+=.6)for(let z=mnz+.15;z<mxz;z+=.6){if(!HL.some(h=>Math.abs(h.x-x)<h.w/2&&Math.abs(h.z-z)<h.d/2))pts.push([x,z])}
+     const ki=new THREE.InstancedMesh(knot,MTie,pts.length);pts.forEach((p,k)=>{o2.position.set(p[0],fh+.07,p[1]);o2.rotation.set(0,0,0);o2.scale.set(1,.7,1);o2.updateMatrix();ki.setMatrixAt(k,o2.matrix)});L.rebar.add(ki);
+     const ch=new THREE.CylinderGeometry(.018,.03,.05,8),MCh=mat({color:0x9a9a92,roughness:.8}),cp=pts.filter((p,i)=>i%4==0);
+     const ci=new THREE.InstancedMesh(ch,MCh,cp.length);cp.forEach((p,k)=>{o2.position.set(p[0]+.15,fh+.025,p[1]+.15);o2.scale.set(1,1,1);o2.updateMatrix();ci.setMatrixAt(k,o2.matrix)});L.rebar.add(ci)}
+    (M.starters||[]).forEach(s=>{const[x1,z1]=s.a,[x2,z2]=s.b,len=Math.hypot(x2-x1,z2-z1),n=Math.max(1,Math.floor(len/.2));for(let i=0;i<=n;i++){const t=i/n;const r=new THREE.Mesh(bar,MRb);r.scale.set(1.8,1,1.8);r.position.set(x1+(x2-x1)*t,fh+.6,z1+(z2-z1)*t);L.rebar.add(r)}[.35,.85].forEach(y=>{const hb=new THREE.Mesh(bar,MRb);hb.scale.set(1.4,len,1.4);hb.position.set((x1+x2)/2,fh+y,(z1+z2)/2);hb.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(x2-x1,0,z2-z1).normalize());L.rebar.add(hb)})})}
   const V=(p)=>new THREE.Vector3(p[0],p[1],p[2]);
-  (M.pipes||[]).forEach(p=>{const g=L[p.s]||L.x,m=mat({color:(SYS[p.s]||SYS.x)[0],roughness:.4,metalness:.3});for(let i=0;i<p.pts.length-1;i++){const a=V(p.pts[i]),b=V(p.pts[i+1]),v=b.clone().sub(a),l=v.length();if(l<.01)continue;const c=new THREE.Mesh(new THREE.CylinderGeometry(p.r||.05,p.r||.05,l,14),m);c.position.copy(a).add(v.multiplyScalar(.5));c.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),b.clone().sub(a).normalize());c.castShadow=true;g.add(c)}});
+  /* גרסה 642: מערכות ברמת פרט — כל מערכת נראית כמו בשטח:
+     ספרינקלרים: צינור פלדה אדום, מצמדי חריץ בכל חיבור, ראש מתז (גוף פליז, מסגרת, מפזר ונורת זכוכית אדומה), תליות לתקרה
+     חשמל: צינור שרשורי (מצולע) עם קופסאות חיבור בקצוות · מים: צינור עם מחברים בכל מפרק · ביוב: PVC עם פעמון בכל חיבור */
+  const ribT=cnv((g,q)=>{g.fillStyle='#fff';g.fillRect(0,0,q,q);for(let i=0;i<16;i++){const gr=g.createLinearGradient(0,i*q/16,0,(i+1)*q/16);gr.addColorStop(0,'#fff');gr.addColorStop(.5,'#555');gr.addColorStop(1,'#fff');g.fillStyle=gr;g.fillRect(0,i*q/16,q,q/16)}},64);ribT.encoding=THREE.LinearEncoding;
+  const MRod0=0;const MBrass=mat({color:0xc9a24a,metalness:.85,roughness:.3,envMapIntensity:1.2}),MBulb=mat({color:0xff2a1a,transparent:true,opacity:.85,roughness:.05,emissive:0x400000}),MRod=mat({color:0x8d949a,metalness:.8,roughness:.4}),MCpl=mat({color:0x2b2e33,metalness:.6,roughness:.45}),MBox=mat({color:0xe9e4d8,roughness:.6});
+  const UP=new THREE.Vector3(0,1,0),cyl=(g,a,b,r,m,seg)=>{const v=b.clone().sub(a),l=v.length();if(l<.005)return null;const c=new THREE.Mesh(new THREE.CylinderGeometry(r,r,l,seg||14),m);c.position.copy(a).add(v.clone().multiplyScalar(.5));c.quaternion.setFromUnitVectors(UP,v.normalize());c.castShadow=true;c.receiveShadow=true;g.add(c);return c};
+  const head=(g,P)=>{const H=new THREE.Group();H.position.copy(P);  // ראש מתז תלוי
+    const nip=new THREE.Mesh(new THREE.CylinderGeometry(.011,.013,.05,10),MBrass);nip.position.y=-.025;H.add(nip);
+    [-1,1].forEach(sd=>{const arm=new THREE.Mesh(new THREE.BoxGeometry(.005,.045,.006),MBrass);arm.position.set(sd*.012,-.07,0);H.add(arm)});
+    const bulb=new THREE.Mesh(new THREE.CylinderGeometry(.0035,.0035,.022,8),MBulb);bulb.position.y=-.068;H.add(bulb);
+    const def=new THREE.Mesh(new THREE.CylinderGeometry(.022,.022,.003,16),MBrass);def.position.y=-.094;H.add(def);
+    for(let k=0;k<8;k++){const t=new THREE.Mesh(new THREE.BoxGeometry(.008,.003,.003),MBrass);const an=k*Math.PI/4;t.position.set(Math.cos(an)*.026,-.094,Math.sin(an)*.026);t.rotation.y=-an;H.add(t)}
+    H.traverse(o=>{o.castShadow=true});g.add(H);return H};
+  (M.pipes||[]).forEach(p=>{const g=L[p.s]||L.x,col=(SYS[p.s]||SYS.x)[0],r=p.r||.05,pts=p.pts.map(V);
+    const isEl=p.s=='el',m=isEl?(()=>{const t=ribT.clone();t.needsUpdate=true;t.wrapS=t.wrapT=THREE.RepeatWrapping;return mat({color:col,roughness:.55,bumpMap:t,bumpScale:.006})})():mat({color:col,roughness:p.s=='sw'?.55:.32,metalness:p.s=='sp'?.45:.1,envMapIntensity:.8});
+    let run=0;for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1],l=a.distanceTo(b);if(l<.01)continue;const c=cyl(g,a,b,r,m,isEl?10:18);
+      if(isEl&&c){c.material=m.clone();c.material.bumpMap=m.bumpMap.clone();c.material.bumpMap.needsUpdate=true;c.material.bumpMap.wrapS=c.material.bumpMap.wrapT=THREE.RepeatWrapping;c.material.bumpMap.repeat.set(1,l/.06)}
+      const d=b.clone().sub(a).normalize(),horiz=Math.abs(d.y)<.5;
+      // מצמדים / פעמונים כל 6 מ' ובקצוות
+      if(p.s=='sp'||p.s=='sw'||p.s=='wt'){const step=p.s=='sp'?6:p.s=='sw'?3:2.5;for(let t=step;t<l-.1;t+=step){const q=a.clone().add(d.clone().multiplyScalar(t));cyl(g,q.clone().add(d.clone().multiplyScalar(-.03)),q.clone().add(d.clone().multiplyScalar(.03)),r*1.22,p.s=='sp'?MCpl:m,20)}}
+      // תליות לתקרה (מוט הברגה + חבק) כל 2.5 מ' בקטעים אופקיים
+      if(horiz&&!isEl&&a.y<fh-.05){for(let t=.6;t<l-.2;t+=2.5){const q=a.clone().add(d.clone().multiplyScalar(t));cyl(g,new THREE.Vector3(q.x,q.y+r,q.z),new THREE.Vector3(q.x,fh,q.z),.006,MRod,8);const cl=new THREE.Mesh(new THREE.TorusGeometry(r+.006,.004,6,20),MRod);cl.position.copy(q);cl.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),d);g.add(cl)}}
+      // ראשי מתזים כל ~3 מ' בצינורות ספרינקלר אופקיים
+      if(p.s=='sp'&&horiz){for(let t=1.4;t<l-.3;t+=3){const q=a.clone().add(d.clone().multiplyScalar(t));const tee=cyl(g,q,new THREE.Vector3(q.x,q.y-r-.03,q.z),r*.45,m,12);head(g,new THREE.Vector3(q.x,q.y-r-.03,q.z))}}
+      run+=l}
+    // מפרקים: כדור/זווית בכל פינה, קופסת חיבור בקצה צינור חשמל
+    for(let i=1;i<pts.length-1;i++){const e=new THREE.Mesh(new THREE.SphereGeometry(r*(isEl?1.05:1.18),16,12),p.s=='sp'?MCpl:m);e.position.copy(pts[i]);e.castShadow=true;g.add(e)}
+    if(isEl)[pts[0],pts[pts.length-1]].forEach(P=>{const bx=new THREE.Mesh(new THREE.BoxGeometry(.09,.09,.06),MBox);bx.position.copy(P);bx.castShadow=true;g.add(bx);const lid=new THREE.Mesh(new THREE.BoxGeometry(.075,.075,.004),mat({color:0xffffff,roughness:.4}));lid.position.copy(P);lid.position.z+=.032;g.add(lid)})});
   (M.open||[]).forEach(h=>{const g=L[h.s]||L.x,r=h.r||.1,G=new THREE.Group(),hole=new THREE.Mesh(new THREE.CylinderGeometry(r,r,.34,24),h.miss?MMiss:MHole);hole.rotation.x=Math.PI/2;const ring=new THREE.Mesh(new THREE.TorusGeometry(r+.012,.016,8,32),h.miss?MMiss:MRing);ring.position.z=.17;const r2=ring.clone();r2.position.z=-.17;G.add(hole,ring,r2);G.position.set(h.a[0],h.a[1],h.a[2]);if(h.ax=='x')G.rotation.y=Math.PI/2;if(h.ax=='y')G.rotation.x=Math.PI/2;g.add(G);hole.userData.info=(h.miss?'⚠ פתח חסר בתוכנית · ':'')+((SYS[h.s]||SYS.x)[1])+' · קוטר '+Math.round(r*200)+' ס״מ';PK.push(hole)});
   /* גרסה 638: התוכנית המקורית מתחת למודל (שכבה 'pl') — לבדיקה בעין שהמודל תואם לתוכנית */
   L.pl=new THREE.Group();S.add(L.pl);L.pl.visible=false;
@@ -87,7 +156,13 @@ function open(el,M,o){o=o||{};const W=el.clientWidth||360,H=el.clientHeight||480
     const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));sp.renderOrder=9;sp.position.set((z.r[0]+z.r[1])/2,fh+1.3,(z.r[2]+z.r[3])/2);sp.scale.set(2.6,.975,1);sp.userData.zone=z.k;S.add(sp);PK.push(sp)});
   // camera orbit
   const ctr=new THREE.Vector3((mnx+mxx)/2,1.2,(mnz+mxz)/2),span=Math.max(mxx-mnx,mxz-mnz,6);let th=2.3,ph=.95,rd=span*1.35;
-  const put=()=>{C.position.set(ctr.x+Math.cos(th)*Math.sin(ph)*rd,ctr.y+Math.cos(ph)*rd,ctr.z+Math.sin(th)*Math.sin(ph)*rd);C.lookAt(ctr)};put();
+  /* גרסה 641: תנועת מצלמה חלקה (ריכוך) + שמש, קרקע וערפל לפי גודל המודל */
+  let cth=th,cph=ph,crd=rd;const place=()=>{C.position.set(ctr.x+Math.cos(cth)*Math.sin(cph)*crd,ctr.y+Math.cos(cph)*crd,ctr.z+Math.sin(cth)*Math.sin(cph)*crd);C.lookAt(ctr)};const put=()=>{};place();
+  sun.position.set(ctr.x-span*.9,span*.95+8,ctr.z+span*.6);sun.target.position.copy(ctr);const sh=span*.85+4;Object.assign(sun.shadow.camera,{left:-sh,right:sh,top:sh,bottom:-sh,near:1,far:span*4+60});sun.shadow.camera.updateProjectionMatrix();fill.position.set(ctr.x+span,span*.6,ctr.z-span);
+  {const gp=new THREE.Mesh(new THREE.PlaneGeometry(span*8,span*8),new THREE.ShadowMaterial({opacity:.22}));gp.rotation.x=-Math.PI/2;gp.position.set(ctr.x,-.005,ctr.z);gp.receiveShadow=true;S.add(gp);
+   const gc=document.createElement('canvas');gc.width=gc.height=256;const g=gc.getContext('2d'),gr=g.createRadialGradient(128,128,0,128,128,128);gr.addColorStop(0,'rgba(170,164,152,.55)');gr.addColorStop(.6,'rgba(190,185,175,.25)');gr.addColorStop(1,'rgba(220,218,212,0)');g.fillStyle=gr;g.fillRect(0,0,256,256);
+   const gb=new THREE.Mesh(new THREE.PlaneGeometry(span*3.2,span*3.2),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(gc),transparent:true,depthWrite:false}));gb.rotation.x=-Math.PI/2;gb.position.set(ctr.x,-.01,ctr.z);gb.renderOrder=-1;S.add(gb)}
+  S.fog=new THREE.Fog(0xe6e8e8,span*2.6,span*7);
   const P=new Map();let d0=0,mv=0,dn=null;const cv=R.domElement;cv.style.touchAction='none';
   cv.addEventListener('pointerdown',e=>{P.set(e.pointerId,[e.clientX,e.clientY]);if(P.size==1){mv=0;dn=[e.clientX,e.clientY]}else mv=99;if(P.size==2){const v=[...P.values()];d0=Math.hypot(v[0][0]-v[1][0],v[0][1]-v[1][1])}});
   cv.addEventListener('pointermove',e=>{if(!P.has(e.pointerId))return;const p=P.get(e.pointerId);if(dn)mv=Math.max(mv,Math.hypot(e.clientX-dn[0],e.clientY-dn[1]));if(P.size==1){th+=(e.clientX-p[0])*.008;ph=Math.max(.15,Math.min(1.5,ph-(e.clientY-p[1])*.006))}P.set(e.pointerId,[e.clientX,e.clientY]);if(P.size==2){const v=[...P.values()],d=Math.hypot(v[0][0]-v[1][0],v[0][1]-v[1][1]);if(d0)rd=Math.max(span*.3,Math.min(span*3,rd*d0/d));d0=d}put()});
@@ -96,8 +171,8 @@ function open(el,M,o){o=o||{};const W=el.clientWidth||360,H=el.clientHeight||480
     if(hit&&hit.object.userData.zone){o.onZone&&o.onZone(hit.object.userData.zone);return}if(hit&&hit.object.userData.info){o.onPick&&o.onPick(hit.object.userData.info);return}
     if(ZN.length&&o.onZone){const pl=new THREE.Plane(new THREE.Vector3(0,1,0),0),pt=new THREE.Vector3();if(rc.ray.intersectPlane(pl,pt)){const z=ZN.find(z=>inZ(pt.x,pt.z,z.r));if(z)o.onZone(z.k)}}};
   const up=e=>{const was=P.size==1&&mv<7;P.delete(e.pointerId);d0=0;if(was&&e.type=='pointerup')tap(e);dn=null};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);cv.addEventListener('wheel',e=>{e.preventDefault();rd=Math.max(span*.3,Math.min(span*3,rd*(e.deltaY>0?1.1:.9)));put()},{passive:false});
-  let run=1;const loop=()=>{if(!run)return;R.render(S,C);requestAnimationFrame(loop)};loop();
-  return{layers:Object.keys(L),show(k,v){if(L[k])L[k].visible=v},dispose(){run=0;try{R.dispose()}catch(e){}cv.remove()},resize(){const w=el.clientWidth,h=el.clientHeight;R.setSize(w,h);C.aspect=w/h;C.updateProjectionMatrix()}}}
+  let run=1,idle=0;const loop=()=>{if(!run)return;const k=.18,d=Math.abs(th-cth)+Math.abs(ph-cph)+Math.abs(rd-crd)/span;if(d>1e-4){cth+=(th-cth)*k;cph+=(ph-cph)*k;crd+=(rd-crd)*k;place();idle=0}else if(idle<3){cth=th;cph=ph;crd=rd;place()}if(idle++<4||d>1e-4||idle%20==0)R.render(S,C);requestAnimationFrame(loop)};loop();
+  const kick=()=>{idle=0};['pointermove','pointerdown','pointerup','wheel'].forEach(t=>cv.addEventListener(t,kick));return{layers:Object.keys(L),cam(o){o=o||{};if(o.c){ctr.set(o.c[0],o.c[1],o.c[2]);if(o.rd==null)place()}if(o.th!=null)th=cth=o.th;if(o.ph!=null)ph=cph=o.ph;if(o.rd!=null)rd=crd=o.rd*span;if(o.rm!=null)rd=crd=o.rm;place();idle=0;R.render(S,C)},show(k,v){if(L[k])L[k].visible=v;idle=0},dispose(){run=0;try{R.dispose()}catch(e){}cv.remove();const vg=el.querySelector('.mdv-vg');if(vg)vg.remove()},resize(){const w=el.clientWidth,h=el.clientHeight;R.setSize(w,h);C.aspect=w/h;C.updateProjectionMatrix();idle=0}}}
 
 /* כמויות: בטון (קירות, עמודים, תקרה, מדרגות, קיזוז פתחים) וברזל (רשימת ברזל = מדויק, תוכנית זיון = הערכה). אין צורך ב-THREE */
 function qty(M){const fh=M.fh||3,st=(M.slab&&M.slab.t)||.25,wh=fh-st,r2=v=>Math.round(v*100)/100,Q={fh,st,wh};
