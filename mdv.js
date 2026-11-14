@@ -3,7 +3,8 @@
    walls:[{a:[x,z],b:[x,z],t,m:'c'|'blk'|'stone'|'alu',o?,h?, ops?:[{k:'win'|'door'|'ldoor'|'x',at,w,h,s?}]}]   ← ops = פתחים בקיר: at = מרחק מרכז הפתח מנקודה a, w רוחב, h גובה, s גובה אדן (דלת 0)
    cols:[{x,z,w,d}], slab:{t,holes?:[{k:'shaft'|'stair'|'x',x,z,w,d}]}|null,
    open:[{a:[x,y,z],r,s:'sw'|'sp'|'el'|'wt'|'x',ax?,miss?:1}], pipes:[{s,pts:[[x,y,z]...],r}], starters:[{a:[x,z],b:[x,z]}],
-   stair:[{x,z,w,d,fl?:2,lw?:1.3}], shaft:[{x,z,w,d}],
+   stair:[{x,z,w,d,fl?:2,lw?:1.3}], shaft:[{x,z,w,d}], pl?:{id,x0,z0,x1,z1} ← תמונת התוכנית המקורית (photos/<id>) וגבולותיה במטרים, להצגה מתחת למודל,
+   q?:{g:'A'|'B'|'C'|'D',src:'pdf'|'img',sc:'1:50',dims:12,unc:[...],by,ok:{n,t}} ← אמינות: ציון, מקור, קנה מידה, לא ודאי, אישור מהנדס,
    zones?:[{k:'a1',n:'דירה 1',r:[x0,x1,z0,z1]},{k:'L',n:'לובי',r:[...]}]   ← דירות (k מתחיל ב-a) ולובי (k='L')
    rb?:[{d,kg?,L?,n}]  ← רשימת ברזל מהקונסטרוקטור (מדויק) · rbm?:{top:[d,s],bot:[d,s],st:[d,s,L],w:[d,s]} ← תוכנית זיון (הערכה) }
  מטרים, מרכז הקומה ב-0,0 */
@@ -78,6 +79,9 @@ function open(el,M,o){o=o||{};const W=el.clientWidth||360,H=el.clientHeight||480
   const V=(p)=>new THREE.Vector3(p[0],p[1],p[2]);
   (M.pipes||[]).forEach(p=>{const g=L[p.s]||L.x,m=mat({color:(SYS[p.s]||SYS.x)[0],roughness:.4,metalness:.3});for(let i=0;i<p.pts.length-1;i++){const a=V(p.pts[i]),b=V(p.pts[i+1]),v=b.clone().sub(a),l=v.length();if(l<.01)continue;const c=new THREE.Mesh(new THREE.CylinderGeometry(p.r||.05,p.r||.05,l,14),m);c.position.copy(a).add(v.multiplyScalar(.5));c.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),b.clone().sub(a).normalize());c.castShadow=true;g.add(c)}});
   (M.open||[]).forEach(h=>{const g=L[h.s]||L.x,r=h.r||.1,G=new THREE.Group(),hole=new THREE.Mesh(new THREE.CylinderGeometry(r,r,.34,24),h.miss?MMiss:MHole);hole.rotation.x=Math.PI/2;const ring=new THREE.Mesh(new THREE.TorusGeometry(r+.012,.016,8,32),h.miss?MMiss:MRing);ring.position.z=.17;const r2=ring.clone();r2.position.z=-.17;G.add(hole,ring,r2);G.position.set(h.a[0],h.a[1],h.a[2]);if(h.ax=='x')G.rotation.y=Math.PI/2;if(h.ax=='y')G.rotation.x=Math.PI/2;g.add(G);hole.userData.info=(h.miss?'⚠ פתח חסר בתוכנית · ':'')+((SYS[h.s]||SYS.x)[1])+' · קוטר '+Math.round(r*200)+' ס״מ';PK.push(hole)});
+  /* גרסה 638: התוכנית המקורית מתחת למודל (שכבה 'pl') — לבדיקה בעין שהמודל תואם לתוכנית */
+  L.pl=new THREE.Group();S.add(L.pl);L.pl.visible=false;
+  if(M.pl&&o.planImg){const tl=new THREE.TextureLoader();tl.load(o.planImg,tx=>{tx.anisotropy=8;tx.encoding=THREE.sRGBEncoding;const w=M.pl.x1-M.pl.x0,d=M.pl.z1-M.pl.z0,pm=new THREE.Mesh(new THREE.PlaneGeometry(w,d),new THREE.MeshBasicMaterial({map:tx,transparent:true,opacity:.92,depthWrite:false}));pm.rotation.x=-Math.PI/2;pm.position.set((M.pl.x0+M.pl.x1)/2,.012,(M.pl.z0+M.pl.z1)/2);pm.renderOrder=2;L.pl.add(pm)})}
   /* תוויות דירות/לובי בתצוגת קומה — לחיצה נכנסת */
   const ZN=(o.zones&&M.zones)||[];ZN.forEach(z=>{const c=document.createElement('canvas');c.width=256;c.height=96;const g=c.getContext('2d');g.fillStyle=z.k=='L'?'rgba(34,38,43,.86)':'rgba(47,107,67,.92)';g.beginPath();g.roundRect?g.roundRect(8,14,240,68,34):g.rect(8,14,240,68);g.fill();g.fillStyle='#fff';g.font='bold 40px Heebo,Arial';g.textAlign='center';g.textBaseline='middle';g.fillText(z.n,128,50);
     const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));sp.renderOrder=9;sp.position.set((z.r[0]+z.r[1])/2,fh+1.3,(z.r[2]+z.r[3])/2);sp.scale.set(2.6,.975,1);sp.userData.zone=z.k;S.add(sp);PK.push(sp)});
