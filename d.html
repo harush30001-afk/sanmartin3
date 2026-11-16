@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>מערכת ניהול פרויקטים YH</title><meta name="description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:title" content="מערכת ניהול פרויקטים YH"><meta property="og:description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:image" content="https://harush30001-afk.github.io/sanmartin3/app-512.png"><meta property="og:type" content="website"><link rel="apple-touch-icon" href="app-180.png"><link rel="icon" type="image/png" href="app-180.png">
-<!-- v: d 649 -->
+<!-- v: d 680 -->
 <style>
 #ld{position:fixed;inset:0;z-index:50;background:#15171b;display:flex;align-items:center;justify-content:center;transition:opacity .35s}#ld.out{opacity:0;pointer-events:none}
 
@@ -214,148 +214,555 @@ details summary{padding:6px 0}
 @keyframes ldnl{0%,65%{transform:none}75%{transform:translateY(1px)}100%{transform:none}}
 .ldfl,.ldtop,.ldtr,.ldhk,.ldhm,.ldnail,.ldcar{animation:none!important;opacity:1}</style></head><body><div id="sgp" class="sgp"><div class="sgh"><b>טוען…</b></div><div class="sgb"><div class="mu">טוען…</div></div></div>
 <script>
-const CFG={apiKey:"AIzaSyDaxJFkzVhV1yqsV_ue82a_l2f4ghkn9Eg",authDomain:"sanmartin3-f51ed.firebaseapp.com",projectId:"sanmartin3-f51ed",storageBucket:"sanmartin3-f51ed.firebasestorage.app",messagingSenderId:"988109406674",appId:"1:988109406674:web:64708ae1efb5b8025e880b"};
-const $=id=>document.getElementById(id);
-const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const escJ=s=>esc(String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,'\\n'));
-async function idHash(tok,id){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(tok+'|'+String(id).replace(/\D/g,'').replace(/^0+/,'')));return[...new Uint8Array(b)].slice(0,10).map(x=>x.toString(16).padStart(2,'0')).join('')}
+const CFG={ apiKey: "AIzaSyDaxJFkzVhV1yqsV_ue82a_l2f4ghkn9Eg", authDomain: "sanmartin3-f51ed.firebaseapp.com", projectId: "sanmartin3-f51ed", storageBucket: "sanmartin3-f51ed.firebasestorage.app", messagingSenderId: "988109406674", appId: "1:988109406674:web:64708ae1efb5b8025e880b" };
+const $=id => document.getElementById(id);
+const esc=s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c]));
+const escJ=s => esc(String(s == null ? "" : s).replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/\r?\n/g, "\\n"));
+async function idHash(tok, id) { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(tok + "|" + String(id).replace(/\D/g, "").replace(/^0+/, ""))); return [...new Uint8Array(b)].slice(0, 10).map(x => x.toString(16).padStart(2, "0")).join(""); }
 const AUC={};
 let AUP=null;
-const auT=s=>{s=Math.max(0,Math.round(+s||0));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
-const auGet=async(id,pub)=>{if(AUC[id])return AUC[id];let d='';if(pub){const x=window.signFS?await(await window.signFS()).get(id):(await DB.doc('sign/'+id).get()).data();d=(x&&x.d)||''}else d=await pGet(id)||'';if(d)AUC[id]=d;return d};
-function auBtn(id,sec,pub){setTimeout(()=>{auGet(id,pub).catch(()=>{})},200);return`<button type="button" class="hoau" onclick="event.stopPropagation();auPlay(this,'${escJ(id)}',${pub?1:0})"><i></i><span class="hoauw"></span><small>${sec?auT(sec):''}</small></button>`}
-async function auPlay(el,id,pub){if(AUP){const same=AUP.id==id;try{AUP.a.pause()}catch(e){}document.querySelectorAll('.hoau.on').forEach(x=>x.classList.remove('on'));AUP=null;if(same)return}
-  let d=AUC[id];if(!d){el.classList.add('ld');try{d=await auGet(id,pub)}catch(e){}el.classList.remove('ld')}
-  const sm=el.querySelector('small');if(!d){if(sm)sm.textContent='לא נטען · נסה שוב';return}
-  const a=new Audio(d);AUP={a,id};el.classList.add('on');a.onended=()=>{el.classList.remove('on');if(AUP&&AUP.a===a)AUP=null};try{await a.play()}catch(e){el.classList.remove('on');AUP=null;if(sm)sm.textContent='לחץ שוב'}}
-async function ptSigImg(id){const c=$(id),w=300,h=110,o=document.createElement('canvas');o.width=w;o.height=h;o.getContext('2d').drawImage(c,0,0,w,h);return o.toDataURL('image/png')}
-async function twPage(tok,pre){document.title='דיווח ליקוי · מערכת ניהול פרויקטים YH';document.documentElement.dataset.theme='tech';document.body.innerHTML='<div id="sgp" class="sgp"><div class="sgh"><b>מערכת ניהול פרויקטים <span>YH</span></b></div><div class="sgb"><div class="mu">טוען…</div></div></div>';
-  const B=document.querySelector('#sgp .sgb');let d=pre||null;if(!d){try{d=await (await window.signFS()).get(tok)}catch(e){}}if(!d||d.k!='tw'){B.innerHTML='<h2>הקישור לא בתוקף</h2><p>אפשר לבקש קישור חדש ממי ששלח.</p>';return}
-  window.TWD=d;window.TWS=window.TWS||{r:'',w:'',x:'',p:''};const S0=window.TWS,qs=d.qs||{},Q=(d.q||[]).slice().sort((a,b)=>b.t-a.t);
-  const ch=(k,v,l)=>`<button class="chip ${S0[k]==v?'on':''}" data-k="${k}" data-v="${String(v).replace(/"/g,'&quot;')}">${String(l).replace(/[<&]/g,'')}</button>`;
-  B.innerHTML=`<p class="mu" style="margin:0">${String(d.pn||'').replace(/[<&]/g,'')}</p><h2>דיווח ליקוי · דירה ${String(d.apt||'').replace(/[<&]/g,'')}</h2>${d.hv?`<p class="mu">נמסרה ${String(d.hv).replace(/[<&]/g,'')}</p>`:''}
-  <h3>איפה בדירה?</h3><div class="row" style="flex-wrap:wrap;gap:6px">${(d.rm||[]).map(r=>ch('r',r,r)).join('')}</div>
-  <h3>של מי?</h3><div class="row" style="flex-wrap:wrap;gap:6px">${(d.w||[]).map(w=>ch('w',w.id,w.n)).join('')}</div>
-  <h3>מה הבעיה?</h3><textarea id="twx" style="width:100%;height:80px;font:inherit;padding:10px;border-radius:12px;border:1px solid #dedad4" placeholder="כתוב בקצרה (חובה)">${String(S0.x||'').replace(/[<&]/g,'')}</textarea>
-  <label class="btn sb" style="display:block;text-align:center;margin-top:8px">${S0.p?'✓ יש תמונה · להחליף':'צלם תמונה (חובה)'}<input type="file" accept="image/*" capture="environment" hidden id="twf"></label>${S0.p?`<img src="${S0.p}" alt="" style="width:50%;border-radius:10px;margin-top:6px;display:block">`:''}
-  <button class="btn stgbig" id="twgo" style="width:100%;margin-top:12px">שלח</button><p class="mu" id="twm"></p>
-  ${Q.length?`<h3>מה כבר דיווחת</h3>${Q.map(q=>`<div style="border:1px solid #dedad4;border-radius:12px;padding:10px;margin:8px 0;background:#fff"><b>${String((q.r?q.r+' · ':'')+(q.wn||'')).replace(/[<&]/g,'')}</b><div>${String(q.x||'').replace(/[<&]/g,'')}</div><div style="margin-top:4px;font-weight:800;color:${qs[q.id]=='d'?'#2f5a3a':qs[q.id]=='r'?'#8a5a12':'#6b6660'}">${qs[q.id]=='d'?'✓ טופל':qs[q.id]=='r'?'התקבל · אצל הקבלן':'נשלח'}</div></div>`).join('')}`:''}`;
-  B.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{S0.x=document.getElementById('twx').value;S0[b.dataset.k]=b.dataset.v;twPage(tok,window.TWD)});
-  document.getElementById('twf').onchange=async ev=>{const f=ev.target.files[0];if(!f)return;S0.x=document.getElementById('twx').value;try{S0.p=await dfSmall(f,640,.55)}catch(e){}twPage(tok,window.TWD)};
-  document.getElementById('twgo').onclick=async()=>{S0.x=document.getElementById('twx').value.trim();const m=document.getElementById('twm');if(!S0.r||!S0.w){m.textContent='לבחור איפה בדירה ושל מי';return}if(!S0.x){m.textContent='לכתוב מה הבעיה';return}if(!S0.p){m.textContent='לצרף תמונה';return}
-    const btn=document.getElementById('twgo');btn.disabled=true;m.textContent='שולח…';try{const F=await window.signFS(),cur=await F.get(tok),q=(cur&&cur.q)||[];if(q.length>=30){m.textContent='הגעת למספר הדיווחים המרבי בקישור הזה. פנה למנהל העבודה.';btn.disabled=false;return}
-      const w=(d.w||[]).find(x=>x.id==S0.w)||{};q.push({id:Date.now(),r:S0.r,w:S0.w,wn:w.n||'',x:S0.x.slice(0,600),p:S0.p,t:Date.now()});await F.upd(tok,{q,qt:Date.now()});window.TWS={r:'',w:'',x:'',p:''};const nd=await F.get(tok);twPage(tok,nd||Object.assign({},d,{q}));setTimeout(()=>{const x=document.getElementById('twm');if(x)x.textContent='✓ נשלח. הליקוי הועבר לקבלן האחראי.'},50)}catch(e){m.textContent='לא נשלח. בדוק קליטה ונסה שוב.';btn.disabled=false}}}
-function gzPad(id){setTimeout(()=>{const c=$(id);if(!c)return;const x=c.getContext('2d');x.lineWidth=2.6;x.lineCap='round';x.strokeStyle='#1e1f21';let dr=0;const pt=ev=>{const r=c.getBoundingClientRect();return[(ev.clientX-r.left)*c.width/r.width,(ev.clientY-r.top)*c.height/r.height]};c.onpointerdown=ev=>{dr=1;c.setPointerCapture(ev.pointerId);const[p,q]=pt(ev);x.beginPath();x.moveTo(p,q)};c.onpointermove=ev=>{if(!dr)return;const[p,q]=pt(ev);x.lineTo(p,q);x.stroke()};c.onpointerup=()=>{dr=0}},40)}
-function gzInk(id){const c=$(id);if(!c)return 0;const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;for(let i=3;i<d.length;i+=4)if(d[i]>0)return 1;return 0}
-const gzPadH=id=>`<canvas id="${id}" width="600" height="220" class="gzpad"></canvas><button class="chip" onclick="const c=$('${id}');c.getContext('2d').clearRect(0,0,c.width,c.height)">נקה חתימה</button>`;
-function dfSmall(blob,W,q){return new Promise(ok=>{const u=URL.createObjectURL(blob),im=new Image();im.onload=()=>{const k=Math.min(1,W/im.width),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL('image/jpeg',q))};im.onerror=()=>ok('');im.src=u})}
-const DFL={he:{m3:'הצג במודל הדירה',nph:'לליקוי צורפה תמונה — כדי לסמן טופל צריך לצלם תמונה אחרי התיקון',snd:'שולח…',dn2:'✓ טופל',ph:'צלם',nt2:'הערה',done:'טופל · צלם',q:'יש שאלה',who:'מי מעדכן? (שם)',w:'✓ דיווחת שטופל · ממתין לאישור',qs:'שאלה נשלחה',re:'נפתח מחדש',due:'יעד',nt:'הערה (לא חובה)',qn:'כתוב את השאלה בשורת ההערה',nm:'כתוב שם לפני שליחה',err:'לא נשלח. נסה שוב, ואם זה חוזר — עדכן בוואטסאפ את מי ששלח.',fw:'אפשר להעביר את הקישור לעובדים — כל אחד מעדכן בשמו.',ts:'טופל · הדייר חותם',tsn:'שם הדייר',tsg:'חתימת הדייר',tsok:'אישור תיקון',tsd:'טופל · הדייר חתם',tsm:'הדייר צריך לכתוב שם ולחתום'},
- en:{m3:'Show in apartment model',nph:'A photo was attached to this defect — take a photo after the repair to mark it fixed',snd:'Sending…',dn2:'✓ Fixed',ph:'Photo',nt2:'Note',done:'Fixed · photo',q:'I have a question',who:'Who is updating? (name)',w:'✓ Reported as fixed · awaiting approval',qs:'Question sent',re:'Reopened',due:'Due',nt:'Note (optional)',qn:'Write the question in the note line',nm:'Enter a name before sending',err:'Not sent. Try again, and if it keeps failing, message the sender on WhatsApp.',fw:'You can forward the link to workers — each one updates under their own name.',ts:'Fixed · tenant signs',tsn:'Tenant name',tsg:'Tenant signature',tsok:'Confirm repair',tsd:'Fixed · tenant signed',tsm:'The tenant must write a name and sign'},
- ar:{m3:'عرض في نموذج الشقة',snd:'جارٍ الإرسال…',dn2:'✓ تم الإصلاح',ph:'صوّر',nt2:'ملاحظة',done:'تم الإصلاح · صوّر',q:'عندي سؤال',who:'من يحدّث؟ (الاسم)',w:'✓ أبلغت أنه تم الإصلاح · بانتظار الموافقة',qs:'تم إرسال السؤال',re:'أُعيد فتحه',due:'الموعد',nt:'ملاحظة (اختياري)',qn:'اكتب السؤال في سطر الملاحظة',nm:'اكتب الاسم قبل الإرسال',err:'لم يُرسل. حاول مرة أخرى، وإذا تكرر أبلغ المرسل في واتساب.',fw:'يمكن إرسال الرابط للعمال — كل واحد يحدّث باسمه.',ts:'تم الإصلاح · توقيع الساكن',tsn:'اسم الساكن',tsg:'توقيع الساكن',tsok:'تأكيد الإصلاح',tsd:'تم الإصلاح · وقّع الساكن',tsm:'على الساكن كتابة الاسم والتوقيع'},
- ru:{m3:'Показать на модели квартиры',snd:'Отправка…',dn2:'✓ Исправлено',ph:'Фото',nt2:'Комментарий',done:'Исправлено · фото',q:'Есть вопрос',who:'Кто обновляет? (имя)',w:'✓ Отмечено как исправлено · ждёт подтверждения',qs:'Вопрос отправлен',re:'Открыто заново',due:'Срок',nt:'Комментарий (необязательно)',qn:'Напишите вопрос в строке комментария',nm:'Введите имя перед отправкой',err:'Не отправлено. Попробуйте ещё раз или напишите отправителю в WhatsApp.',fw:'Ссылку можно переслать рабочим — каждый отмечает под своим именем.',ts:'Исправлено · подпись жильца',tsn:'Имя жильца',tsg:'Подпись жильца',tsok:'Подтвердить',tsd:'Исправлено · жилец подписал',tsm:'Жилец должен написать имя и расписаться'},
- zh:{m3:'在户型模型中查看',snd:'发送中…',dn2:'✓ 已处理',ph:'拍照',nt2:'备注',done:'已处理 · 拍照',q:'有问题',who:'谁在更新？（姓名）',w:'✓ 已报告处理 · 等待确认',qs:'问题已发送',re:'已重新打开',due:'期限',nt:'备注（可选）',qn:'请在备注栏写下问题',nm:'发送前请输入姓名',err:'未发送。请重试，如果仍然失败，请通过 WhatsApp 联系发送人。',fw:'可以把链接转给工人 — 每人用自己的名字更新。',ts:'已处理 · 住户签字',tsn:'住户姓名',tsg:'住户签名',tsok:'确认修复',tsd:'已处理 · 住户已签字',tsm:'住户需要填写姓名并签字'},
- hi:{m3:'फ़्लैट के मॉडल में देखें',snd:'भेजा जा रहा है…',dn2:'✓ ठीक किया',ph:'फ़ोटो',nt2:'टिप्पणी',done:'ठीक किया · फ़ोटो',q:'सवाल है',who:'कौन अपडेट कर रहा है? (नाम)',w:'✓ ठीक होने की सूचना दी · मंज़ूरी बाकी',qs:'सवाल भेजा गया',re:'फिर से खोला गया',due:'समय सीमा',nt:'टिप्पणी (वैकल्पिक)',qn:'टिप्पणी में सवाल लिखें',nm:'भेजने से पहले नाम लिखें',err:'नहीं भेजा गया। फिर कोशिश करें, या भेजने वाले को WhatsApp करें।',fw:'लिंक मज़दूरों को भेज सकते हैं — हर कोई अपने नाम से अपडेट करे।',ts:'ठीक किया · निवासी के हस्ताक्षर',tsn:'निवासी का नाम',tsg:'निवासी के हस्ताक्षर',tsok:'मरम्मत की पुष्टि',tsd:'ठीक किया · निवासी ने हस्ताक्षर किए',tsm:'निवासी को नाम लिखकर हस्ताक्षर करने होंगे'}};
-let DFLG=(()=>{try{return localStorage.getItem('sm3_dflg')||'he'}catch(e){return'he'}})();
-const dfNm=()=>{try{return localStorage.getItem('sm3_dfnm')||''}catch(e){return''}};
-function dfNmS(v){try{localStorage.setItem('sm3_dfnm',String(v||'').trim())}catch(e){}}
-function dfLg(tok,k){DFLG=k;try{document.documentElement.dir=['en','ru','zh','hi'].includes(k)?'ltr':'rtl'}catch(e){}try{localStorage.setItem('sm3_dflg',k)}catch(e){}defPage(tok,window.DFD)}
-function dfItems(tok,d){const T=DFL[DFLG]||DFL.he,R=d.r||{},P=d.pics||[],I=d.it||[],one=P.length==I.length;
-  return`<div class="row" style="gap:6px;justify-content:flex-end;flex-wrap:wrap">${[['he','עברית'],['en','English'],['ar','العربية'],['ru','Русский'],['zh','中文'],['hi','हिन्दी']].map(([k,n])=>`<button class="chip ${DFLG==k?'on':''}" onclick="dfLg('${tok}','${k}')">${n}</button>`).join('')}</div>
-  <input id="dfnm" placeholder="${T.who}" value="${esc(dfNm())}" onchange="dfNmS(this.value)" style="margin-top:8px">`
-  +I.map((x,i)=>{const r=R[i]||null,open=!r||r.st=='x'||r.st=='q';return`<div style="border:1px solid #dedad4;border-radius:12px;padding:10px;margin:10px 0;background:#fff">${one&&P[i]?`<img src="${esc(P[i])}" alt="" style="width:100%;border-radius:10px;display:block;margin-bottom:8px">`:''}<b>${I.length>1?(i+1)+'. ':''}${x.r?esc(x.r)+' — ':''}${esc(x.n||'')}</b>${x.pi?'<div><span class="hopi">ליקוי מפרוטוקול ראשוני</span></div>':''}${x.hm?'<div><span class="hopi b">ליקוי מפרוטוקול מסירה</span></div>':''}${x.tp&&open?`<div class="row" style="gap:6px;margin-top:8px"><a class="btn sb" style="flex:1;text-decoration:none" href="tel:+972${esc(String(x.tp).replace(/^0/,'').replace(/^972/,''))}">התקשר לדייר</a><a class="btn wa" style="flex:1;text-decoration:none" href="https://wa.me/972${esc(String(x.tp).replace(/^0/,'').replace(/^972/,''))}" target="_blank" rel="noopener">וואטסאפ לדייר</a></div>`:''}${x.due?`<div class="mu">${T.due}: ${esc(String(x.due).split('-').reverse().join('.'))}</div>`:''}
-  ${r?`<div style="margin-top:6px;font-weight:800;color:${r.st=='d'?'#2f5a3a':r.st=='x'?'#a8322a':'#8a5a12'}">${r.st=='d'?(r.sg?'✓ '+(T.tsd||DFL.he.tsd)+(r.tn?' · '+esc(r.tn):'')+' · '+fdt(r.t):T.w):r.st=='x'?T.re+(r.n?': '+esc(r.n):''):T.qs+(r.n?': '+esc(r.n):'')}${r.by&&r.st!='x'?' · '+esc(r.by):''}</div>${r.st=='d'&&(r.af||[])[0]?`<img src="${esc(r.af[0])}" alt="" style="width:55%;border-radius:8px;margin-top:6px;display:block">`:''}`:''}
-  ${open&&x.ts?`<div id="dfts${i}" style="margin-top:8px"><button class="btn stgbig" style="width:100%" onclick="dfTsOpen('${tok}','${i}')">${T.ts||DFL.he.ts}</button></div>`:''}${open&&!x.ts?`<input id="dfn${i}" placeholder="${T.nt}" style="margin-top:8px"><div class="row" style="gap:6px;margin-top:6px"><label class="btn stgbig" style="flex:1;text-align:center">${T.done}<input type="file" accept="image/*" capture="environment" hidden onchange="dfRep('${tok}',${i},'d',this)"></label><button class="btn sb" style="flex:1" onclick="dfRep('${tok}',${i},'q')">${T.q}</button></div>`:''}</div>`}).join('')
-  +(!one?P.map(p=>`<img src="${esc(p)}" alt="" style="width:100%;border-radius:12px;border:1px solid #dedad4;display:block;margin-top:8px">`).join(''):'')+`<p class="mu" style="font-size:13px">${T.fw}</p>`}
+const auT=s => { s = Math.max(0, Math.round(+s || 0)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
+const auGet=async (id, pub) => { if (AUC[id])
+return AUC[id]; let d = ""; if (pub) {
+const x = window.signFS ? await (await window.signFS()).get(id) : (await DB.doc("sign/" + id).get()).data();
+d = (x && x.d) || "";
+}
+else
+d = await pGet(id) || ""; if (d)
+AUC[id] = d; return d; };
+function auBtn(id, sec, pub) { setTimeout(() => { auGet(id, pub).catch(() => { }); }, 200); return `<button type="button" class="hoau" onclick="event.stopPropagation();auPlay(this,'${escJ(id)}',${pub ? 1 : 0})"><i></i><span class="hoauw"></span><small>${sec ? auT(sec) : ""}</small></button>`; }
+async function auPlay(el, id, pub) {
+if (AUP) {
+const same = AUP.id == id;
+try {
+AUP.a.pause();
+}
+catch (e) { }
+document.querySelectorAll(".hoau.on").forEach(x => x.classList.remove("on"));
+AUP = null;
+if (same)
+return;
+}
+let d = AUC[id];
+if (!d) {
+el.classList.add("ld");
+try {
+d = await auGet(id, pub);
+}
+catch (e) { }
+el.classList.remove("ld");
+}
+const sm = el.querySelector("small");
+if (!d) {
+if (sm)
+sm.textContent = "\u05DC\u05D0 \u05E0\u05D8\u05E2\u05DF \u00B7 \u05E0\u05E1\u05D4 \u05E9\u05D5\u05D1";
+return;
+}
+const a = new Audio(d);
+AUP = { a, id };
+el.classList.add("on");
+a.onended = () => { el.classList.remove("on"); if (AUP && AUP.a === a)
+AUP = null; };
+try {
+await a.play();
+}
+catch (e) {
+el.classList.remove("on");
+AUP = null;
+if (sm)
+sm.textContent = "\u05DC\u05D7\u05E5 \u05E9\u05D5\u05D1";
+}
+}
+async function ptSigImg(id) { const c = $(id), w = 300, h = 110, o = document.createElement("canvas"); o.width = w; o.height = h; o.getContext("2d").drawImage(c, 0, 0, w, h); return o.toDataURL("image/png"); }
+async function twPage(tok, pre) {
+document.title = "\u05D3\u05D9\u05D5\u05D5\u05D7 \u05DC\u05D9\u05E7\u05D5\u05D9 \u00B7 \u05DE\u05E2\u05E8\u05DB\u05EA \u05E0\u05D9\u05D4\u05D5\u05DC \u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\u05D9\u05DD YH";
+document.documentElement.dataset.theme = "tech";
+document.body.innerHTML = "<div id=\"sgp\" class=\"sgp\"><div class=\"sgh\"><b>\u05DE\u05E2\u05E8\u05DB\u05EA \u05E0\u05D9\u05D4\u05D5\u05DC \u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\u05D9\u05DD <span>YH</span></b></div><div class=\"sgb\"><div class=\"mu\">\u05D8\u05D5\u05E2\u05DF\u2026</div></div></div>";
+const B = document.querySelector("#sgp .sgb");
+let d = pre || null;
+if (!d) {
+try {
+d = await (await window.signFS()).get(tok);
+}
+catch (e) { }
+}
+if (!d || d.k != "tw") {
+B.innerHTML = "<h2>\u05D4\u05E7\u05D9\u05E9\u05D5\u05E8 \u05DC\u05D0 \u05D1\u05EA\u05D5\u05E7\u05E3</h2><p>\u05D0\u05E4\u05E9\u05E8 \u05DC\u05D1\u05E7\u05E9 \u05E7\u05D9\u05E9\u05D5\u05E8 \u05D7\u05D3\u05E9 \u05DE\u05DE\u05D9 \u05E9\u05E9\u05DC\u05D7.</p>";
+return;
+}
+window.TWD = d;
+window.TWS = window.TWS || { r: "", w: "", x: "", p: "" };
+const S0 = window.TWS, qs = d.qs || {}, Q = (d.q || []).slice().sort((a, b) => b.t - a.t);
+const ch = (k, v, l) => `<button class="chip ${S0[k] == v ? "on" : ""}" data-k="${k}" data-v="${String(v).replace(/"/g, "&quot;")}">${String(l).replace(/[<&]/g, "")}</button>`;
+B.innerHTML = `<p class="mu" style="margin:0">${String(d.pn || "").replace(/[<&]/g, "")}</p><h2>דיווח ליקוי · דירה ${String(d.apt || "").replace(/[<&]/g, "")}</h2>${d.hv ? `<p class="mu">נמסרה ${String(d.hv).replace(/[<&]/g, "")}</p>` : ""}
+<h3>איפה בדירה?</h3><div class="row" style="flex-wrap:wrap;gap:6px">${(d.rm || []).map(r => ch("r", r, r)).join("")}</div>
+<h3>של מי?</h3><div class="row" style="flex-wrap:wrap;gap:6px">${(d.w || []).map(w => ch("w", w.id, w.n)).join("")}</div>
+<h3>מה הבעיה?</h3><textarea id="twx" style="width:100%;height:80px;font:inherit;padding:10px;border-radius:12px;border:1px solid #dedad4" placeholder="כתוב בקצרה (חובה)">${String(S0.x || "").replace(/[<&]/g, "")}</textarea>
+<label class="btn sb" style="display:block;text-align:center;margin-top:8px">${S0.p ? "\u2713 \u05D9\u05E9 \u05EA\u05DE\u05D5\u05E0\u05D4 \u00B7 \u05DC\u05D4\u05D7\u05DC\u05D9\u05E3" : "\u05E6\u05DC\u05DD \u05EA\u05DE\u05D5\u05E0\u05D4 (\u05D7\u05D5\u05D1\u05D4)"}<input type="file" accept="image/*" capture="environment" hidden id="twf"></label>${S0.p ? `<img src="${S0.p}" alt="" style="width:50%;border-radius:10px;margin-top:6px;display:block">` : ""}
+<button class="btn stgbig" id="twgo" style="width:100%;margin-top:12px">שלח</button><p class="mu" id="twm"></p>
+${Q.length ? `<h3>מה כבר דיווחת</h3>${Q.map(q => `<div style="border:1px solid #dedad4;border-radius:12px;padding:10px;margin:8px 0;background:#fff"><b>${String((q.r ? q.r + " \u00B7 " : "") + (q.wn || "")).replace(/[<&]/g, "")}</b><div>${String(q.x || "").replace(/[<&]/g, "")}</div><div style="margin-top:4px;font-weight:800;color:${qs[q.id] == "d" ? "#2f5a3a" : qs[q.id] == "r" ? "#8a5a12" : "#6b6660"}">${qs[q.id] == "d" ? "\u2713 \u05D8\u05D5\u05E4\u05DC" : qs[q.id] == "r" ? "\u05D4\u05EA\u05E7\u05D1\u05DC \u00B7 \u05D0\u05E6\u05DC \u05D4\u05E7\u05D1\u05DC\u05DF" : "\u05E0\u05E9\u05DC\u05D7"}</div></div>`).join("")}` : ""}`;
+B.querySelectorAll("[data-k]").forEach(b => b.onclick = () => { S0.x = document.getElementById("twx").value; S0[b.dataset.k] = b.dataset.v; twPage(tok, window.TWD); });
+document.getElementById("twf").onchange = async (ev) => { const f = ev.target.files[0]; if (!f)
+return; S0.x = document.getElementById("twx").value; try {
+S0.p = await dfSmall(f, 640, 0.55);
+}
+catch (e) { } twPage(tok, window.TWD); };
+document.getElementById("twgo").onclick = async () => {
+S0.x = document.getElementById("twx").value.trim();
+const m = document.getElementById("twm");
+if (!S0.r || !S0.w) {
+m.textContent = "\u05DC\u05D1\u05D7\u05D5\u05E8 \u05D0\u05D9\u05E4\u05D4 \u05D1\u05D3\u05D9\u05E8\u05D4 \u05D5\u05E9\u05DC \u05DE\u05D9";
+return;
+}
+if (!S0.x) {
+m.textContent = "\u05DC\u05DB\u05EA\u05D5\u05D1 \u05DE\u05D4 \u05D4\u05D1\u05E2\u05D9\u05D4";
+return;
+}
+if (!S0.p) {
+m.textContent = "\u05DC\u05E6\u05E8\u05E3 \u05EA\u05DE\u05D5\u05E0\u05D4";
+return;
+}
+const btn = document.getElementById("twgo");
+btn.disabled = true;
+m.textContent = "\u05E9\u05D5\u05DC\u05D7\u2026";
+try {
+const F = await window.signFS(), cur = await F.get(tok), q = (cur && cur.q) || [];
+if (q.length >= 30) {
+m.textContent = "\u05D4\u05D2\u05E2\u05EA \u05DC\u05DE\u05E1\u05E4\u05E8 \u05D4\u05D3\u05D9\u05D5\u05D5\u05D7\u05D9\u05DD \u05D4\u05DE\u05E8\u05D1\u05D9 \u05D1\u05E7\u05D9\u05E9\u05D5\u05E8 \u05D4\u05D6\u05D4. \u05E4\u05E0\u05D4 \u05DC\u05DE\u05E0\u05D4\u05DC \u05D4\u05E2\u05D1\u05D5\u05D3\u05D4.";
+btn.disabled = false;
+return;
+}
+const w = (d.w || []).find(x => x.id == S0.w) || {};
+q.push({ id: Date.now(), r: S0.r, w: S0.w, wn: w.n || "", x: S0.x.slice(0, 600), p: S0.p, t: Date.now() });
+await F.upd(tok, { q, qt: Date.now() });
+window.TWS = { r: "", w: "", x: "", p: "" };
+const nd = await F.get(tok);
+twPage(tok, nd || Object.assign({}, d, { q }));
+setTimeout(() => { const x = document.getElementById("twm"); if (x)
+x.textContent = "\u2713 \u05E0\u05E9\u05DC\u05D7. \u05D4\u05DC\u05D9\u05E7\u05D5\u05D9 \u05D4\u05D5\u05E2\u05D1\u05E8 \u05DC\u05E7\u05D1\u05DC\u05DF \u05D4\u05D0\u05D7\u05E8\u05D0\u05D9."; }, 50);
+}
+catch (e) {
+m.textContent = "\u05DC\u05D0 \u05E0\u05E9\u05DC\u05D7. \u05D1\u05D3\u05D5\u05E7 \u05E7\u05DC\u05D9\u05D8\u05D4 \u05D5\u05E0\u05E1\u05D4 \u05E9\u05D5\u05D1.";
+btn.disabled = false;
+}
+};
+}
+function gzPad(id) { setTimeout(() => { const c = $(id); if (!c)
+return; const x = c.getContext("2d"); x.lineWidth = 2.6; x.lineCap = "round"; x.strokeStyle = "#1e1f21"; let dr = 0; const pt = ev => { const r = c.getBoundingClientRect(); return [(ev.clientX - r.left) * c.width / r.width, (ev.clientY - r.top) * c.height / r.height]; }; c.onpointerdown = ev => { dr = 1; c.setPointerCapture(ev.pointerId); const [p, q] = pt(ev); x.beginPath(); x.moveTo(p, q); }; c.onpointermove = ev => { if (!dr)
+return; const [p, q] = pt(ev); x.lineTo(p, q); x.stroke(); }; c.onpointerup = () => { dr = 0; }; }, 40); }
+function gzInk(id) { const c = $(id); if (!c)
+return 0; const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data; for (let i = 3; i < d.length; i += 4)
+if (d[i] > 0)
+return 1; return 0; }
+const gzPadH=id => `<canvas id="${id}" width="600" height="220" class="gzpad"></canvas><button class="chip" onclick="const c=$('${id}');c.getContext('2d').clearRect(0,0,c.width,c.height)">נקה חתימה</button>`;
+function dfSmall(blob, W, q) { return new Promise(ok => { const u = URL.createObjectURL(blob), im = new Image(); im.onload = () => { const k = Math.min(1, W / im.width), c = document.createElement("canvas"); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u); ok(c.toDataURL("image/jpeg", q)); }; im.onerror = () => ok(""); im.src = u; }); }
+const DFL={ he: { m3: "\u05D4\u05E6\u05D2 \u05D1\u05DE\u05D5\u05D3\u05DC \u05D4\u05D3\u05D9\u05E8\u05D4", nph: "\u05DC\u05DC\u05D9\u05E7\u05D5\u05D9 \u05E6\u05D5\u05E8\u05E4\u05D4 \u05EA\u05DE\u05D5\u05E0\u05D4 \u2014 \u05DB\u05D3\u05D9 \u05DC\u05E1\u05DE\u05DF \u05D8\u05D5\u05E4\u05DC \u05E6\u05E8\u05D9\u05DA \u05DC\u05E6\u05DC\u05DD \u05EA\u05DE\u05D5\u05E0\u05D4 \u05D0\u05D7\u05E8\u05D9 \u05D4\u05EA\u05D9\u05E7\u05D5\u05DF", snd: "\u05E9\u05D5\u05DC\u05D7\u2026", dn2: "\u2713 \u05D8\u05D5\u05E4\u05DC", ph: "\u05E6\u05DC\u05DD", nt2: "\u05D4\u05E2\u05E8\u05D4", done: "\u05D8\u05D5\u05E4\u05DC \u00B7 \u05E6\u05DC\u05DD", q: "\u05D9\u05E9 \u05E9\u05D0\u05DC\u05D4", who: "\u05DE\u05D9 \u05DE\u05E2\u05D3\u05DB\u05DF? (\u05E9\u05DD)", w: "\u2713 \u05D3\u05D9\u05D5\u05D5\u05D7\u05EA \u05E9\u05D8\u05D5\u05E4\u05DC \u00B7 \u05DE\u05DE\u05EA\u05D9\u05DF \u05DC\u05D0\u05D9\u05E9\u05D5\u05E8", qs: "\u05E9\u05D0\u05DC\u05D4 \u05E0\u05E9\u05DC\u05D7\u05D4", re: "\u05E0\u05E4\u05EA\u05D7 \u05DE\u05D7\u05D3\u05E9", due: "\u05D9\u05E2\u05D3", nt: "\u05D4\u05E2\u05E8\u05D4 (\u05DC\u05D0 \u05D7\u05D5\u05D1\u05D4)", qn: "\u05DB\u05EA\u05D5\u05D1 \u05D0\u05EA \u05D4\u05E9\u05D0\u05DC\u05D4 \u05D1\u05E9\u05D5\u05E8\u05EA \u05D4\u05D4\u05E2\u05E8\u05D4", nm: "\u05DB\u05EA\u05D5\u05D1 \u05E9\u05DD \u05DC\u05E4\u05E0\u05D9 \u05E9\u05DC\u05D9\u05D7\u05D4", err: "\u05DC\u05D0 \u05E0\u05E9\u05DC\u05D7. \u05E0\u05E1\u05D4 \u05E9\u05D5\u05D1, \u05D5\u05D0\u05DD \u05D6\u05D4 \u05D7\u05D5\u05D6\u05E8 \u2014 \u05E2\u05D3\u05DB\u05DF \u05D1\u05D5\u05D5\u05D0\u05D8\u05E1\u05D0\u05E4 \u05D0\u05EA \u05DE\u05D9 \u05E9\u05E9\u05DC\u05D7.", fw: "\u05D0\u05E4\u05E9\u05E8 \u05DC\u05D4\u05E2\u05D1\u05D9\u05E8 \u05D0\u05EA \u05D4\u05E7\u05D9\u05E9\u05D5\u05E8 \u05DC\u05E2\u05D5\u05D1\u05D3\u05D9\u05DD \u2014 \u05DB\u05DC \u05D0\u05D7\u05D3 \u05DE\u05E2\u05D3\u05DB\u05DF \u05D1\u05E9\u05DE\u05D5.", ts: "\u05D8\u05D5\u05E4\u05DC \u00B7 \u05D4\u05D3\u05D9\u05D9\u05E8 \u05D7\u05D5\u05EA\u05DD", tsn: "\u05E9\u05DD \u05D4\u05D3\u05D9\u05D9\u05E8", tsg: "\u05D7\u05EA\u05D9\u05DE\u05EA \u05D4\u05D3\u05D9\u05D9\u05E8", tsok: "\u05D0\u05D9\u05E9\u05D5\u05E8 \u05EA\u05D9\u05E7\u05D5\u05DF", tsd: "\u05D8\u05D5\u05E4\u05DC \u00B7 \u05D4\u05D3\u05D9\u05D9\u05E8 \u05D7\u05EA\u05DD", tsm: "\u05D4\u05D3\u05D9\u05D9\u05E8 \u05E6\u05E8\u05D9\u05DA \u05DC\u05DB\u05EA\u05D5\u05D1 \u05E9\u05DD \u05D5\u05DC\u05D7\u05EA\u05D5\u05DD" }, en: { m3: "Show in apartment model", nph: "A photo was attached to this defect \u2014 take a photo after the repair to mark it fixed", snd: "Sending\u2026", dn2: "\u2713 Fixed", ph: "Photo", nt2: "Note", done: "Fixed \u00B7 photo", q: "I have a question", who: "Who is updating? (name)", w: "\u2713 Reported as fixed \u00B7 awaiting approval", qs: "Question sent", re: "Reopened", due: "Due", nt: "Note (optional)", qn: "Write the question in the note line", nm: "Enter a name before sending", err: "Not sent. Try again, and if it keeps failing, message the sender on WhatsApp.", fw: "You can forward the link to workers \u2014 each one updates under their own name.", ts: "Fixed \u00B7 tenant signs", tsn: "Tenant name", tsg: "Tenant signature", tsok: "Confirm repair", tsd: "Fixed \u00B7 tenant signed", tsm: "The tenant must write a name and sign" }, ar: { m3: "\u0639\u0631\u0636 \u0641\u064A \u0646\u0645\u0648\u0630\u062C \u0627\u0644\u0634\u0642\u0629", snd: "\u062C\u0627\u0631\u064D \u0627\u0644\u0625\u0631\u0633\u0627\u0644\u2026", dn2: "\u2713 \u062A\u0645 \u0627\u0644\u0625\u0635\u0644\u0627\u062D", ph: "\u0635\u0648\u0651\u0631", nt2: "\u0645\u0644\u0627\u062D\u0638\u0629", done: "\u062A\u0645 \u0627\u0644\u0625\u0635\u0644\u0627\u062D \u00B7 \u0635\u0648\u0651\u0631", q: "\u0639\u0646\u062F\u064A \u0633\u0624\u0627\u0644", who: "\u0645\u0646 \u064A\u062D\u062F\u0651\u062B\u061F (\u0627\u0644\u0627\u0633\u0645)", w: "\u2713 \u0623\u0628\u0644\u063A\u062A \u0623\u0646\u0647 \u062A\u0645 \u0627\u0644\u0625\u0635\u0644\u0627\u062D \u00B7 \u0628\u0627\u0646\u062A\u0638\u0627\u0631 \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629", qs: "\u062A\u0645 \u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0633\u0624\u0627\u0644", re: "\u0623\u064F\u0639\u064A\u062F \u0641\u062A\u062D\u0647", due: "\u0627\u0644\u0645\u0648\u0639\u062F", nt: "\u0645\u0644\u0627\u062D\u0638\u0629 (\u0627\u062E\u062A\u064A\u0627\u0631\u064A)", qn: "\u0627\u0643\u062A\u0628 \u0627\u0644\u0633\u0624\u0627\u0644 \u0641\u064A \u0633\u0637\u0631 \u0627\u0644\u0645\u0644\u0627\u062D\u0638\u0629", nm: "\u0627\u0643\u062A\u0628 \u0627\u0644\u0627\u0633\u0645 \u0642\u0628\u0644 \u0627\u0644\u0625\u0631\u0633\u0627\u0644", err: "\u0644\u0645 \u064A\u064F\u0631\u0633\u0644. \u062D\u0627\u0648\u0644 \u0645\u0631\u0629 \u0623\u062E\u0631\u0649\u060C \u0648\u0625\u0630\u0627 \u062A\u0643\u0631\u0631 \u0623\u0628\u0644\u063A \u0627\u0644\u0645\u0631\u0633\u0644 \u0641\u064A \u0648\u0627\u062A\u0633\u0627\u0628.", fw: "\u064A\u0645\u0643\u0646 \u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0631\u0627\u0628\u0637 \u0644\u0644\u0639\u0645\u0627\u0644 \u2014 \u0643\u0644 \u0648\u0627\u062D\u062F \u064A\u062D\u062F\u0651\u062B \u0628\u0627\u0633\u0645\u0647.", ts: "\u062A\u0645 \u0627\u0644\u0625\u0635\u0644\u0627\u062D \u00B7 \u062A\u0648\u0642\u064A\u0639 \u0627\u0644\u0633\u0627\u0643\u0646", tsn: "\u0627\u0633\u0645 \u0627\u0644\u0633\u0627\u0643\u0646", tsg: "\u062A\u0648\u0642\u064A\u0639 \u0627\u0644\u0633\u0627\u0643\u0646", tsok: "\u062A\u0623\u0643\u064A\u062F \u0627\u0644\u0625\u0635\u0644\u0627\u062D", tsd: "\u062A\u0645 \u0627\u0644\u0625\u0635\u0644\u0627\u062D \u00B7 \u0648\u0642\u0651\u0639 \u0627\u0644\u0633\u0627\u0643\u0646", tsm: "\u0639\u0644\u0649 \u0627\u0644\u0633\u0627\u0643\u0646 \u0643\u062A\u0627\u0628\u0629 \u0627\u0644\u0627\u0633\u0645 \u0648\u0627\u0644\u062A\u0648\u0642\u064A\u0639" }, ru: { m3: "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u043D\u0430 \u043C\u043E\u0434\u0435\u043B\u0438 \u043A\u0432\u0430\u0440\u0442\u0438\u0440\u044B", snd: "\u041E\u0442\u043F\u0440\u0430\u0432\u043A\u0430\u2026", dn2: "\u2713 \u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E", ph: "\u0424\u043E\u0442\u043E", nt2: "\u041A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u0439", done: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u00B7 \u0444\u043E\u0442\u043E", q: "\u0415\u0441\u0442\u044C \u0432\u043E\u043F\u0440\u043E\u0441", who: "\u041A\u0442\u043E \u043E\u0431\u043D\u043E\u0432\u043B\u044F\u0435\u0442? (\u0438\u043C\u044F)", w: "\u2713 \u041E\u0442\u043C\u0435\u0447\u0435\u043D\u043E \u043A\u0430\u043A \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u00B7 \u0436\u0434\u0451\u0442 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F", qs: "\u0412\u043E\u043F\u0440\u043E\u0441 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D", re: "\u041E\u0442\u043A\u0440\u044B\u0442\u043E \u0437\u0430\u043D\u043E\u0432\u043E", due: "\u0421\u0440\u043E\u043A", nt: "\u041A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u0439 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)", qn: "\u041D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u0432\u043E\u043F\u0440\u043E\u0441 \u0432 \u0441\u0442\u0440\u043E\u043A\u0435 \u043A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u044F", nm: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0438\u043C\u044F \u043F\u0435\u0440\u0435\u0434 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u043E\u0439", err: "\u041D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437 \u0438\u043B\u0438 \u043D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u0435\u043B\u044E \u0432 WhatsApp.", fw: "\u0421\u0441\u044B\u043B\u043A\u0443 \u043C\u043E\u0436\u043D\u043E \u043F\u0435\u0440\u0435\u0441\u043B\u0430\u0442\u044C \u0440\u0430\u0431\u043E\u0447\u0438\u043C \u2014 \u043A\u0430\u0436\u0434\u044B\u0439 \u043E\u0442\u043C\u0435\u0447\u0430\u0435\u0442 \u043F\u043E\u0434 \u0441\u0432\u043E\u0438\u043C \u0438\u043C\u0435\u043D\u0435\u043C.", ts: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u00B7 \u043F\u043E\u0434\u043F\u0438\u0441\u044C \u0436\u0438\u043B\u044C\u0446\u0430", tsn: "\u0418\u043C\u044F \u0436\u0438\u043B\u044C\u0446\u0430", tsg: "\u041F\u043E\u0434\u043F\u0438\u0441\u044C \u0436\u0438\u043B\u044C\u0446\u0430", tsok: "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C", tsd: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u00B7 \u0436\u0438\u043B\u0435\u0446 \u043F\u043E\u0434\u043F\u0438\u0441\u0430\u043B", tsm: "\u0416\u0438\u043B\u0435\u0446 \u0434\u043E\u043B\u0436\u0435\u043D \u043D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u0438\u043C\u044F \u0438 \u0440\u0430\u0441\u043F\u0438\u0441\u0430\u0442\u044C\u0441\u044F" }, zh: { m3: "\u5728\u6237\u578B\u6A21\u578B\u4E2D\u67E5\u770B", snd: "\u53D1\u9001\u4E2D\u2026", dn2: "\u2713 \u5DF2\u5904\u7406", ph: "\u62CD\u7167", nt2: "\u5907\u6CE8", done: "\u5DF2\u5904\u7406 \u00B7 \u62CD\u7167", q: "\u6709\u95EE\u9898", who: "\u8C01\u5728\u66F4\u65B0\uFF1F\uFF08\u59D3\u540D\uFF09", w: "\u2713 \u5DF2\u62A5\u544A\u5904\u7406 \u00B7 \u7B49\u5F85\u786E\u8BA4", qs: "\u95EE\u9898\u5DF2\u53D1\u9001", re: "\u5DF2\u91CD\u65B0\u6253\u5F00", due: "\u671F\u9650", nt: "\u5907\u6CE8\uFF08\u53EF\u9009\uFF09", qn: "\u8BF7\u5728\u5907\u6CE8\u680F\u5199\u4E0B\u95EE\u9898", nm: "\u53D1\u9001\u524D\u8BF7\u8F93\u5165\u59D3\u540D", err: "\u672A\u53D1\u9001\u3002\u8BF7\u91CD\u8BD5\uFF0C\u5982\u679C\u4ECD\u7136\u5931\u8D25\uFF0C\u8BF7\u901A\u8FC7 WhatsApp \u8054\u7CFB\u53D1\u9001\u4EBA\u3002", fw: "\u53EF\u4EE5\u628A\u94FE\u63A5\u8F6C\u7ED9\u5DE5\u4EBA \u2014 \u6BCF\u4EBA\u7528\u81EA\u5DF1\u7684\u540D\u5B57\u66F4\u65B0\u3002", ts: "\u5DF2\u5904\u7406 \u00B7 \u4F4F\u6237\u7B7E\u5B57", tsn: "\u4F4F\u6237\u59D3\u540D", tsg: "\u4F4F\u6237\u7B7E\u540D", tsok: "\u786E\u8BA4\u4FEE\u590D", tsd: "\u5DF2\u5904\u7406 \u00B7 \u4F4F\u6237\u5DF2\u7B7E\u5B57", tsm: "\u4F4F\u6237\u9700\u8981\u586B\u5199\u59D3\u540D\u5E76\u7B7E\u5B57" }, hi: { m3: "\u092B\u093C\u094D\u0932\u0948\u091F \u0915\u0947 \u092E\u0949\u0921\u0932 \u092E\u0947\u0902 \u0926\u0947\u0916\u0947\u0902", snd: "\u092D\u0947\u091C\u093E \u091C\u093E \u0930\u0939\u093E \u0939\u0948\u2026", dn2: "\u2713 \u0920\u0940\u0915 \u0915\u093F\u092F\u093E", ph: "\u092B\u093C\u094B\u091F\u094B", nt2: "\u091F\u093F\u092A\u094D\u092A\u0923\u0940", done: "\u0920\u0940\u0915 \u0915\u093F\u092F\u093E \u00B7 \u092B\u093C\u094B\u091F\u094B", q: "\u0938\u0935\u093E\u0932 \u0939\u0948", who: "\u0915\u094C\u0928 \u0905\u092A\u0921\u0947\u091F \u0915\u0930 \u0930\u0939\u093E \u0939\u0948? (\u0928\u093E\u092E)", w: "\u2713 \u0920\u0940\u0915 \u0939\u094B\u0928\u0947 \u0915\u0940 \u0938\u0942\u091A\u0928\u093E \u0926\u0940 \u00B7 \u092E\u0902\u091C\u093C\u0942\u0930\u0940 \u092C\u093E\u0915\u0940", qs: "\u0938\u0935\u093E\u0932 \u092D\u0947\u091C\u093E \u0917\u092F\u093E", re: "\u092B\u093F\u0930 \u0938\u0947 \u0916\u094B\u0932\u093E \u0917\u092F\u093E", due: "\u0938\u092E\u092F \u0938\u0940\u092E\u093E", nt: "\u091F\u093F\u092A\u094D\u092A\u0923\u0940 (\u0935\u0948\u0915\u0932\u094D\u092A\u093F\u0915)", qn: "\u091F\u093F\u092A\u094D\u092A\u0923\u0940 \u092E\u0947\u0902 \u0938\u0935\u093E\u0932 \u0932\u093F\u0916\u0947\u0902", nm: "\u092D\u0947\u091C\u0928\u0947 \u0938\u0947 \u092A\u0939\u0932\u0947 \u0928\u093E\u092E \u0932\u093F\u0916\u0947\u0902", err: "\u0928\u0939\u0940\u0902 \u092D\u0947\u091C\u093E \u0917\u092F\u093E\u0964 \u092B\u093F\u0930 \u0915\u094B\u0936\u093F\u0936 \u0915\u0930\u0947\u0902, \u092F\u093E \u092D\u0947\u091C\u0928\u0947 \u0935\u093E\u0932\u0947 \u0915\u094B WhatsApp \u0915\u0930\u0947\u0902\u0964", fw: "\u0932\u093F\u0902\u0915 \u092E\u091C\u093C\u0926\u0942\u0930\u094B\u0902 \u0915\u094B \u092D\u0947\u091C \u0938\u0915\u0924\u0947 \u0939\u0948\u0902 \u2014 \u0939\u0930 \u0915\u094B\u0908 \u0905\u092A\u0928\u0947 \u0928\u093E\u092E \u0938\u0947 \u0905\u092A\u0921\u0947\u091F \u0915\u0930\u0947\u0964", ts: "\u0920\u0940\u0915 \u0915\u093F\u092F\u093E \u00B7 \u0928\u093F\u0935\u093E\u0938\u0940 \u0915\u0947 \u0939\u0938\u094D\u0924\u093E\u0915\u094D\u0937\u0930", tsn: "\u0928\u093F\u0935\u093E\u0938\u0940 \u0915\u093E \u0928\u093E\u092E", tsg: "\u0928\u093F\u0935\u093E\u0938\u0940 \u0915\u0947 \u0939\u0938\u094D\u0924\u093E\u0915\u094D\u0937\u0930", tsok: "\u092E\u0930\u092E\u094D\u092E\u0924 \u0915\u0940 \u092A\u0941\u0937\u094D\u091F\u093F", tsd: "\u0920\u0940\u0915 \u0915\u093F\u092F\u093E \u00B7 \u0928\u093F\u0935\u093E\u0938\u0940 \u0928\u0947 \u0939\u0938\u094D\u0924\u093E\u0915\u094D\u0937\u0930 \u0915\u093F\u090F", tsm: "\u0928\u093F\u0935\u093E\u0938\u0940 \u0915\u094B \u0928\u093E\u092E \u0932\u093F\u0916\u0915\u0930 \u0939\u0938\u094D\u0924\u093E\u0915\u094D\u0937\u0930 \u0915\u0930\u0928\u0947 \u0939\u094B\u0902\u0917\u0947" } };
+let DFLG=(() => { try {
+return localStorage.getItem("sm3_dflg") || "he";
+}
+catch (e) {
+return "he";
+} })();
+const dfNm=() => { try {
+return localStorage.getItem("sm3_dfnm") || "";
+}
+catch (e) {
+return "";
+} };
+function dfNmS(v) { try {
+localStorage.setItem("sm3_dfnm", String(v || "").trim());
+}
+catch (e) { } }
+function dfLg(tok, k) { DFLG = k; try {
+document.documentElement.dir = ["en", "ru", "zh", "hi"].includes(k) ? "ltr" : "rtl";
+}
+catch (e) { } try {
+localStorage.setItem("sm3_dflg", k);
+}
+catch (e) { } defPage(tok, window.DFD); }
+function dfItems(tok, d) {
+const T = DFL[DFLG] || DFL.he, R = d.r || {}, P = d.pics || [], I = d.it || [], one = P.length == I.length;
+return `<div class="row" style="gap:6px;justify-content:flex-end;flex-wrap:wrap">${[["he", "\u05E2\u05D1\u05E8\u05D9\u05EA"], ["en", "English"], ["ar", "\u0627\u0644\u0639\u0631\u0628\u064A\u0629"], ["ru", "\u0420\u0443\u0441\u0441\u043A\u0438\u0439"], ["zh", "\u4E2D\u6587"], ["hi", "\u0939\u093F\u0928\u094D\u0926\u0940"]].map(([k, n]) => `<button class="chip ${DFLG == k ? "on" : ""}" onclick="dfLg('${tok}','${k}')">${n}</button>`).join("")}</div>
+<input id="dfnm" placeholder="${T.who}" value="${esc(dfNm())}" onchange="dfNmS(this.value)" style="margin-top:8px">`
++ I.map((x, i) => {
+const r = R[i] || null, open = !r || r.st == "x" || r.st == "q";
+return `<div style="border:1px solid #dedad4;border-radius:12px;padding:10px;margin:10px 0;background:#fff">${one && P[i] ? `<img src="${esc(P[i])}" alt="" style="width:100%;border-radius:10px;display:block;margin-bottom:8px">` : ""}<b>${I.length > 1 ? (i + 1) + ". " : ""}${x.r ? esc(x.r) + " \u2014 " : ""}${esc(x.n || "")}</b>${x.pi ? "<div><span class=\"hopi\">\u05DC\u05D9\u05E7\u05D5\u05D9 \u05DE\u05E4\u05E8\u05D5\u05D8\u05D5\u05E7\u05D5\u05DC \u05E8\u05D0\u05E9\u05D5\u05E0\u05D9</span></div>" : ""}${x.hm ? "<div><span class=\"hopi b\">\u05DC\u05D9\u05E7\u05D5\u05D9 \u05DE\u05E4\u05E8\u05D5\u05D8\u05D5\u05E7\u05D5\u05DC \u05DE\u05E1\u05D9\u05E8\u05D4</span></div>" : ""}${x.tp && open ? `<div class="row" style="gap:6px;margin-top:8px"><a class="btn sb" style="flex:1;text-decoration:none" href="tel:+972${esc(String(x.tp).replace(/^0/, "").replace(/^972/, ""))}">התקשר לדייר</a><a class="btn wa" style="flex:1;text-decoration:none" href="https://wa.me/972${esc(String(x.tp).replace(/^0/, "").replace(/^972/, ""))}" target="_blank" rel="noopener">וואטסאפ לדייר</a></div>` : ""}${x.due ? `<div class="mu">${T.due}: ${esc(String(x.due).split("-").reverse().join("."))}</div>` : ""}
+${r ? `<div style="margin-top:6px;font-weight:800;color:${r.st == "d" ? "#2f5a3a" : r.st == "x" ? "#a8322a" : "#8a5a12"}">${r.st == "d" ? (r.sg ? "\u2713 " + (T.tsd || DFL.he.tsd) + (r.tn ? " \u00B7 " + esc(r.tn) : "") + " \u00B7 " + fdt(r.t) : T.w) : r.st == "x" ? T.re + (r.n ? ": " + esc(r.n) : "") : T.qs + (r.n ? ": " + esc(r.n) : "")}${r.by && r.st != "x" ? " \u00B7 " + esc(r.by) : ""}</div>${r.st == "d" && (r.af || [])[0] ? `<img src="${esc(r.af[0])}" alt="" style="width:55%;border-radius:8px;margin-top:6px;display:block">` : ""}` : ""}
+${open && x.ts ? `<div id="dfts${i}" style="margin-top:8px"><button class="btn stgbig" style="width:100%" onclick="dfTsOpen('${tok}','${i}')">${T.ts || DFL.he.ts}</button></div>` : ""}${open && !x.ts ? `<input id="dfn${i}" placeholder="${T.nt}" style="margin-top:8px"><div class="row" style="gap:6px;margin-top:6px"><label class="btn stgbig" style="flex:1;text-align:center">${T.done}<input type="file" accept="image/*" capture="environment" hidden onchange="dfRep('${tok}',${i},'d',this)"></label><button class="btn sb" style="flex:1" onclick="dfRep('${tok}',${i},'q')">${T.q}</button></div>` : ""}</div>`;
+}).join("")
++ (!one ? P.map(p => `<img src="${esc(p)}" alt="" style="width:100%;border-radius:12px;border:1px solid #dedad4;display:block;margin-top:8px">`).join("") : "") + `<p class="mu" style="font-size:13px">${T.fw}</p>`;
+}
 const DFPH={};
-function dfPhP(i,inp){const f=inp.files&&inp.files[0];if(!f)return;DFPH[i]=f;const v=$('dfpv'+i);if(v){try{v.src=URL.createObjectURL(f);v.style.display='block'}catch(e){}}}
-async function dfRep(tok,i,st,inp){const T=DFL[DFLG]||DFL.he,nf=$('dfnm'),nm=((nf||{}).value||'').trim();if(nf&&!nm){alert(T.nm);if(inp)inp.value='';const e=$('dfnm');if(e)e.focus();return}
-  const n=(($('dfn'+i)||{}).value||'').trim();if(nm)dfNmS(nm);if(st=='q'&&!n){alert(T.qn);const e=$('dfn'+i);if(e)e.focus();return}
-  let af=[];const f=(inp&&inp.files&&inp.files[0])||DFPH[i];/* גרסה 536: ליקוי שנשלח עם תמונה — חובה תמונה אחרי התיקון */try{const it0=window.DFD&&(window.DFD.it||[]).find(y=>String(y.id)==String(i));if(st=='d'&&it0&&it0.p&&!it0.ts&&!f){alert(T.nph||DFL.he.nph);return}}catch(e){}if(f){try{let u=await dfSmall(f,520,.5);if(u.length>70000)u=await dfSmall(f,380,.42);if(u&&u.length<90000)af=[u]}catch(e){}}
-  const rr={st,n:n.slice(0,300),af,by:(nm||'').slice(0,60),t:Date.now()};
-  const cd=$('dfc'+i);if(cd){cd.style.opacity='.55';cd.style.pointerEvents='none';const b=cd.querySelector('.stgbig');if(b)b.textContent=T.snd||DFL.he.snd}try{const api=await window.signFS();await api.upd(tok,{['r.'+i]:rr,rt:Date.now()});const D=window.DFD;if(D){D.r=D.r||{};D.r[i]=rr;defPage(tok,D)}else defPage(tok)}catch(e){if(cd){cd.style.opacity='';cd.style.pointerEvents=''}alert(T.err)}}
-const dfTsX=i=>{const D=window.DFD||{},I=D.it||[];return(D.kind=='ct'?I.find(q=>String(q.id)==String(i)):I[+i])||{}};
-function dfTsOpen(tok,i){const T=DFL[DFLG]||DFL.he,b=$('dfts'+i);if(!b)return;const x=dfTsX(i),need=(x.idh||[]).length,G=window.DFSG,re=G&&need&&G.k==(x.idh||[]).join();
-  b.innerHTML=(re?`<button class="btn stgbig" style="width:100%;margin-bottom:8px" onclick="dfTsSend('${tok}','${i}',1)">אותה חתימה · ${esc(G.tn)}</button><div class="mu" style="text-align:center;margin-bottom:6px">או חתימה חדשה:</div>`:'')+(need?`<input id="dfid${i}" inputmode="numeric" autocomplete="off" placeholder="תעודת זהות של בעל הדירה" style="margin-bottom:6px">`:'')+`<input id="dftn${i}" placeholder="${T.tsn}"><b style="display:block;margin-top:6px">${T.tsg}</b>${gzPadH('dfsg'+i)}<button class="btn stgbig" style="width:100%;margin-top:6px" onclick="dfTsSend('${tok}','${i}')">${T.tsok}</button>`;gzPad('dfsg'+i)}
-async function dfTsSend(tok,i,re){const T=DFL[DFLG]||DFL.he,nf=$('dfnm'),nm=((nf||{}).value||'').trim()||(nf?'':String((window.DFD||{}).cn||'קבלן'));if(nf&&!nm){alert(T.nm);nf.focus();return}if(nf)dfNmS(nm);const x=dfTsX(i),need=(x.idh||[]).length,G=window.DFSG;let tn='',sg='';
-  if(re&&G&&G.k==(x.idh||[]).join()){tn=G.tn;sg=G.sg}else{
-    if(need){const v=String(($('dfid'+i)||{}).value||'').replace(/\D/g,'');let ok=false;try{ok=v.length>=5&&x.idh.includes(await idHash(tok,v))}catch(e){}if(!ok){alert('תעודת הזהות לא תואמת את בעלי הדירה. החתימה לא נפתחת.');const e=$('dfid'+i);if(e)e.focus();return}}
-    tn=(($('dftn'+i)||{}).value||'').trim();if(!tn||!gzInk('dfsg'+i)){alert(T.tsm);return}try{sg=await ptSigImg('dfsg'+i)}catch(e){}}
-  if(!sg||sg.length>120000){alert(T.err);return}const rr={st:'d',n:'',af:[],by:nm.slice(0,60),t:Date.now(),sg,tn:tn.slice(0,80),idv:need?1:0};
-  try{const api=await window.signFS();await api.upd(tok,{['r.'+i]:rr,rt:Date.now()});if(need)window.DFSG={sg,tn,k:(x.idh||[]).join()};const D=window.DFD;if(D){D.r=D.r||{};D.r[i]=rr;defPage(tok,D)}else defPage(tok)}catch(e){alert(T.err)}}
-function dfM3X(){try{window.DFM3&&window.DFM3.stop()}catch(e){}window.DFM3=null;const o=document.getElementById('m3ov');if(o)o.remove()}
-async function dfM3(id){const d=window.DFD;if(!d)return;const x=(d.it||[]).find(q=>q.id==id);if(!x||!/^(p[A-Za-z0-9]{1,5})$/.test(x.m3||''))return;dfM3X();const L=(d.it||[]).filter(q=>q.m3==x.m3&&q.loc==x.loc),o=document.createElement('div');o.id='m3ov';o.style.cssText='position:fixed;inset:0;z-index:260;background:#eef0f2;color:#22262b;overflow-y:auto;direction:rtl';
-  o.innerHTML='<div style="position:sticky;top:0;z-index:6;display:flex;align-items:center;gap:10px;padding:10px 14px;background:#eef0f2"><button class="chip" onclick="dfM3X()">← חזרה</button><b style="flex:1;font-size:15px">'+esc(x.loc||'')+'</b></div><div id="m3bd" style="max-width:560px;margin:0 auto"><div class="mu" style="padding:60px 20px;text-align:center">טוען את המודל…</div></div>';document.body.appendChild(o);
-  const js=src=>new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)});
-  try{if(!window.THREE)await js('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');if(!window.M3D){await js('m3e.js?v=596');if(window.__m3p)await window.__m3p}if(!document.getElementById('m3ov'))return;
-    window.DFM3=window.M3D(document.getElementById('m3bd'),{plan:x.m3,real:1,ct:1,defs:L.map(q=>({rm:q.mr||'',it:q.mi||0,t:(q.r?q.r+' · ':'')+(q.n||''),ps:q.p||''})),startIx:L.indexOf(x)})}
-  catch(e){const b=document.getElementById('m3bd');if(b)b.innerHTML='<div class="mu" style="padding:60px 20px;text-align:center">לא הצלחתי לטעון את המודל. בדוק את החיבור ונסה שוב.</div>'}}
-function dfSum(d,I,R){const sm=d.sm||{},op=I.filter(x=>{const r=R[x.id];return!r||r.st=='x'||r.st=='q'}),old=op.length?Math.max(...op.map(x=>Math.floor((Date.now()-(x.t0||Date.now()))/864e5))):0;if(!sm.n&&!op.length)return'';
-  const L={he:['ב-30 הימים האחרונים טיפלת ב-{n} ליקויים, בממוצע {a} ימים לתיקון.','הליקוי הוותיק שממתין לך: {o} ימים.'],en:['Last 30 days: you fixed {n} defects, {a} days on average.','Oldest defect waiting for you: {o} days.'],ar:['آخر 30 يومًا: أصلحت {n} عيوب، بمعدل {a} أيام.','أقدم عيب ينتظرك: {o} أيام.'],ru:['За 30 дней: вы исправили {n} дефектов, в среднем за {a} дн.','Самый старый ожидающий дефект: {o} дн.'],zh:['过去30天：你修复了 {n} 个缺陷，平均 {a} 天。','等待最久的缺陷：{o} 天。'],hi:['पिछले 30 दिन: आपने {n} खराबियाँ ठीक कीं, औसतन {a} दिन में।','सबसे पुरानी लंबित खराबी: {o} दिन।']}[DFLG]||null,T=L||['ב-30 הימים האחרונים טיפלת ב-{n} ליקויים, בממוצע {a} ימים לתיקון.','הליקוי הוותיק שממתין לך: {o} ימים.'],f=(t,o)=>t.replace('{n}',o.n).replace('{a}',o.a).replace('{o}',o.o);
-  return`<div style="background:#fff;border:1px solid #dedad4;border-radius:12px;padding:10px 12px;margin:-2px 0 10px;font-size:14px;line-height:1.5">${sm.n?`<div>${esc(f(T[0],{n:sm.n,a:sm.a}))}</div>`:''}${op.length&&old>0?`<div style="color:#a8322a;font-weight:700">${esc(f(T[1],{o:old}))}</div>`:''}</div>`}
-function dfItemsC(tok,d){const T=DFL[DFLG]||DFL.he,R=d.r||{},I=d.it||[],now=Date.now(),w=I.filter(x=>(R[x.id]||{}).st=='d').length,D=d.dn||[];
-  return`<div class="row" style="gap:6px;justify-content:flex-end;flex-wrap:wrap">${[['he','עברית'],['en','English'],['ar','العربية'],['ru','Русский'],['zh','中文'],['hi','हिन्दी']].map(([k,n])=>`<button class="chip ${DFLG==k?'on':''}" onclick="dfLg('${tok}','${k}')">${n}</button>`).join('')}</div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center;margin:10px 0">${[[I.length-w,T.op],[w,T.wt],[d.sm&&d.sm.n!=null?d.sm.n:D.length,T.dn]].map(([n,l])=>`<div style="background:#fff;border:1px solid #dedad4;border-radius:12px;padding:8px 2px"><b style="display:block;font-size:20px">${n}</b><small class="mu">${l}</small></div>`).join('')}</div>
-  ${dfSum(d,I,R)}${I.length?'':`<h3 style="text-align:center;margin:18px 0">${T.none}</h3>`}`
-  +I.map(x=>{const r=R[x.id]||null,open=!r||r.st=='x'||r.st=='q',age=Math.floor((now-(x.t0||now))/864e5),nw=age<3&&!r;return`<div class="dfcd" id="dfc${x.id}">${x.p?`<img src="${esc(x.p)}" alt="" style="width:100%;border-radius:10px;display:block;margin-bottom:8px">`:''}<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><b class="dfloc">${esc([(x.loc||'').trim(),x.r].filter(Boolean).join(' · ')||'—')}</b><span style="flex:none;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:800;background:#f6e4e0;color:#a8322a">${nw?T.nw:T.od+' '+age+' '+T.dd}</span></div><div class="dfdf">${esc((x.tl&&(x.tl[DFLG]||x.tl[DFLG+'-CN']))||x.n||'')}</div>${x.tl&&(x.tl[DFLG]||x.tl[DFLG+'-CN'])?`<div class="mu" style="font-size:12px;direction:rtl">עברית: ${esc(x.n||'')}</div>`:''}${x.m3?`<button class="chip" style="margin-top:8px" onclick="dfM3(${x.id})">${esc(T.m3||'הצג במודל הדירה')}</button>`:''}${x.pi?'<span class="hopi">ליקוי מפרוטוקול ראשוני</span>':''}${x.hm?'<div><span class="hopi b">ליקוי מפרוטוקול מסירה</span></div>':''}${x.tp&&open?`<div class="row" style="gap:6px;margin-top:8px"><a class="btn sb" style="flex:1;text-decoration:none" href="tel:+972${esc(String(x.tp).replace(/^0/,'').replace(/^972/,''))}">התקשר לדייר</a><a class="btn wa" style="flex:1;text-decoration:none" href="https://wa.me/972${esc(String(x.tp).replace(/^0/,'').replace(/^972/,''))}" target="_blank" rel="noopener">וואטסאפ לדייר</a></div>`:''}${x.au?auBtn(x.au,x.aus,1):''}
-  ${r?`<div style="margin-top:6px;font-weight:800;color:${r.st=='d'?'#2f5a3a':r.st=='x'?'#a8322a':'#8a5a12'}">${r.st=='d'?(r.sg?'✓ '+(T.tsd||DFL.he.tsd)+(r.tn?' · '+esc(r.tn):'')+' · '+fdt(r.t):T.w):r.st=='x'?T.re+(r.n?': '+esc(r.n):''):T.qs+(r.n?': '+esc(r.n):'')}${r.by&&r.st!='x'?' · '+esc(r.by):''}</div>${r.st=='d'&&(r.af||[])[0]?`<img src="${esc(r.af[0])}" alt="" style="width:55%;border-radius:8px;margin-top:6px;display:block">`:''}`:''}
-  ${open&&x.ts?`<div id="dfts${x.id}" style="margin-top:8px"><button class="btn stgbig" style="width:100%" onclick="dfTsOpen('${tok}','${x.id}')">${T.ts||DFL.he.ts}</button></div>`:''}${open&&!x.ts?(x.p?`<div class="mu" style="margin-top:8px;font-weight:700">${T.nph||DFL.he.nph}</div><div class="row" style="gap:6px;margin-top:6px"><label class="btn stgbig" style="flex:1;text-align:center">${T.done||DFL.he.done}<input type="file" accept="image/*" capture="environment" hidden onchange="dfRep('${tok}','${x.id}','d',this)"></label></div>`:`<div class="row" style="gap:6px;margin-top:8px"><button class="btn stgbig" style="flex:1" onclick="dfRep('${tok}','${x.id}','d')">${T.dn2||DFL.he.dn2}</button><label class="btn sb" style="flex:1;text-align:center">${T.ph||DFL.he.ph}<input type="file" accept="image/*" capture="environment" hidden onchange="dfPhP('${x.id}',this)"></label></div>`)+`<img id="dfpv${x.id}" alt="" style="display:none;width:40%;border-radius:8px;margin-top:6px"><input id="dfn${x.id}" placeholder="${T.nt2||T.nt}" style="margin-top:6px">`:''}</div>`}).join('')
-  +(D.length?`<details style="margin-top:8px"><summary class="mu" style="cursor:pointer">${T.dn} (${D.length})</summary>${D.map(x=>`<div class="mu" style="padding:4px 0">✓ ${esc(x.n||'')}${x.loc?' · '+esc(x.loc):''}</div>`).join('')}</details>`:'')}
-async function defPage(tok,pre){try{document.documentElement.dir=['en','ru','zh','hi'].includes(DFLG)?'ltr':'rtl'}catch(e){}document.title='ליקויים לטיפול · מערכת ניהול פרויקטים YH';document.documentElement.dataset.theme='tech';document.body.innerHTML='<div id="sgp" class="sgp"><div class="sgh"><b>מערכת ניהול פרויקטים <span>YH</span></b></div><div class="sgb"><div class="mu">טוען…</div></div></div>';const B=document.querySelector('#sgp .sgb');
-  let d=pre||null;if(!d)try{const api=await window.signFS();d=await api.get(tok)}catch(e){}window.DFD=d;
-  if(!d||d.k!='df'){B.innerHTML='<h2>הקישור לא בתוקף</h2><p>אפשר לבקש קישור חדש ממי ששלח.</p>';return}
-  try{const lg=String(d.lg||'').replace('-CN','');if(lg&&!localStorage.getItem('sm3_dflg')&&DFL[lg]&&DFLG!=lg){DFLG=lg;document.documentElement.dir=['en','ru','zh','hi'].includes(lg)?'ltr':'rtl'}}catch(e){}
-  try{const H=document.querySelector('#sgp .sgh');if(H&&window.LDSCENE)H.innerHTML=`<div class="dflg"><img class="dfyh" src="app-180.png" alt="YH"><div><b>${esc(d.kind=='ct'?(d.cn||'ליקויים'):'ליקויים לטיפול')}</b><small>${esc(d.pn||'')}</small></div></div>`}catch(e){}
-  const m=d.me||{},ph=String(m.ph||'').replace(/\D/g,'').replace(/^0/,'972');
-  B.innerHTML=`<small>${esc(d.pn||'')}</small><h2 style="${d.u?'color:'+(d.u==2?'#5b3a8a':'#b3261e'):''}">${d.u==2?"ריג'קט":d.u?'טיפול דחוף':'ליקויים לטיפול'}</h2>${d.cn?`<p>לכבוד: <b>${esc(d.cn)}</b></p>`:''}${d.loc?`<p>${esc(d.loc)}</p>`:''}
-  ${d.kind=='ct'?dfItemsC(tok,d):dfItems(tok,d)}
-  <p class="mu" style="font-size:13px">לשמירת תמונה: לחיצה ארוכה עליה.</p>
-  <div class="li" style="display:block;background:#f9f8f6;border:1px solid #dedad4;border-radius:12px;padding:12px"><small>נשלח ע״י</small><div style="font-size:17px;font-weight:800">${esc(m.n||d.by||'')}${m.ro?' · '+esc(m.ro):''}</div><div class="mu">${esc(d.pn||'')}${m.co?' · '+esc(m.co):''}${d.t?' · '+new Date(d.t).toLocaleDateString('he-IL'):''}</div>
-  ${ph?`<div class="row" style="gap:8px;margin-top:10px"><a class="btn wa" style="flex:1;text-align:center;text-decoration:none" href="https://wa.me/${ph}" target="_blank" rel="noopener">ענה בוואטסאפ</a><a class="btn sb" style="flex:1;text-align:center;text-decoration:none" href="tel:${esc(m.ph)}">התקשר</a></div>`:''}</div>`}
-async function hpPage(tok,pre){document.title='פרוטוקול מסירה · מערכת ניהול פרויקטים YH';document.documentElement.dataset.theme='tech';document.body.innerHTML='<div id="sgp" class="sgp"><div class="sgh"><div class="sglogo"><img src="app-180.png" alt="YH"><div><b>פרוטוקול מסירה</b><small>טוען…</small></div></div></div><div class="sgb"><div class="mu">טוען…</div></div></div>';const B=document.querySelector('#sgp .sgb');
-  let d=pre||null;try{if(!d)d=await (await window.signFS()).get(tok)}catch(e){}
-  if(!d||d.k!='hp'){B.innerHTML='<h2>הקישור לא בתוקף</h2>';return}
-  try{document.querySelector('.sglogo b').textContent='פרוטוקול מסירה · דירה '+(d.apt||'');document.querySelector('.sglogo small').textContent=(d.pn||'')+(d.loc?' · '+d.loc:'')}catch(e){}
-  const df=d.df||[],sv=d.sv||[],sg=d.sg||[],T=d.tns||[];
-  B.innerHTML=`<div class="hpok"><b>הדירה נמסרה</b><small>${esc(d.dn||'')}</small></div>
-  ${T.length?`<div class="hpc"><h4>בעלי הדירה</h4>${T.map(t=>`<div class="hpkv"><span>${esc(t.n)}${t.poa?' · מיופה כוח':''}</span><span>חתם</span></div>`).join('')}</div>`:''}
-  ${sv.length?`<div class="hpc"><h4>נמסר</h4>${sv.map(x=>`<div class="hpkv"><span>${esc(x.t)}</span><b>${esc(String(x.q))}</b></div>`).join('')}</div>`:''}
-  <div class="hpc"><h4>ליקויים במסירה · ${df.length}</h4>${df.length?df.map(x=>`<div class="hpit"><span>${esc(x.t)}<small>${esc(x.rn)}${x.n?' · '+esc(x.n):''}</small></span><em class="${x.ok?'d':''}">${x.ok?'טופל':'לטיפול'}</em></div>`).join(''):'<div class="mu">אין</div>'}</div>
-  ${sg.length?`<div class="hpsg">${sg.map(g=>`<div>${g.i?`<img src="${esc(g.i)}" alt="">`:''}<small>${esc(g.lb)} · ${esc(g.n)}</small></div>`).join('')}</div>`:''}
-  <button class="btn olb hppr" style="width:100%;margin-top:12px" onclick="const H=document.querySelectorAll('.hppr,.dbk');H.forEach(x=>x.style.visibility='hidden');setTimeout(()=>{window.print();H.forEach(x=>x.style.visibility='')},50)">הורדה כ־PDF</button>`}
-const hoLab=at=>{const d=new Date(at);return['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'][d.getDay()]+' '+d.getDate()+'.'+(d.getMonth()+1)+' בשעה '+at.slice(11,16)};
-async function hoPage(tok,pre){document.title='מסירת דירה · מערכת ניהול פרויקטים YH';document.documentElement.dataset.theme='tech';document.body.innerHTML='<div id="sgp" class="sgp"><div class="sgh"><div class="sglogo"><img src="app-180.png" alt="YH"><div><b>קבלת המפתח</b><small>טוען…</small></div></div></div><div class="sgb"><div class="mu">טוען…</div></div></div>';const B=document.querySelector('#sgp .sgb');
-  let api=null,d=pre||null;try{api=await window.signFS();if(!d)d=await api.get(tok)}catch(e){}
-  try{if(d){document.querySelector('.sglogo b').textContent='קבלת המפתח · דירה '+(d.apt||'');document.querySelector('.sglogo small').textContent=d.pn||''}}catch(e){}
-  if(!d||d.k!='ho'){B.innerHTML='<h2>הקישור לא בתוקף</h2><p>אפשר לבקש קישור חדש ממי ששלח.</p>';return}
-  const nav=`https://waze.com/ul?q=${encodeURIComponent(d.adr||d.pn||'')}&navigate=yes`,ics=at=>{const z=at.replace(/[-:]/g,'')+'00',e=new Date(new Date(at).getTime()+36e5),ee=e.getFullYear()+String(e.getMonth()+1).padStart(2,'0')+String(e.getDate()).padStart(2,'0')+'T'+String(e.getHours()).padStart(2,'0')+String(e.getMinutes()).padStart(2,'0')+'00';return'data:text/calendar;charset=utf-8,'+encodeURIComponent(['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT','DTSTART:'+z,'DTEND:'+ee,'SUMMARY:מסירת דירה '+d.apt+' · '+d.pn,'LOCATION:'+(d.adr||''),'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:מחר מסירת הדירה','TRIGGER:-P1D','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n'))};
-  if(d.st=='s'){B.innerHTML=`<small>${esc(d.pn||'')}</small><h2>נתראה בקרוב!</h2><p>קבלת המפתח לדירה ${esc(d.apt)}: <b>${esc(hoLab(d.sg))}</b></p><p>בעלי הדירה מגיעים יחד, או עם ייפוי כוח.<br>חובה להביא תעודת זהות או דרכון.</p>${/· (\S+) מגיעים/.test(d.nm||'')?`<p>מגיעים: <b>${esc((d.nm.match(/· (\S+) מגיעים/)||[])[1])}</b></p>`:''}<a class="btn olb" target="_blank" rel="noopener" style="text-align:center;text-decoration:none;width:100%" href="${nav}">ניווט לאתר</a><a class="btn sb" style="text-align:center;text-decoration:none;width:100%;margin-top:8px" download="מסירה.ics" href="${ics(d.sg)}">הוסף ליומן</a><p class="mu">רוצים לשנות? פנו אל ${esc(d.by||'מנהל העבודה')}.</p>`;return}
-  hoWiz(B,d,api,tok,nav)}
-function wzTop(st,tot,pn){return`<div class="wzt">${st>1?'<button class="wzbk" data-bk="1">→ חזרה</button>':'<span></span>'}<span class="wzd">${Array.from({length:tot},(_,i)=>`<i class="${i<st?'on':''}"></i>`).join('')}</span><span class="wzn">${st} מתוך ${tot}</span></div>${pn?`<small class="mu">${esc(pn)}</small>`:''}`}
-function hoWiz(B,d,api,tok,nav){const sl=d.sl||[],T0=[...new Set(sl.map(a=>a.slice(11,16)))].sort(),T=T0.length?T0:['09:00','13:00'],ds=[...new Set(sl.map(a=>a.slice(0,10)))].sort(),k2=x=>x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0'),wkOf=k=>{const x=new Date(k+'T12:00');x.setDate(x.getDate()-x.getDay());return k2(x)},W=[...new Set(ds.map(wkOf))];let wi=0,st=1,pick='',cnt='';
-  const go=n=>{st=n;draw();window.scrollTo(0,0)};
-  const draw=()=>{let h=wzTop(st,3,'');
-    if(st==1){const w=W[wi];h+=`<h2 class="wzq">בחרו מועד שנוח לכם</h2><p class="mu" style="margin:0 0 6px">ימים א׳–ה׳ · ${T.join(' או ')}</p>`;
-      if(!w)h+=`<p>אין כרגע מועד פנוי. פנו אל ${esc(d.by||'מנהל העבודה')}.</p>`;else{h+=`<div class="howk"><span>${wi==0?'השבוע':wi==1?'שבוע הבא':'בעוד '+wi+' שבועות'}</span><span>${wi>0?'<button data-wk="-1">‹ קודם</button>':''}${wi<W.length-1?'<button data-wk="1">הבא ›</button>':''}</span></div><div class="hogr">`;
-        for(let i=0;i<5;i++){const x=new Date(w+'T12:00');x.setDate(x.getDate()+i);const k=k2(x);h+=`<div class="hoday"><b>${esc(x.toLocaleDateString('he-IL',{weekday:'long'}).replace('יום ',''))}<small>${x.getDate()}.${x.getMonth()+1}</small></b>${T.map(t=>{const at=k+'T'+t,ok=sl.includes(at);return`<button ${ok?`data-at="${at}"`:'disabled'} class="${pick==at?'on':''}">${t}</button>`}).join('')}</div>`}
-        h+=`</div>`}
-      if(pick)h+=`<button class="btn olb wzgo" id="hopk1" style="width:100%">אישור · ${esc(hoLab(pick).replace(' בשעה ',' · '))}</button>`}
-    if(st==2)h+=`<h2 class="wzq">כמה אנשים מגיעים?</h2><div class="wzg" style="grid-template-columns:repeat(3,1fr)">${['1','2','3','4','5+'].map(c=>`<button class="${cnt==c?'on':''}" data-c="${c}">${c}</button>`).join('')}</div><div class="li" style="display:block;margin-top:12px"><b>לפני שמגיעים</b><p style="margin:4px 0 0">בעלי הדירה מגיעים יחד, או אחד עם ייפוי כוח מהשני · להביא תעודת זהות או דרכון</p></div>`;
-    if(st==3)h+=`<h2 class="wzq">כמעט סיימנו</h2><div class="wzs"><b>דירה ${esc(d.apt)}</b><span>${esc(hoLab(pick))}</span><span>${esc(cnt)} ${cnt=='1'?'אדם':'אנשים'}</span></div><label>שם<input id="hon" value="${esc(d.cn||'')}"></label><button class="btn olb wzgo" id="hook" style="width:100%">אישור</button><a class="btn sb" target="_blank" rel="noopener" style="text-align:center;text-decoration:none;margin-top:8px;width:100%" href="${nav}">מיקום האתר בניווט</a>`;
-    B.innerHTML=h;
-    B.querySelectorAll('[data-bk]').forEach(b=>b.onclick=()=>go(st-1));
-    B.querySelectorAll('[data-wk]').forEach(b=>b.onclick=()=>{wi+=+b.dataset.wk;draw()});
-    B.querySelectorAll('[data-at]').forEach(b=>b.onclick=()=>{pick=b.dataset.at;draw()});
-    const p1=document.getElementById('hopk1');if(p1)p1.onclick=()=>go(2);
-    B.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{cnt=b.dataset.c;go(3)});
-    const ok=document.getElementById('hook');if(ok)ok.onclick=async()=>{const nm=((document.getElementById('hon').value||'').trim()||d.cn||'דייר')+' · '+cnt+' מגיעים';ok.disabled=true;ok.textContent='שולח…';try{await api.upd(tok,{st:'s',sg:pick,nm,ts:Date.now()});d.st='s';d.sg=pick;d.nm=nm;hoPage(tok,d)}catch(e){ok.disabled=false;ok.textContent='אישור';alert('השליחה נכשלה. בדוק אינטרנט ונסה שוב.')}}};
-  draw()}
-const fdt=t=>new Date(t).toLocaleString('he-IL',{day:'numeric',month:'numeric',year:'2-digit',hour:'2-digit',minute:'2-digit'});
-Object.assign(DFL.he,{op:'פתוחים',wt:'ממתין לאישור',dn:'טופלו',none:'אין ליקויים פתוחים. תודה!',nw:'חדש',od:'פתוח',dd:'ימים'});
-Object.assign(DFL.en,{op:'Open',wt:'Awaiting approval',dn:'Fixed',none:'No open defects. Thank you!',nw:'New',od:'Open',dd:'days'});
-Object.assign(DFL.ar,{op:'مفتوحة',wt:'بانتظار الموافقة',dn:'تم إصلاحها',none:'لا توجد عيوب مفتوحة. شكراً!',nw:'جديد',od:'مفتوح',dd:'أيام'});
-Object.assign(DFL.ru,{op:'Открыто',wt:'Ждёт подтверждения',dn:'Исправлено',none:'Открытых дефектов нет. Спасибо!',nw:'Новое',od:'Открыто',dd:'дн.'});
-Object.assign(DFL.zh,{op:'未处理',wt:'等待确认',dn:'已处理',none:'没有未处理的缺陷。谢谢！',nw:'新',od:'已开',dd:'天'});
-Object.assign(DFL.hi,{op:'खुले',wt:'मंज़ूरी बाकी',dn:'ठीक किए',none:'कोई खुली खराबी नहीं। धन्यवाद!',nw:'नया',od:'खुला',dd:'दिन'});
+function dfPhP(i, inp) { const f = inp.files && inp.files[0]; if (!f)
+return; DFPH[i] = f; const v = $("dfpv" + i); if (v) {
+try {
+v.src = URL.createObjectURL(f);
+v.style.display = "block";
+}
+catch (e) { }
+} }
+async function dfRep(tok, i, st, inp) {
+const T = DFL[DFLG] || DFL.he, nf = $("dfnm"), nm = ((nf || {}).value || "").trim();
+if (nf && !nm) {
+alert(T.nm);
+if (inp)
+inp.value = "";
+const e = $("dfnm");
+if (e)
+e.focus();
+return;
+}
+const n = (($("dfn" + i) || {}).value || "").trim();
+if (nm)
+dfNmS(nm);
+if (st == "q" && !n) {
+alert(T.qn);
+const e = $("dfn" + i);
+if (e)
+e.focus();
+return;
+}
+let af = [];
+const f = (inp && inp.files && inp.files[0]) || DFPH[i];
+try {
+const it0 = window.DFD && (window.DFD.it || []).find(y => String(y.id) == String(i));
+if (st == "d" && it0 && it0.p && !it0.ts && !f) {
+alert(T.nph || DFL.he.nph);
+return;
+}
+}
+catch (e) { }
+if (f) {
+try {
+let u = await dfSmall(f, 520, 0.5);
+if (u.length > 70000)
+u = await dfSmall(f, 380, 0.42);
+if (u && u.length < 90000)
+af = [u];
+}
+catch (e) { }
+}
+const rr = { st, n: n.slice(0, 300), af, by: (nm || "").slice(0, 60), t: Date.now() };
+const cd = $("dfc" + i);
+if (cd) {
+cd.style.opacity = ".55";
+cd.style.pointerEvents = "none";
+const b = cd.querySelector(".stgbig");
+if (b)
+b.textContent = T.snd || DFL.he.snd;
+}
+try {
+const api = await window.signFS();
+await api.upd(tok, { ["r." + i]: rr, rt: Date.now() });
+const D = window.DFD;
+if (D) {
+D.r = D.r || {};
+D.r[i] = rr;
+defPage(tok, D);
+}
+else
+defPage(tok);
+}
+catch (e) {
+if (cd) {
+cd.style.opacity = "";
+cd.style.pointerEvents = "";
+}
+alert(T.err);
+}
+}
+const dfTsX=i => { const D = window.DFD || {}, I = D.it || []; return (D.kind == "ct" ? I.find(q => String(q.id) == String(i)) : I[+i]) || {}; };
+function dfTsOpen(tok, i) {
+const T = DFL[DFLG] || DFL.he, b = $("dfts" + i);
+if (!b)
+return;
+const x = dfTsX(i), need = (x.idh || []).length, G = window.DFSG, re = G && need && G.k == (x.idh || []).join();
+b.innerHTML = (re ? `<button class="btn stgbig" style="width:100%;margin-bottom:8px" onclick="dfTsSend('${tok}','${i}',1)">אותה חתימה · ${esc(G.tn)}</button><div class="mu" style="text-align:center;margin-bottom:6px">או חתימה חדשה:</div>` : "") + (need ? `<input id="dfid${i}" inputmode="numeric" autocomplete="off" placeholder="תעודת זהות של בעל הדירה" style="margin-bottom:6px">` : "") + `<input id="dftn${i}" placeholder="${T.tsn}"><b style="display:block;margin-top:6px">${T.tsg}</b>${gzPadH("dfsg" + i)}<button class="btn stgbig" style="width:100%;margin-top:6px" onclick="dfTsSend('${tok}','${i}')">${T.tsok}</button>`;
+gzPad("dfsg" + i);
+}
+async function dfTsSend(tok, i, re) {
+const T = DFL[DFLG] || DFL.he, nf = $("dfnm"), nm = ((nf || {}).value || "").trim() || (nf ? "" : String((window.DFD || {}).cn || "\u05E7\u05D1\u05DC\u05DF"));
+if (nf && !nm) {
+alert(T.nm);
+nf.focus();
+return;
+}
+if (nf)
+dfNmS(nm);
+const x = dfTsX(i), need = (x.idh || []).length, G = window.DFSG;
+let tn = "", sg = "";
+if (re && G && G.k == (x.idh || []).join()) {
+tn = G.tn;
+sg = G.sg;
+}
+else {
+if (need) {
+const v = String(($("dfid" + i) || {}).value || "").replace(/\D/g, "");
+let ok = false;
+try {
+ok = v.length >= 5 && x.idh.includes(await idHash(tok, v));
+}
+catch (e) { }
+if (!ok) {
+alert("\u05EA\u05E2\u05D5\u05D3\u05EA \u05D4\u05D6\u05D4\u05D5\u05EA \u05DC\u05D0 \u05EA\u05D5\u05D0\u05DE\u05EA \u05D0\u05EA \u05D1\u05E2\u05DC\u05D9 \u05D4\u05D3\u05D9\u05E8\u05D4. \u05D4\u05D7\u05EA\u05D9\u05DE\u05D4 \u05DC\u05D0 \u05E0\u05E4\u05EA\u05D7\u05EA.");
+const e = $("dfid" + i);
+if (e)
+e.focus();
+return;
+}
+}
+tn = (($("dftn" + i) || {}).value || "").trim();
+if (!tn || !gzInk("dfsg" + i)) {
+alert(T.tsm);
+return;
+}
+try {
+sg = await ptSigImg("dfsg" + i);
+}
+catch (e) { }
+}
+if (!sg || sg.length > 120000) {
+alert(T.err);
+return;
+}
+const rr = { st: "d", n: "", af: [], by: nm.slice(0, 60), t: Date.now(), sg, tn: tn.slice(0, 80), idv: need ? 1 : 0 };
+try {
+const api = await window.signFS();
+await api.upd(tok, { ["r." + i]: rr, rt: Date.now() });
+if (need)
+window.DFSG = { sg, tn, k: (x.idh || []).join() };
+const D = window.DFD;
+if (D) {
+D.r = D.r || {};
+D.r[i] = rr;
+defPage(tok, D);
+}
+else
+defPage(tok);
+}
+catch (e) {
+alert(T.err);
+}
+}
+function dfM3X() { try {
+window.DFM3 && window.DFM3.stop();
+}
+catch (e) { } window.DFM3 = null; const o = document.getElementById("m3ov"); if (o)
+o.remove(); }
+async function dfM3(id) {
+const d = window.DFD;
+if (!d)
+return;
+const x = (d.it || []).find(q => q.id == id);
+if (!x || !/^(p[A-Za-z0-9]{1,5})$/.test(x.m3 || ""))
+return;
+dfM3X();
+const L = (d.it || []).filter(q => q.m3 == x.m3 && q.loc == x.loc), o = document.createElement("div");
+o.id = "m3ov";
+o.style.cssText = "position:fixed;inset:0;z-index:260;background:#eef0f2;color:#22262b;overflow-y:auto;direction:rtl";
+o.innerHTML = "<div style=\"position:sticky;top:0;z-index:6;display:flex;align-items:center;gap:10px;padding:10px 14px;background:#eef0f2\"><button class=\"chip\" onclick=\"dfM3X()\">\u2190 \u05D7\u05D6\u05E8\u05D4</button><b style=\"flex:1;font-size:15px\">" + esc(x.loc || "") + "</b></div><div id=\"m3bd\" style=\"max-width:560px;margin:0 auto\"><div class=\"mu\" style=\"padding:60px 20px;text-align:center\">\u05D8\u05D5\u05E2\u05DF \u05D0\u05EA \u05D4\u05DE\u05D5\u05D3\u05DC\u2026</div></div>";
+document.body.appendChild(o);
+const js = src => new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+try {
+if (!window.THREE)
+await js("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js");
+if (!window.M3D) {
+await js("m3e.js?v=596");
+if (window.__m3p)
+await window.__m3p;
+}
+if (!document.getElementById("m3ov"))
+return;
+window.DFM3 = window.M3D(document.getElementById("m3bd"), { plan: x.m3, real: 1, ct: 1, defs: L.map(q => ({ rm: q.mr || "", it: q.mi || 0, t: (q.r ? q.r + " \u00B7 " : "") + (q.n || ""), ps: q.p || "" })), startIx: L.indexOf(x) });
+}
+catch (e) {
+const b = document.getElementById("m3bd");
+if (b)
+b.innerHTML = "<div class=\"mu\" style=\"padding:60px 20px;text-align:center\">\u05DC\u05D0 \u05D4\u05E6\u05DC\u05D7\u05EA\u05D9 \u05DC\u05D8\u05E2\u05D5\u05DF \u05D0\u05EA \u05D4\u05DE\u05D5\u05D3\u05DC. \u05D1\u05D3\u05D5\u05E7 \u05D0\u05EA \u05D4\u05D7\u05D9\u05D1\u05D5\u05E8 \u05D5\u05E0\u05E1\u05D4 \u05E9\u05D5\u05D1.</div>";
+}
+}
+function dfSum(d, I, R) {
+const sm = d.sm || {}, op = I.filter(x => { const r = R[x.id]; return !r || r.st == "x" || r.st == "q"; }), old = op.length ? Math.max(...op.map(x => Math.floor((Date.now() - (x.t0 || Date.now())) / 86400000))) : 0;
+if (!sm.n && !op.length)
+return "";
+const L = { he: ["\u05D1-30 \u05D4\u05D9\u05DE\u05D9\u05DD \u05D4\u05D0\u05D7\u05E8\u05D5\u05E0\u05D9\u05DD \u05D8\u05D9\u05E4\u05DC\u05EA \u05D1-{n} \u05DC\u05D9\u05E7\u05D5\u05D9\u05D9\u05DD, \u05D1\u05DE\u05DE\u05D5\u05E6\u05E2 {a} \u05D9\u05DE\u05D9\u05DD \u05DC\u05EA\u05D9\u05E7\u05D5\u05DF.", "\u05D4\u05DC\u05D9\u05E7\u05D5\u05D9 \u05D4\u05D5\u05D5\u05EA\u05D9\u05E7 \u05E9\u05DE\u05DE\u05EA\u05D9\u05DF \u05DC\u05DA: {o} \u05D9\u05DE\u05D9\u05DD."], en: ["Last 30 days: you fixed {n} defects, {a} days on average.", "Oldest defect waiting for you: {o} days."], ar: ["\u0622\u062E\u0631 30 \u064A\u0648\u0645\u064B\u0627: \u0623\u0635\u0644\u062D\u062A {n} \u0639\u064A\u0648\u0628\u060C \u0628\u0645\u0639\u062F\u0644 {a} \u0623\u064A\u0627\u0645.", "\u0623\u0642\u062F\u0645 \u0639\u064A\u0628 \u064A\u0646\u062A\u0638\u0631\u0643: {o} \u0623\u064A\u0627\u0645."], ru: ["\u0417\u0430 30 \u0434\u043D\u0435\u0439: \u0432\u044B \u0438\u0441\u043F\u0440\u0430\u0432\u0438\u043B\u0438 {n} \u0434\u0435\u0444\u0435\u043A\u0442\u043E\u0432, \u0432 \u0441\u0440\u0435\u0434\u043D\u0435\u043C \u0437\u0430 {a} \u0434\u043D.", "\u0421\u0430\u043C\u044B\u0439 \u0441\u0442\u0430\u0440\u044B\u0439 \u043E\u0436\u0438\u0434\u0430\u044E\u0449\u0438\u0439 \u0434\u0435\u0444\u0435\u043A\u0442: {o} \u0434\u043D."], zh: ["\u8FC7\u53BB30\u5929\uFF1A\u4F60\u4FEE\u590D\u4E86 {n} \u4E2A\u7F3A\u9677\uFF0C\u5E73\u5747 {a} \u5929\u3002", "\u7B49\u5F85\u6700\u4E45\u7684\u7F3A\u9677\uFF1A{o} \u5929\u3002"], hi: ["\u092A\u093F\u091B\u0932\u0947 30 \u0926\u093F\u0928: \u0906\u092A\u0928\u0947 {n} \u0916\u0930\u093E\u092C\u093F\u092F\u093E\u0901 \u0920\u0940\u0915 \u0915\u0940\u0902, \u0914\u0938\u0924\u0928 {a} \u0926\u093F\u0928 \u092E\u0947\u0902\u0964", "\u0938\u092C\u0938\u0947 \u092A\u0941\u0930\u093E\u0928\u0940 \u0932\u0902\u092C\u093F\u0924 \u0916\u0930\u093E\u092C\u0940: {o} \u0926\u093F\u0928\u0964"] }[DFLG] || null, T = L || ["\u05D1-30 \u05D4\u05D9\u05DE\u05D9\u05DD \u05D4\u05D0\u05D7\u05E8\u05D5\u05E0\u05D9\u05DD \u05D8\u05D9\u05E4\u05DC\u05EA \u05D1-{n} \u05DC\u05D9\u05E7\u05D5\u05D9\u05D9\u05DD, \u05D1\u05DE\u05DE\u05D5\u05E6\u05E2 {a} \u05D9\u05DE\u05D9\u05DD \u05DC\u05EA\u05D9\u05E7\u05D5\u05DF.", "\u05D4\u05DC\u05D9\u05E7\u05D5\u05D9 \u05D4\u05D5\u05D5\u05EA\u05D9\u05E7 \u05E9\u05DE\u05DE\u05EA\u05D9\u05DF \u05DC\u05DA: {o} \u05D9\u05DE\u05D9\u05DD."], f = (t, o) => t.replace("{n}", o.n).replace("{a}", o.a).replace("{o}", o.o);
+return `<div style="background:#fff;border:1px solid #dedad4;border-radius:12px;padding:10px 12px;margin:-2px 0 10px;font-size:14px;line-height:1.5">${sm.n ? `<div>${esc(f(T[0], { n: sm.n, a: sm.a }))}</div>` : ""}${op.length && old > 0 ? `<div style="color:#a8322a;font-weight:700">${esc(f(T[1], { o: old }))}</div>` : ""}</div>`;
+}
+function dfItemsC(tok, d) {
+const T = DFL[DFLG] || DFL.he, R = d.r || {}, I = d.it || [], now = Date.now(), w = I.filter(x => (R[x.id] || {}).st == "d").length, D = d.dn || [];
+return `<div class="row" style="gap:6px;justify-content:flex-end;flex-wrap:wrap">${[["he", "\u05E2\u05D1\u05E8\u05D9\u05EA"], ["en", "English"], ["ar", "\u0627\u0644\u0639\u0631\u0628\u064A\u0629"], ["ru", "\u0420\u0443\u0441\u0441\u043A\u0438\u0439"], ["zh", "\u4E2D\u6587"], ["hi", "\u0939\u093F\u0928\u094D\u0926\u0940"]].map(([k, n]) => `<button class="chip ${DFLG == k ? "on" : ""}" onclick="dfLg('${tok}','${k}')">${n}</button>`).join("")}</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center;margin:10px 0">${[[I.length - w, T.op], [w, T.wt], [d.sm && d.sm.n != null ? d.sm.n : D.length, T.dn]].map(([n, l]) => `<div style="background:#fff;border:1px solid #dedad4;border-radius:12px;padding:8px 2px"><b style="display:block;font-size:20px">${n}</b><small class="mu">${l}</small></div>`).join("")}</div>
+${dfSum(d, I, R)}${I.length ? "" : `<h3 style="text-align:center;margin:18px 0">${T.none}</h3>`}`
++ I.map(x => {
+const r = R[x.id] || null, open = !r || r.st == "x" || r.st == "q", age = Math.floor((now - (x.t0 || now)) / 86400000), nw = age < 3 && !r;
+return `<div class="dfcd" id="dfc${x.id}">${x.p ? `<img src="${esc(x.p)}" alt="" style="width:100%;border-radius:10px;display:block;margin-bottom:8px">` : ""}<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><b class="dfloc">${esc([(x.loc || "").trim(), x.r].filter(Boolean).join(" \u00B7 ") || "\u2014")}</b><span style="flex:none;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:800;background:#f6e4e0;color:#a8322a">${nw ? T.nw : T.od + " " + age + " " + T.dd}</span></div><div class="dfdf">${esc((x.tl && (x.tl[DFLG] || x.tl[DFLG + "-CN"])) || x.n || "")}</div>${x.tl && (x.tl[DFLG] || x.tl[DFLG + "-CN"]) ? `<div class="mu" style="font-size:12px;direction:rtl">עברית: ${esc(x.n || "")}</div>` : ""}${x.m3 ? `<button class="chip" style="margin-top:8px" onclick="dfM3(${x.id})">${esc(T.m3 || "\u05D4\u05E6\u05D2 \u05D1\u05DE\u05D5\u05D3\u05DC \u05D4\u05D3\u05D9\u05E8\u05D4")}</button>` : ""}${x.pi ? "<span class=\"hopi\">\u05DC\u05D9\u05E7\u05D5\u05D9 \u05DE\u05E4\u05E8\u05D5\u05D8\u05D5\u05E7\u05D5\u05DC \u05E8\u05D0\u05E9\u05D5\u05E0\u05D9</span>" : ""}${x.hm ? "<div><span class=\"hopi b\">\u05DC\u05D9\u05E7\u05D5\u05D9 \u05DE\u05E4\u05E8\u05D5\u05D8\u05D5\u05E7\u05D5\u05DC \u05DE\u05E1\u05D9\u05E8\u05D4</span></div>" : ""}${x.tp && open ? `<div class="row" style="gap:6px;margin-top:8px"><a class="btn sb" style="flex:1;text-decoration:none" href="tel:+972${esc(String(x.tp).replace(/^0/, "").replace(/^972/, ""))}">התקשר לדייר</a><a class="btn wa" style="flex:1;text-decoration:none" href="https://wa.me/972${esc(String(x.tp).replace(/^0/, "").replace(/^972/, ""))}" target="_blank" rel="noopener">וואטסאפ לדייר</a></div>` : ""}${x.au ? auBtn(x.au, x.aus, 1) : ""}
+${r ? `<div style="margin-top:6px;font-weight:800;color:${r.st == "d" ? "#2f5a3a" : r.st == "x" ? "#a8322a" : "#8a5a12"}">${r.st == "d" ? (r.sg ? "\u2713 " + (T.tsd || DFL.he.tsd) + (r.tn ? " \u00B7 " + esc(r.tn) : "") + " \u00B7 " + fdt(r.t) : T.w) : r.st == "x" ? T.re + (r.n ? ": " + esc(r.n) : "") : T.qs + (r.n ? ": " + esc(r.n) : "")}${r.by && r.st != "x" ? " \u00B7 " + esc(r.by) : ""}</div>${r.st == "d" && (r.af || [])[0] ? `<img src="${esc(r.af[0])}" alt="" style="width:55%;border-radius:8px;margin-top:6px;display:block">` : ""}` : ""}
+${open && x.ts ? `<div id="dfts${x.id}" style="margin-top:8px"><button class="btn stgbig" style="width:100%" onclick="dfTsOpen('${tok}','${x.id}')">${T.ts || DFL.he.ts}</button></div>` : ""}${open && !x.ts ? (x.p ? `<div class="mu" style="margin-top:8px;font-weight:700">${T.nph || DFL.he.nph}</div><div class="row" style="gap:6px;margin-top:6px"><label class="btn stgbig" style="flex:1;text-align:center">${T.done || DFL.he.done}<input type="file" accept="image/*" capture="environment" hidden onchange="dfRep('${tok}','${x.id}','d',this)"></label></div>` : `<div class="row" style="gap:6px;margin-top:8px"><button class="btn stgbig" style="flex:1" onclick="dfRep('${tok}','${x.id}','d')">${T.dn2 || DFL.he.dn2}</button><label class="btn sb" style="flex:1;text-align:center">${T.ph || DFL.he.ph}<input type="file" accept="image/*" capture="environment" hidden onchange="dfPhP('${x.id}',this)"></label></div>`) + `<img id="dfpv${x.id}" alt="" style="display:none;width:40%;border-radius:8px;margin-top:6px"><input id="dfn${x.id}" placeholder="${T.nt2 || T.nt}" style="margin-top:6px">` : ""}</div>`;
+}).join("")
++ (D.length ? `<details style="margin-top:8px"><summary class="mu" style="cursor:pointer">${T.dn} (${D.length})</summary>${D.map(x => `<div class="mu" style="padding:4px 0">✓ ${esc(x.n || "")}${x.loc ? " \u00B7 " + esc(x.loc) : ""}</div>`).join("")}</details>` : "");
+}
+async function defPage(tok, pre) {
+try {
+document.documentElement.dir = ["en", "ru", "zh", "hi"].includes(DFLG) ? "ltr" : "rtl";
+}
+catch (e) { }
+document.title = "\u05DC\u05D9\u05E7\u05D5\u05D9\u05D9\u05DD \u05DC\u05D8\u05D9\u05E4\u05D5\u05DC \u00B7 \u05DE\u05E2\u05E8\u05DB\u05EA \u05E0\u05D9\u05D4\u05D5\u05DC \u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\u05D9\u05DD YH";
+document.documentElement.dataset.theme = "tech";
+document.body.innerHTML = "<div id=\"sgp\" class=\"sgp\"><div class=\"sgh\"><b>\u05DE\u05E2\u05E8\u05DB\u05EA \u05E0\u05D9\u05D4\u05D5\u05DC \u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\u05D9\u05DD <span>YH</span></b></div><div class=\"sgb\"><div class=\"mu\">\u05D8\u05D5\u05E2\u05DF\u2026</div></div></div>";
+const B = document.querySelector("#sgp .sgb");
+let d = pre || null;
+if (!d)
+try {
+const api = await window.signFS();
+d = await api.get(tok);
+}
+catch (e) { }
+window.DFD = d;
+if (!d || d.k != "df") {
+B.innerHTML = "<h2>\u05D4\u05E7\u05D9\u05E9\u05D5\u05E8 \u05DC\u05D0 \u05D1\u05EA\u05D5\u05E7\u05E3</h2><p>\u05D0\u05E4\u05E9\u05E8 \u05DC\u05D1\u05E7\u05E9 \u05E7\u05D9\u05E9\u05D5\u05E8 \u05D7\u05D3\u05E9 \u05DE\u05DE\u05D9 \u05E9\u05E9\u05DC\u05D7.</p>";
+return;
+}
+try {
+const lg = String(d.lg || "").replace("-CN", "");
+if (lg && !localStorage.getItem("sm3_dflg") && DFL[lg] && DFLG != lg) {
+DFLG = lg;
+document.documentElement.dir = ["en", "ru", "zh", "hi"].includes(lg) ? "ltr" : "rtl";
+}
+}
+catch (e) { }
+try {
+const H = document.querySelector("#sgp .sgh");
+if (H && window.LDSCENE)
+H.innerHTML = `<div class="dflg"><img class="dfyh" src="app-180.png" alt="YH"><div><b>${esc(d.kind == "ct" ? (d.cn || "\u05DC\u05D9\u05E7\u05D5\u05D9\u05D9\u05DD") : "\u05DC\u05D9\u05E7\u05D5\u05D9\u05D9\u05DD \u05DC\u05D8\u05D9\u05E4\u05D5\u05DC")}</b><small>${esc(d.pn || "")}</small></div></div>`;
+}
+catch (e) { }
+const m = d.me || {}, ph = String(m.ph || "").replace(/\D/g, "").replace(/^0/, "972");
+B.innerHTML = `<small>${esc(d.pn || "")}</small><h2 style="${d.u ? "color:" + (d.u == 2 ? "#5b3a8a" : "#b3261e") : ""}">${d.u == 2 ? "\u05E8\u05D9\u05D2'\u05E7\u05D8" : d.u ? "\u05D8\u05D9\u05E4\u05D5\u05DC \u05D3\u05D7\u05D5\u05E3" : "\u05DC\u05D9\u05E7\u05D5\u05D9\u05D9\u05DD \u05DC\u05D8\u05D9\u05E4\u05D5\u05DC"}</h2>${d.cn ? `<p>לכבוד: <b>${esc(d.cn)}</b></p>` : ""}${d.loc ? `<p>${esc(d.loc)}</p>` : ""}
+${d.kind == "ct" ? dfItemsC(tok, d) : dfItems(tok, d)}
+<p class="mu" style="font-size:13px">לשמירת תמונה: לחיצה ארוכה עליה.</p>
+<div class="li" style="display:block;background:#f9f8f6;border:1px solid #dedad4;border-radius:12px;padding:12px"><small>נשלח ע״י</small><div style="font-size:17px;font-weight:800">${esc(m.n || d.by || "")}${m.ro ? " \u00B7 " + esc(m.ro) : ""}</div><div class="mu">${esc(d.pn || "")}${m.co ? " \u00B7 " + esc(m.co) : ""}${d.t ? " \u00B7 " + new Date(d.t).toLocaleDateString("he-IL") : ""}</div>
+${ph ? `<div class="row" style="gap:8px;margin-top:10px"><a class="btn wa" style="flex:1;text-align:center;text-decoration:none" href="https://wa.me/${ph}" target="_blank" rel="noopener">ענה בוואטסאפ</a><a class="btn sb" style="flex:1;text-align:center;text-decoration:none" href="tel:${esc(m.ph)}">התקשר</a></div>` : ""}</div>`;
+}
+async function hpPage(tok, pre) {
+document.title = "\u05E4\u05E8\u05D5\u05D8\u05D5\u05E7\u05D5\u05DC \u05DE\u05E1\u05D9\u05E8\u05D4 \u00B7 \u05DE\u05E2\u05E8\u05DB\u05EA \u05E0\u05D9\u05D4\u05D5\u05DC \u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\u05D9\u05DD YH";
+document.documentElement.dataset.theme = "tech";
+document.body.innerHTML = "<div id=\"sgp\" class=\"sgp\"><div class=\"sgh\"><div class=\"sglogo\"><img src=\"app-180.png\" alt=\"YH\"><div><b>\u05E4\u05E8\u05D5\u05D8\u05D5\u05E7\u05D5\u05DC \u05DE\u05E1\u05D9\u05E8\u05D4</b><small>\u05D8\u05D5\u05E2\u05DF\u2026</small></div></div></div><div class=\"sgb\"><div class=\"mu\">\u05D8\u05D5\u05E2\u05DF\u2026</div></div></div>";
+const B = document.querySelector("#sgp .sgb");
+let d = pre || null;
+try {
+if (!d)
+d = await (await window.signFS()).get(tok);
+}
+catch (e) { }
+if (!d || d.k != "hp") {
+B.innerHTML = "<h2>\u05D4\u05E7\u05D9\u05E9\u05D5\u05E8 \u05DC\u05D0 \u05D1\u05EA\u05D5\u05E7\u05E3</h2>";
+return;
+}
+try {
+document.querySelector(".sglogo b").textContent = "\u05E4\u05E8\u05D5\u05D8\u05D5\u05E7\u05D5\u05DC \u05DE\u05E1\u05D9\u05E8\u05D4 \u00B7 \u05D3\u05D9\u05E8\u05D4 " + (d.apt || "");
+document.querySelector(".sglogo small").textContent = (d.pn || "") + (d.loc ? " \u00B7 " + d.loc : "");
+}
+catch (e) { }
+const df = d.df || [], sv = d.sv || [], sg = d.sg || [], T = d.tns || [];
+B.innerHTML = `<div class="hpok"><b>הדירה נמסרה</b><small>${esc(d.dn || "")}</small></div>
+${T.length ? `<div class="hpc"><h4>בעלי הדירה</h4>${T.map(t => `<div class="hpkv"><span>${esc(t.n)}${t.poa ? " \u00B7 \u05DE\u05D9\u05D5\u05E4\u05D4 \u05DB\u05D5\u05D7" : ""}</span><span>חתם</span></div>`).join("")}</div>` : ""}
+${sv.length ? `<div class="hpc"><h4>נמסר</h4>${sv.map(x => `<div class="hpkv"><span>${esc(x.t)}</span><b>${esc(String(x.q))}</b></div>`).join("")}</div>` : ""}
+<div class="hpc"><h4>ליקויים במסירה · ${df.length}</h4>${df.length ? df.map(x => `<div class="hpit"><span>${esc(x.t)}<small>${esc(x.rn)}${x.n ? " \u00B7 " + esc(x.n) : ""}</small></span><em class="${x.ok ? "d" : ""}">${x.ok ? "\u05D8\u05D5\u05E4\u05DC" : "\u05DC\u05D8\u05D9\u05E4\u05D5\u05DC"}</em></div>`).join("") : "<div class=\"mu\">\u05D0\u05D9\u05DF</div>"}</div>
+${sg.length ? `<div class="hpsg">${sg.map(g => `<div>${g.i ? `<img src="${esc(g.i)}" alt="">` : ""}<small>${esc(g.lb)} · ${esc(g.n)}</small></div>`).join("")}</div>` : ""}
+<button class="btn olb hppr" style="width:100%;margin-top:12px" onclick="const H=document.querySelectorAll('.hppr,.dbk');H.forEach(x=>x.style.visibility='hidden');setTimeout(()=>{window.print();H.forEach(x=>x.style.visibility='')},50)">הורדה כ־PDF</button>`;
+}
+const hoLab=at => { const d = new Date(at); return ["\u05E8\u05D0\u05E9\u05D5\u05DF", "\u05E9\u05E0\u05D9", "\u05E9\u05DC\u05D9\u05E9\u05D9", "\u05E8\u05D1\u05D9\u05E2\u05D9", "\u05D7\u05DE\u05D9\u05E9\u05D9", "\u05E9\u05D9\u05E9\u05D9", "\u05E9\u05D1\u05EA"][d.getDay()] + " " + d.getDate() + "." + (d.getMonth() + 1) + " \u05D1\u05E9\u05E2\u05D4 " + at.slice(11, 16); };
+async function hoPage(tok, pre) {
+document.title = "\u05DE\u05E1\u05D9\u05E8\u05EA \u05D3\u05D9\u05E8\u05D4 \u00B7 \u05DE\u05E2\u05E8\u05DB\u05EA \u05E0\u05D9\u05D4\u05D5\u05DC \u05E4\u05E8\u05D5\u05D9\u05E7\u05D8\u05D9\u05DD YH";
+document.documentElement.dataset.theme = "tech";
+document.body.innerHTML = "<div id=\"sgp\" class=\"sgp\"><div class=\"sgh\"><div class=\"sglogo\"><img src=\"app-180.png\" alt=\"YH\"><div><b>\u05E7\u05D1\u05DC\u05EA \u05D4\u05DE\u05E4\u05EA\u05D7</b><small>\u05D8\u05D5\u05E2\u05DF\u2026</small></div></div></div><div class=\"sgb\"><div class=\"mu\">\u05D8\u05D5\u05E2\u05DF\u2026</div></div></div>";
+const B = document.querySelector("#sgp .sgb");
+let api = null, d = pre || null;
+try {
+api = await window.signFS();
+if (!d)
+d = await api.get(tok);
+}
+catch (e) { }
+try {
+if (d) {
+document.querySelector(".sglogo b").textContent = "\u05E7\u05D1\u05DC\u05EA \u05D4\u05DE\u05E4\u05EA\u05D7 \u00B7 \u05D3\u05D9\u05E8\u05D4 " + (d.apt || "");
+document.querySelector(".sglogo small").textContent = d.pn || "";
+}
+}
+catch (e) { }
+if (!d || d.k != "ho") {
+B.innerHTML = "<h2>\u05D4\u05E7\u05D9\u05E9\u05D5\u05E8 \u05DC\u05D0 \u05D1\u05EA\u05D5\u05E7\u05E3</h2><p>\u05D0\u05E4\u05E9\u05E8 \u05DC\u05D1\u05E7\u05E9 \u05E7\u05D9\u05E9\u05D5\u05E8 \u05D7\u05D3\u05E9 \u05DE\u05DE\u05D9 \u05E9\u05E9\u05DC\u05D7.</p>";
+return;
+}
+const nav = `https://waze.com/ul?q=${encodeURIComponent(d.adr || d.pn || "")}&navigate=yes`, ics = at => { const z = at.replace(/[-:]/g, "") + "00", e = new Date(new Date(at).getTime() + 3600000), ee = e.getFullYear() + String(e.getMonth() + 1).padStart(2, "0") + String(e.getDate()).padStart(2, "0") + "T" + String(e.getHours()).padStart(2, "0") + String(e.getMinutes()).padStart(2, "0") + "00"; return "data:text/calendar;charset=utf-8," + encodeURIComponent(["BEGIN:VCALENDAR", "VERSION:2.0", "BEGIN:VEVENT", "DTSTART:" + z, "DTEND:" + ee, "SUMMARY:\u05DE\u05E1\u05D9\u05E8\u05EA \u05D3\u05D9\u05E8\u05D4 " + d.apt + " \u00B7 " + d.pn, "LOCATION:" + (d.adr || ""), "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:\u05DE\u05D7\u05E8 \u05DE\u05E1\u05D9\u05E8\u05EA \u05D4\u05D3\u05D9\u05E8\u05D4", "TRIGGER:-P1D", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n")); };
+if (d.st == "s") {
+B.innerHTML = `<small>${esc(d.pn || "")}</small><h2>נתראה בקרוב!</h2><p>קבלת המפתח לדירה ${esc(d.apt)}: <b>${esc(hoLab(d.sg))}</b></p><p>בעלי הדירה מגיעים יחד, או עם ייפוי כוח.<br>חובה להביא תעודת זהות או דרכון.</p>${/· (\S+) מגיעים/.test(d.nm || "") ? `<p>מגיעים: <b>${esc((d.nm.match(/· (\S+) מגיעים/) || [])[1])}</b></p>` : ""}<a class="btn olb" target="_blank" rel="noopener" style="text-align:center;text-decoration:none;width:100%" href="${nav}">ניווט לאתר</a><a class="btn sb" style="text-align:center;text-decoration:none;width:100%;margin-top:8px" download="מסירה.ics" href="${ics(d.sg)}">הוסף ליומן</a><p class="mu">רוצים לשנות? פנו אל ${esc(d.by || "\u05DE\u05E0\u05D4\u05DC \u05D4\u05E2\u05D1\u05D5\u05D3\u05D4")}.</p>`;
+return;
+}
+hoWiz(B, d, api, tok, nav);
+}
+function wzTop(st, tot, pn) { return `<div class="wzt">${st > 1 ? "<button class=\"wzbk\" data-bk=\"1\">\u2192 \u05D7\u05D6\u05E8\u05D4</button>" : "<span></span>"}<span class="wzd">${Array.from({ length: tot }, (_, i) => `<i class="${i < st ? "on" : ""}"></i>`).join("")}</span><span class="wzn">${st} מתוך ${tot}</span></div>${pn ? `<small class="mu">${esc(pn)}</small>` : ""}`; }
+function hoWiz(B, d, api, tok, nav) {
+const sl = d.sl || [], T0 = [...new Set(sl.map(a => a.slice(11, 16)))].sort(), T = T0.length ? T0 : ["09:00", "13:00"], ds = [...new Set(sl.map(a => a.slice(0, 10)))].sort(), k2 = x => x.getFullYear() + "-" + String(x.getMonth() + 1).padStart(2, "0") + "-" + String(x.getDate()).padStart(2, "0"), wkOf = k => { const x = new Date(k + "T12:00"); x.setDate(x.getDate() - x.getDay()); return k2(x); }, W = [...new Set(ds.map(wkOf))];
+let wi = 0, st = 1, pick = "", cnt = "";
+const go = n => { st = n; draw(); window.scrollTo(0, 0); };
+const draw = () => {
+let h = wzTop(st, 3, "");
+if (st == 1) {
+const w = W[wi];
+h += `<h2 class="wzq">בחרו מועד שנוח לכם</h2><p class="mu" style="margin:0 0 6px">ימים א׳–ה׳ · ${T.join(" \u05D0\u05D5 ")}</p>`;
+if (!w)
+h += `<p>אין כרגע מועד פנוי. פנו אל ${esc(d.by || "\u05DE\u05E0\u05D4\u05DC \u05D4\u05E2\u05D1\u05D5\u05D3\u05D4")}.</p>`;
+else {
+h += `<div class="howk"><span>${wi == 0 ? "\u05D4\u05E9\u05D1\u05D5\u05E2" : wi == 1 ? "\u05E9\u05D1\u05D5\u05E2 \u05D4\u05D1\u05D0" : "\u05D1\u05E2\u05D5\u05D3 " + wi + " \u05E9\u05D1\u05D5\u05E2\u05D5\u05EA"}</span><span>${wi > 0 ? "<button data-wk=\"-1\">\u2039 \u05E7\u05D5\u05D3\u05DD</button>" : ""}${wi < W.length - 1 ? "<button data-wk=\"1\">\u05D4\u05D1\u05D0 \u203A</button>" : ""}</span></div><div class="hogr">`;
+for (let i = 0; i < 5; i++) {
+const x = new Date(w + "T12:00");
+x.setDate(x.getDate() + i);
+const k = k2(x);
+h += `<div class="hoday"><b>${esc(x.toLocaleDateString("he-IL", { weekday: "long" }).replace("\u05D9\u05D5\u05DD ", ""))}<small>${x.getDate()}.${x.getMonth() + 1}</small></b>${T.map(t => { const at = k + "T" + t, ok = sl.includes(at); return `<button ${ok ? `data-at="${at}"` : "disabled"} class="${pick == at ? "on" : ""}">${t}</button>`; }).join("")}</div>`;
+}
+h += `</div>`;
+}
+if (pick)
+h += `<button class="btn olb wzgo" id="hopk1" style="width:100%">אישור · ${esc(hoLab(pick).replace(" \u05D1\u05E9\u05E2\u05D4 ", " \u00B7 "))}</button>`;
+}
+if (st == 2)
+h += `<h2 class="wzq">כמה אנשים מגיעים?</h2><div class="wzg" style="grid-template-columns:repeat(3,1fr)">${["1", "2", "3", "4", "5+"].map(c => `<button class="${cnt == c ? "on" : ""}" data-c="${c}">${c}</button>`).join("")}</div><div class="li" style="display:block;margin-top:12px"><b>לפני שמגיעים</b><p style="margin:4px 0 0">בעלי הדירה מגיעים יחד, או אחד עם ייפוי כוח מהשני · להביא תעודת זהות או דרכון</p></div>`;
+if (st == 3)
+h += `<h2 class="wzq">כמעט סיימנו</h2><div class="wzs"><b>דירה ${esc(d.apt)}</b><span>${esc(hoLab(pick))}</span><span>${esc(cnt)} ${cnt == "1" ? "\u05D0\u05D3\u05DD" : "\u05D0\u05E0\u05E9\u05D9\u05DD"}</span></div><label>שם<input id="hon" value="${esc(d.cn || "")}"></label><button class="btn olb wzgo" id="hook" style="width:100%">אישור</button><a class="btn sb" target="_blank" rel="noopener" style="text-align:center;text-decoration:none;margin-top:8px;width:100%" href="${nav}">מיקום האתר בניווט</a>`;
+B.innerHTML = h;
+B.querySelectorAll("[data-bk]").forEach(b => b.onclick = () => go(st - 1));
+B.querySelectorAll("[data-wk]").forEach(b => b.onclick = () => { wi += +b.dataset.wk; draw(); });
+B.querySelectorAll("[data-at]").forEach(b => b.onclick = () => { pick = b.dataset.at; draw(); });
+const p1 = document.getElementById("hopk1");
+if (p1)
+p1.onclick = () => go(2);
+B.querySelectorAll("[data-c]").forEach(b => b.onclick = () => { cnt = b.dataset.c; go(3); });
+const ok = document.getElementById("hook");
+if (ok)
+ok.onclick = async () => { const nm = ((document.getElementById("hon").value || "").trim() || d.cn || "\u05D3\u05D9\u05D9\u05E8") + " \u00B7 " + cnt + " \u05DE\u05D2\u05D9\u05E2\u05D9\u05DD"; ok.disabled = true; ok.textContent = "\u05E9\u05D5\u05DC\u05D7\u2026"; try {
+await api.upd(tok, { st: "s", sg: pick, nm, ts: Date.now() });
+d.st = "s";
+d.sg = pick;
+d.nm = nm;
+hoPage(tok, d);
+}
+catch (e) {
+ok.disabled = false;
+ok.textContent = "\u05D0\u05D9\u05E9\u05D5\u05E8";
+alert("\u05D4\u05E9\u05DC\u05D9\u05D7\u05D4 \u05E0\u05DB\u05E9\u05DC\u05D4. \u05D1\u05D3\u05D5\u05E7 \u05D0\u05D9\u05E0\u05D8\u05E8\u05E0\u05D8 \u05D5\u05E0\u05E1\u05D4 \u05E9\u05D5\u05D1.");
+} };
+};
+draw();
+}
+const fdt=t => new Date(t).toLocaleString("he-IL", { day: "numeric", month: "numeric", year: "2-digit", hour: "2-digit", minute: "2-digit" });
+Object.assign(DFL.he, { op: "\u05E4\u05EA\u05D5\u05D7\u05D9\u05DD", wt: "\u05DE\u05DE\u05EA\u05D9\u05DF \u05DC\u05D0\u05D9\u05E9\u05D5\u05E8", dn: "\u05D8\u05D5\u05E4\u05DC\u05D5", none: "\u05D0\u05D9\u05DF \u05DC\u05D9\u05E7\u05D5\u05D9\u05D9\u05DD \u05E4\u05EA\u05D5\u05D7\u05D9\u05DD. \u05EA\u05D5\u05D3\u05D4!", nw: "\u05D7\u05D3\u05E9", od: "\u05E4\u05EA\u05D5\u05D7", dd: "\u05D9\u05DE\u05D9\u05DD" });
+Object.assign(DFL.en, { op: "Open", wt: "Awaiting approval", dn: "Fixed", none: "No open defects. Thank you!", nw: "New", od: "Open", dd: "days" });
+Object.assign(DFL.ar, { op: "\u0645\u0641\u062A\u0648\u062D\u0629", wt: "\u0628\u0627\u0646\u062A\u0638\u0627\u0631 \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629", dn: "\u062A\u0645 \u0625\u0635\u0644\u0627\u062D\u0647\u0627", none: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0639\u064A\u0648\u0628 \u0645\u0641\u062A\u0648\u062D\u0629. \u0634\u0643\u0631\u0627\u064B!", nw: "\u062C\u062F\u064A\u062F", od: "\u0645\u0641\u062A\u0648\u062D", dd: "\u0623\u064A\u0627\u0645" });
+Object.assign(DFL.ru, { op: "\u041E\u0442\u043A\u0440\u044B\u0442\u043E", wt: "\u0416\u0434\u0451\u0442 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F", dn: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E", none: "\u041E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0434\u0435\u0444\u0435\u043A\u0442\u043E\u0432 \u043D\u0435\u0442. \u0421\u043F\u0430\u0441\u0438\u0431\u043E!", nw: "\u041D\u043E\u0432\u043E\u0435", od: "\u041E\u0442\u043A\u0440\u044B\u0442\u043E", dd: "\u0434\u043D." });
+Object.assign(DFL.zh, { op: "\u672A\u5904\u7406", wt: "\u7B49\u5F85\u786E\u8BA4", dn: "\u5DF2\u5904\u7406", none: "\u6CA1\u6709\u672A\u5904\u7406\u7684\u7F3A\u9677\u3002\u8C22\u8C22\uFF01", nw: "\u65B0", od: "\u5DF2\u5F00", dd: "\u5929" });
+Object.assign(DFL.hi, { op: "\u0916\u0941\u0932\u0947", wt: "\u092E\u0902\u091C\u093C\u0942\u0930\u0940 \u092C\u093E\u0915\u0940", dn: "\u0920\u0940\u0915 \u0915\u093F\u090F", none: "\u0915\u094B\u0908 \u0916\u0941\u0932\u0940 \u0916\u0930\u093E\u092C\u0940 \u0928\u0939\u0940\u0902\u0964 \u0927\u0928\u094D\u092F\u0935\u093E\u0926!", nw: "\u0928\u092F\u093E", od: "\u0916\u0941\u0932\u093E", dd: "\u0926\u093F\u0928" });
 window.LDSCENE=function(){return''};
 
 const FSB='https://firestore.googleapis.com/v1/projects/'+CFG.projectId+'/databases/(default)/documents/sign/';
