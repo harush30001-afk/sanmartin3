@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>מערכת ניהול פרויקטים YH</title><meta name="description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:title" content="מערכת ניהול פרויקטים YH"><meta property="og:description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:image" content="https://harush30001-afk.github.io/sanmartin3/app-512.png"><meta property="og:type" content="website"><link rel="apple-touch-icon" href="app-180.png"><link rel="icon" type="image/png" href="app-180.png">
-<!-- v: d 695 -->
+<!-- v: d 696 -->
 <style>
 #ld{position:fixed;inset:0;z-index:50;background:#15171b;display:flex;align-items:center;justify-content:center;transition:opacity .35s}#ld.out{opacity:0;pointer-events:none}
 
@@ -451,9 +451,30 @@ const b = cd.querySelector(".stgbig");
 if (b)
 b.textContent = T.snd || DFL.he.snd;
 }
+// 696 (בקר ב 17.11 ממצא 3): בלי קליטה — הדיווח נשמר בטלפון של הקבלן ונשלח לבד (גם אם סגר את הדף ופתח שוב), ואחרי 6 שניות כתוב לו מה קורה
+const qk = "dfq_" + tok + "_" + i;
+try {
+localStorage.setItem(qk, JSON.stringify(rr));
+}
+catch (e) { }
+const slow = setTimeout(() => { if (cd && cd.isConnected) {
+let n = cd.querySelector(".dfoff");
+if (!n) {
+n = document.createElement("div");
+n.className = "dfoff";
+n.style.cssText = "background:#fff4d6;border:1px solid #e9c46a;color:#5b4300;border-radius:10px;padding:8px 10px;margin-top:8px;font-size:14px;font-weight:600;opacity:1";
+cd.appendChild(n);
+}
+n.textContent = "\u05D0\u05D9\u05DF \u05E7\u05DC\u05D9\u05D8\u05D4 \u05DB\u05E8\u05D2\u05E2 \u00B7 \u05D4\u05D3\u05D9\u05D5\u05D5\u05D7 \u05E0\u05E9\u05DE\u05E8 \u05D1\u05D8\u05DC\u05E4\u05D5\u05DF \u05D5\u05D9\u05D9\u05E9\u05DC\u05D7 \u05DC\u05D1\u05D3 \u05DB\u05E9\u05EA\u05D7\u05D6\u05D5\u05E8 \u05D4\u05E7\u05DC\u05D9\u05D8\u05D4 \u00B7 No signal: saved, will send automatically";
+} }, 6000);
 try {
 const api = await window.signFS();
 await api.upd(tok, { ["r." + i]: rr, rt: Date.now() });
+clearTimeout(slow);
+try {
+localStorage.removeItem(qk);
+}
+catch (e) { }
 const D = window.DFD;
 if (D) {
 D.r = D.r || {};
@@ -464,6 +485,7 @@ else
 defPage(tok);
 }
 catch (e) {
+clearTimeout(slow);
 if (cd) {
 cd.style.opacity = "";
 cd.style.pointerEvents = "";
@@ -471,6 +493,32 @@ cd.style.pointerEvents = "";
 alert(T.err);
 }
 }
+async function dfPend(tok) { let ks = [];
+try {
+ks = Object.keys(localStorage).filter(k => k.indexOf("dfq_" + tok + "_") == 0);
+}
+catch (e) { }
+if (!ks.length)
+return;
+const api = await window.signFS();
+for (const k of ks) {
+try {
+const rr = JSON.parse(localStorage.getItem(k)), i = k.slice(("dfq_" + tok + "_").length);
+await api.upd(tok, { ["r." + i]: rr, rt: Date.now() });
+localStorage.removeItem(k);
+const D = window.DFD;
+if (D) {
+D.r = D.r || {};
+D.r[i] = rr;
+}
+}
+catch (e) { }
+}
+try {
+if (window.DFD)
+defPage(tok, window.DFD);
+}
+catch (e) { } }
 const dfTsX=i => { const D = window.DFD || {}, I = D.it || []; return (D.kind == "ct" ? I.find(q => String(q.id) == String(i)) : I[+i]) || {}; };
 function dfTsOpen(tok, i) {
 const T = DFL[DFLG] || DFL.he, b = $("dfts" + i);
@@ -602,6 +650,11 @@ ${open && x.ts ? `<div id="dfts${x.id}" style="margin-top:8px"><button class="bt
 + (D.length ? `<details style="margin-top:8px"><summary class="mu" style="cursor:pointer">${T.dn} (${D.length})</summary>${D.map(x => `<div class="mu" style="padding:4px 0">✓ ${esc(x.n || "")}${x.loc ? " \u00B7 " + esc(x.loc) : ""}</div>`).join("")}</details>` : "");
 }
 async function defPage(tok, pre) {
+if (!window._DFPI) {
+window._DFPI = 1;
+setTimeout(() => dfPend(tok), 1500);
+window.addEventListener("online", () => dfPend(tok));
+}
 try {
 document.documentElement.dir = ["en", "ru", "zh", "hi"].includes(DFLG) ? "ltr" : "rtl";
 }
