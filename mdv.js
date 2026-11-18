@@ -45,7 +45,7 @@ function zone(M,Z){const o=JSON.parse(JSON.stringify(M)),P=(a,b,t)=>[a[0]+(b[0]-
   o.zones=null;o.zr=Z;return o}
 /* גבולות התקרה: ציר הקירות + חצי עובי הקיר החיצוני — אותו חישוב לציור ולכמויות */
 function ext(M){let a=1e9,b=-1e9,c=1e9,d=-1e9,t=0;(M.walls||[]).forEach(w=>{[w.a,w.b].forEach(p=>{a=Math.min(a,p[0]);b=Math.max(b,p[0]);c=Math.min(c,p[1]);d=Math.max(d,p[1])});t=Math.max(t,w.t||.25)});(M.cols||[]).forEach(k=>{a=Math.min(a,k.x);b=Math.max(b,k.x);c=Math.min(c,k.z);d=Math.max(d,k.z)});
-  if(!isFinite(a))return null;const h=t/2;if(M.zr){return[Math.max(a-h,M.zr[0]),Math.min(b+h,M.zr[1]),Math.max(c-h,M.zr[2]),Math.min(d+h,M.zr[3])]}return[a-h,b+h,c-h,d+h]}
+  if(!isFinite(a)||a>b)return null;const h=t/2;if(M.zr){return[Math.max(a-h,M.zr[0]),Math.min(b+h,M.zr[1]),Math.max(c-h,M.zr[2]),Math.min(d+h,M.zr[3])]}return[a-h,b+h,c-h,d+h]}
 function holes(M){const H=((M.slab||{}).holes||[]).slice();(M.shaft||[]).forEach(s=>{if(!H.some(h=>Math.abs(h.x-s.x)<.3&&Math.abs(h.z-s.z)<.3))H.push({k:'shaft',x:s.x,z:s.z,w:s.w,d:s.d})});return H}
 /* חיסור קטעים: [a,b] פחות רשימת חורים */
 function sub(a,b,cut){let I=[[a,b]];cut.forEach(([c,d])=>{const N=[];I.forEach(([x,y])=>{if(d<=x||c>=y){N.push([x,y]);return}if(c>x)N.push([x,c]);if(d<y)N.push([d,y])});I=N});return I.filter(([x,y])=>y-x>.05)}
