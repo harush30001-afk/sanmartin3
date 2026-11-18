@@ -1,0 +1,878 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><title>הדמיית חניון</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap">
+<style>
+html,body,*{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+
+/* אותה שפה כמו סקיצה 155: הדמיה למעלה, שלבים מתחת. צבעי YH */
+:root{
+  --bg:#eceee9; --card:#ffffff; --fg:#1f2328; --mu:#5d625e; --line:#d8dcd5;
+  --acc:#2d5e4a; --acc-in:#ffffff; --chip:#f4f5f1; --q:#fff6df; --qb:#ecd391; --scene:#dfe2dc;
+  --f:"Heebo",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121614; --card:#1b201d; --fg:#e8ebe7; --mu:#a3aaa4; --line:#2c332f; --acc:#5fa585; --acc-in:#0d1411; --chip:#232925; --q:#2b2617; --qb:#5c4f25; --scene:#1e2421; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121614; --card:#1b201d; --fg:#e8ebe7; --mu:#a3aaa4; --line:#2c332f; --acc:#5fa585; --acc-in:#0d1411; --chip:#232925; --q:#2b2617; --qb:#5c4f25; --scene:#1e2421; color-scheme:dark}
+html,body{background:var(--bg);color:var(--fg)}
+body{font:15px/1.5 var(--f);direction:rtl;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 28px}
+.w{max-width:820px;margin:0 auto;display:grid;gap:12px}
+h1{font-size:21px;font-weight:800;margin:0;text-wrap:balance}
+.mu{color:var(--mu);font-size:13.5px}
+.stage3d{position:relative;border-radius:18px;overflow:hidden;background:var(--scene);height:min(66vh,580px);min-height:380px;touch-action:none}
+.stage3d canvas{display:block;width:100%;height:100%}
+.hud{position:absolute;inset:10px 10px auto 10px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;pointer-events:none}
+.hud .col{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.pill{pointer-events:auto;background:color-mix(in srgb,var(--card) 92%,transparent);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700}
+button.tg{pointer-events:auto;font:700 13.5px var(--f);min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+button.tg.on{background:var(--acc);color:var(--acc-in);border-color:var(--acc)}
+button.tg[hidden]{display:none}
+.nav{position:absolute;inset:auto 10px 10px 10px;display:flex;gap:8px;align-items:center}
+.nav button{flex:none;min-width:48px;min-height:48px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--fg);font:800 20px var(--f);cursor:pointer}
+.nav .cap{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 12px;font-size:13px;line-height:1.35}
+.nav .cap b{display:block;font-size:15px}
+.joy{position:absolute;left:14px;bottom:80px;width:112px;height:112px;border-radius:50%;background:color-mix(in srgb,var(--card) 55%,transparent);border:1.5px solid color-mix(in srgb,var(--fg) 25%,transparent);touch-action:none;z-index:3}.joy[hidden]{display:none}.joy .knob{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:var(--card);border:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:none}
+.zm{position:absolute;right:10px;bottom:80px;display:flex;flex-direction:column;gap:6px;z-index:3}.zm[hidden]{display:none}.zm button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:color-mix(in srgb,var(--card) 90%,transparent);color:var(--fg);font:800 20px var(--f);touch-action:manipulation}
+.pick{position:absolute;inset:auto 10px 74px 10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 12px;font-size:13.5px;box-shadow:0 4px 14px rgba(0,0,0,.14)}
+.pick[hidden]{display:none}
+.pick b{display:block;font-size:14.5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:grid;gap:10px}
+.say{gap:2px;font-size:14.5px}
+.lbl{font-size:12.5px;font-weight:700;color:var(--mu)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button.ch{font:600 14px var(--f);min-height:42px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--chip);color:var(--fg);cursor:pointer}button.ch.on{background:var(--acc);color:var(--acc-in);border-color:var(--acc)}
+.steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px}
+.steps button{text-align:right;display:flex;gap:8px;align-items:center;min-height:44px;padding:5px 9px;border-radius:12px;border:1px solid var(--line);background:var(--chip);color:var(--fg);font:600 13.5px var(--f);cursor:pointer}
+.steps button .n{flex:none;font:700 11.5px var(--f);min-width:24px;height:24px;border-radius:999px;display:grid;place-items:center;background:var(--line);color:var(--fg)}
+.steps button.done .n{background:color-mix(in srgb,var(--acc) 32%,var(--chip))}
+.steps button.on{border-color:var(--acc);box-shadow:inset 0 0 0 1.5px var(--acc)}
+.steps button.on .n{background:var(--acc);color:var(--acc-in)}
+.ph{grid-column:1/-1;font:800 12.5px var(--f);color:var(--mu);margin-top:4px}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:22px;height:8px;border-radius:4px;display:inline-block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.q{background:var(--q);border-color:var(--qb)}
+.q ol{margin:2px 0;padding-inline-start:20px}.q li{margin:3px 0}
+#st::after{content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:radial-gradient(ellipse at 50% 45%,transparent 58%,rgba(10,14,18,.2) 100%);z-index:1}
+</style>
+
+<div class="w">
+  <div>
+    <h1 id="pkh">הדמיית חניון</h1>
+    <div class="mu">השלב של כל קומה נשמר במערכת לכולם. מעבירים שלב בחצים או ברשימה, ובוחרים קומה למטה.</div>
+  </div>
+  <div class="stage3d" id="st">
+    <div class="hud"><span class="pill" id="hudStage"></span><div class="col"><button class="tg" id="walkBtn" type="button">הליכה בחניון</button><button class="tg" id="spotBtn" type="button" hidden>למקום הבא</button><button class="tg" id="xrWBtn" type="button" hidden>רנטגן</button><button class="tg" id="dimBtn" type="button">מידות</button><button class="tg" id="ceilBtn" type="button">תקרה: מוסתרת</button><button class="tg" id="ownBtn" type="button">מי חונה איפה</button><button class="tg" id="allBtn" type="button">כל הקומות</button></div></div>
+    <div class="pick" id="pick" hidden></div>
+    <div class="zm" id="zm"><button type="button" data-z="in" aria-label="קרוב">+</button><button type="button" data-z="out" aria-label="רחוק">−</button><button type="button" data-z="home" aria-label="מבט כללי">⌂</button></div>
+    <div class="joy" id="joy" hidden><div class="knob" id="knob"></div></div>
+    <div class="nav"><button type="button" id="prev" aria-label="שלב קודם">›</button><div style="position:relative;flex:1;min-width:0;display:flex"><div class="cap" id="cap"></div><select id="stSel" aria-label="קפיצה לשלב" style="position:absolute;opacity:0;inset:0;width:100%;height:100%;font-size:16px"></select><span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.55;font-size:13px;pointer-events:none">▾</span></div><button type="button" id="next" aria-label="שלב הבא">‹</button></div>
+  </div>
+  <div class="card say" id="say"></div>
+  <div class="card">
+    <div class="row" id="lvl"><span class="lbl">קומה:</span><button class="ch on" data-l="1">‎-1</button><button class="ch" data-l="2">‎-2</button><button class="ch" data-l="3">‎-3</button></div>
+    <div class="row" id="flr"><span class="lbl">רצפה:</span><button class="ch on" data-f="heli">בטון מוחלק + מספור</button><button class="ch" data-f="epoxy">אפוקסי + פס אגזוזים</button></div>
+    <div class="row" id="clad"><span class="lbl">חיפוי בכניסה:</span><button class="ch on" data-c="stone">אבן</button><button class="ch" data-c="alu">אלומיניום</button></div>
+    <div class="mu">אפשר ללחוץ על דלתות, על השער, על המחסום, על המפוחים ועל המשאבות כדי להפעיל אותם.</div>
+  </div>
+  <div class="card"><div class="legend" id="legend"></div></div>
+  <div class="card"><div class="lbl">שלבי החניון</div><div class="steps" id="steps"></div></div>
+  
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+/* ---------- השלבים ---------- */
+const STG=[
+ ['shell','שלד · בטון ועמודים','שלד','קירות דיפון, עמודים, קורות ותקרה מבטון יצוק. רמפה מהרחוב וירידה לקומה הבאה. רואים את הבטון כמו שהוא: חורי קשירה, סימני טפסנות, "קיני חצץ" שצריך לתקן, ולכלוך של אתר על הרצפה.','שלד'],
+ ['fix','תיקוני בטון','שלד','סותמים חורי קשירה ומתקנים קיני חצץ ושברים בטיט תיקון. רואים את הכתמים הבהירים של התיקונים על הקירות והעמודים.','שלד'],
+ ['drain','איטום וניקוז','איטום','תעלת ניקוז לכל רוחב הרמפה בסוף כל רמפה, בכל מפלס, ובור ניקוז ליד חדר המשאבות.','שלד'],
+ ['block','בלוקים: חדרים ומחסנים','בנאי','קירות בלוק לחדר המשאבות, חדר החשמל, הלובי והמחסנים.','בנייה'],
+ ['elec','נקודות חשמל וצנרת','חשמלאי','אחרי הבלוקים, לפני הטיח: חציבות וצנרת בקירות, מתגים ושקעים במחסנים ובלובי, קופסאות ביקורת, לוח חשמל קומתי, וצנרת שעולה לתקרה למגש הכבלים.','בנייה'],
+ ['bagar','טיח ובגר בכל ההיקף','טייח','לפני המערכות: טיח/בגר על כל הקירות, העמודים והקורות בכל ההיקף. מכסה את תיקוני הבטון.','בנייה'],
+ ['frame','משקופים','בנאי','משקופי פלדה לדלתות האש, לחדרים הטכניים, למחסנים ולמעלית.','בנייה'],
+ ['hang','מתלים בתקרה','מערכות','מוטות הברגה ופרופילים מתחת לתקרה, בכל מקום שבו יעברו צנרת ותעלות.','מערכות'],
+ ['spr','ספרינקלרים · ראשי ואנכי','ספרינקלרים','לפי התקן לחניון (סיכון רגיל): ראש לכל 9 מ"ר לכל היותר, עד 3 מ\' בין ראשים ועד 1.5 מ\' מקיר. קו אנכי עם תחנת מגופים, שני קווים ראשיים, קווי משנה כל 2.5 מ\', ראשים במחסנים, בחדר המשאבות ומתחת לתעלת האוורור.','מערכות'],
+ ['sew','ביוב ומים תלויים','אינסטלטור','שישה קווי ביוב יורדים מהבניינים שמעל, שני מאספים ראשיים Ø160 בשיפוע 1% אל בור השאיבה, פתחי ביקורת בכל שינוי כיוון, ניקוז מזגנים, וקו מים כחול לחדר המשאבות.','מערכות'],
+ ['vent','אוורור ושחרור עשן','מיזוג','תעלת יניקה מגולוונת עם גרילים, תשעה מפוחי סילון בשלוש שורות שדוחפים את העשן לכיוון פיר הפליטה, ופיר שחרור עשן לגג.','מערכות'],
+ ['light','תאורה, גלאים ושילוט יציאה','חשמלאי','פסי LED, גלאי CO, לוח בקרה, תאורת חירום ושלטי יציאה ירוקים.','מערכות'],
+ ['fire','עמדות כיבוי ותריס עשן','כיבוי אש','עמדת כיבוי עם גלגלון ומטפה ליד הלובי ובחניון, ברז כיבוי 2" בחדר המדרגות, ותריס שחרור עשן עם מנוע בראש חדר המדרגות.','מערכות'],
+ ['lobby','לובי: גבס, ספרינקלרים, ריצוף','גבס','תקרת גבס בלובי עם ראשי ספרינקלר ותאורה שקועה, ריצוף פורצלן ודלת מעלית.','חדרים'],
+ ['stairs','חדר מדרגות: ריצוף, פודסטים ומעקות','רצף / מסגר','ריצוף מדרגות ופודסטים עם פס מונע החלקה, מעקה פלדה עם מאחז יד, מאחז יד על הקיר, שלט קומה ותאורת חירום.','חדרים'],
+ ['pump','חדר משאבות ומאגר מים','אינסטלטור','שני מאגרי מים, שלוש משאבות על בסיס בטון, מכל לחץ, מגופים, צנרת אדומה (כיבוי) וכחולה (מים) ולוח פיקוד.','חדרים'],
+ ['eroom','חדר חשמל','חשמלאי','לוח ראשי של הבניין, מפסק ראשי, לוח מונים לדירות, לוח תאורת חניון ולוח חירום.','חדרים'],
+ ['curb','אבן שפה וקוביות','פיתוח','אבני שפה בשולי הרמפה ובמדרכה, ריצוף קוביות (אבן משתלבת) ברחבה בכניסה.','גמר'],
+ ['paint','צבע וסימון שוליים','צבעי','קירות, עמודים ותקרה בלבן. פס צהוב־שחור בתחתית העמודים. אבן שפה: אדום־לבן ליד השער ודלת האש, כחול־לבן ברחוב, שחור־לבן ברמפה.','גמר'],
+ ['ramp','רמפה: בטון מוברש','רצפות','הרמפה מקבלת בטון מוברש עם חריצים נגד החלקה.','גמר'],
+ ['doors','דלתות אש ורפפה','נגר / מסגר','דלתות אש עם מחזיר ושלט, דלתות רפפה (לאוורור) למחסנים ולחדר המשאבות, שלטי חדרים ומספרי מחסנים.','גמר'],
+ ['clad','חיפוי בכניסה','חיפוי','חיפוי של קירות ועמודי הכניסה ברחוב: אבן או אלומיניום, לפי הפרויקט (בוחרים למטה).','גמר'],
+ ['floor','רצפת החניון','רצפות','בטון מוחלק (הליקופטר) עם מספור, או אפוקסי עם פס אגזוזים כהה (בוחרים למטה). הלכלוך נעלם.','מסירה'],
+ ['mark','סימון ושילוט','צבעי','קווי חניה, מספרים, חצים, מעצורי גלגלים, מגני פינה, שלט קומה ושלטי רמפה.','מסירה'],
+ ['gate','שער, מחסום ומסירה','מנהל עבודה','שער חניון למעלה ברמפה ומחסום. התאורה דולקת. החניון מוכן למסירה.','מסירה']];
+const K={};STG.forEach((s,i)=>K[s[0]]=i);const ST=k=>K[k];
+const LEG=[['ספרינקלרים','#c42b2b'],['מים','#2f7fe0'],['ביוב','#5d6268'],['אוורור','#b9bec4'],['חשמל','#2d8a3e'],['תיקוני בטון','#c9c4b8'],['אפוקסי','#5f8f84']];
+document.getElementById('legend').innerHTML=LEG.map(([n,c])=>`<span><i style="background:${c}"></i>${n}</span>`).join('');
+let PKS=(()=>{try{const m=/[#&]s=([^&]+)/.exec(location.hash);return m?JSON.parse(decodeURIComponent(m[1])):{}}catch(_){return {}}})(),PKRO=/[#&]ro=1/.test(location.hash);let cur=0,own=false,ceil=0,LVL=(()=>{const m=/[#&]l=([123])/.exec(location.hash);return m?+m[1]:1})(),FLOOR='epoxy',CLAD='stone',ALL=0,WALK=0;
+try{const v=JSON.parse(localStorage.getItem('sk156b')||'null');if(v){FLOOR=v.f||FLOOR;CLAD=v.k||CLAD}}catch(_){}cur=Math.min(STG.length-1,(PKS[LVL]|0));
+const host=document.getElementById('st');
+if(!window.THREE){host.insertAdjacentHTML('beforeend','<div class="pick">לא הצלחתי לטעון את מנוע התלת־ממד.</div>');return}
+const R=new THREE.WebGLRenderer({antialias:true});R.setPixelRatio(Math.min(1.6,devicePixelRatio||1));R.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();host.insertAdjacentHTML('beforeend','<div class="pick" style="inset:40% 10px auto 10px">ההדמיה נטענת מחדש…</div>');setTimeout(()=>location.reload(),600)});R.outputEncoding=THREE.sRGBEncoding;R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.05;host.prepend(R.domElement);
+/* ===== שכבת גרפיקה: חדות, השתקפויות, הילות אור, גוון קולנועי ===== */
+try{if(localStorage.getItem('sm3_lowgfx')!='1')R.setPixelRatio(Math.min(2,devicePixelRatio||1))}catch(_){}
+R.domElement.addEventListener('webglcontextlost',()=>{try{localStorage.setItem('sm3_lowgfx','1')}catch(_){}});
+R.domElement.style.filter='contrast(1.06) saturate(1.12)';
+const GENV=(()=>{const c=document.createElement('canvas');c.width=256;c.height=128;const g=c.getContext('2d');g.fillStyle='#55585a';g.fillRect(0,0,256,128);const gr=g.createLinearGradient(0,60,0,128);gr.addColorStop(0,'#6a6d6e');gr.addColorStop(1,'#2e3031');g.fillStyle=gr;g.fillRect(0,60,256,68);g.fillStyle='#fffbe8';for(let k=0;k<8;k++)g.fillRect(8+k*32,14+(k%2)*10,22,5);g.fillStyle='rgba(255,255,255,.25)';g.fillRect(0,34,256,3);const t=new THREE.CanvasTexture(c);t.mapping=THREE.EquirectangularReflectionMapping;t.encoding=THREE.sRGBEncoding;const pm=new THREE.PMREMGenerator(R),e=pm.fromEquirectangular(t).texture;pm.dispose();return e})();
+const GMAXA=Math.min(8,R.capabilities.getMaxAnisotropy()),GSEEN=new WeakSet();
+window.__GFX=m=>{if(!m||GSEEN.has(m))return m;GSEEN.add(m);['map','bumpMap','emissiveMap'].forEach(k=>{const t=m[k];if(t&&t.anisotropy<GMAXA){t.anisotropy=GMAXA;t.needsUpdate=true}});
+  if(m.isMeshStandardMaterial&&!m.envMap){const gl=m.transparent&&m.opacity<.7,mt=m.metalness>=.35,sm=m.roughness<=.3,sf=m.roughness<=.45;if(gl||mt||sm||sf){m.envMap=GENV;m.envMapIntensity=gl?1.1:mt?.9:sm?.5:.22}}return m};
+const GGLOW=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d'),gr=g.createRadialGradient(32,32,1,32,32,31);gr.addColorStop(0,'rgba(255,248,225,.95)');gr.addColorStop(.3,'rgba(255,240,200,.4)');gr.addColorStop(1,'rgba(255,240,200,0)');g.fillStyle=gr;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(c)})();
+const gGlow=(mesh,s)=>{const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:GGLOW,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:.75}));sp.scale.set(s,s,1);sp.position.y=-.03;mesh.add(sp);return sp};
+
+const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(36,1,.05,300);
+const hemi=new THREE.HemisphereLight(0xffffff,0x7a7468,.7);scene.add(hemi);
+const sun=new THREE.DirectionalLight(0xfff1dc,1.0);sun.position.set(30,26,10);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-40,right:40,top:26,bottom:-26,far:110});sun.shadow.bias=-.0005;scene.add(sun);sun.target.position.set(4,0,0);scene.add(sun.target);
+const inner=new THREE.AmbientLight(0xfff6e8,0);scene.add(inner);
+// אור שנכנס מהרמפה (השמש מבחוץ)
+const rampSun=new THREE.SpotLight(0xffe9c4,0,30,.55,.6,1.2);rampSun.position.set(27,7,0);rampSun.target.position.set(10,0,0);scene.add(rampSun,rampSun.target);
+const G=new THREE.Group();scene.add(G);
+let seed=5;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+function tex(fn,s=512,alpha){const c=document.createElement('canvas');c.width=c.height=s;const g=c.getContext('2d');fn(g,s);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.encoding=THREE.sRGBEncoding;t.anisotropy=4;return t}
+const noise=(g,s,n,a)=>{for(let i=0;i<n;i++){const v=rnd()<.5?255:0;g.fillStyle=`rgba(${v},${v},${v},${rnd()*a})`;g.fillRect(rnd()*s,rnd()*s,1.5,1.5)}};
+/* בטון גס אמיתי: טפסנות, חורי קשירה, נקבוביות, כתמים */
+const tConc=tex((g,s)=>{g.fillStyle='#9a968e';g.fillRect(0,0,s,s);
+  // לוח טפסנות גדול אחד (2.4 מ'): כתמים טבעיים בגדלים שונים, בלי דוגמה
+  for(let i=0;i<90;i++){const x=rnd()*s,y=rnd()*s,r=20+rnd()*140,gr=g.createRadialGradient(x,y,0,x,y,r),v=rnd()<.5?'228,224,215':'62,58,53';gr.addColorStop(0,`rgba(${v},${.04+rnd()*.07})`);gr.addColorStop(1,`rgba(${v},0)`);g.fillStyle=gr;g.fillRect(x-r,y-r,2*r,2*r)}
+  for(let y=0;y<s;y+=4){g.strokeStyle=`rgba(${rnd()<.5?110:205},${rnd()<.5?106:200},100,${.02+rnd()*.02})`;g.lineWidth=1;g.beginPath();g.moveTo(0,y);for(let x=0;x<=s;x+=64)g.lineTo(x,y+Math.sin(x*.015+y)*2);g.stroke()}
+  noise(g,s,30000,.11);
+  for(let i=0;i<420;i++){const c=rnd()<.6?80:200;g.fillStyle=`rgba(${c},${c-4},${c-10},${.12+rnd()*.22})`;g.beginPath();g.arc(rnd()*s,rnd()*s,.5+rnd()*1.6,0,7);g.fill()}
+  // תפר בשולי הלוח בלבד: שפה מעט בולטת ומלט שדלף
+  const e=(x0,y0,x1,y1)=>{g.strokeStyle='rgba(215,210,200,.7)';g.lineWidth=3.5;g.beginPath();g.moveTo(x0,y0);for(let t=0;t<=1;t+=.05)g.lineTo(x0+(x1-x0)*t+(rnd()-.5)*1.5,y0+(y1-y0)*t+(rnd()-.5)*1.5);g.stroke();g.strokeStyle='rgba(50,46,42,.6)';g.lineWidth=2.5;g.beginPath();g.moveTo(x0+(y0==y1?0:3),y0+(y0==y1?3:0));g.lineTo(x1+(y0==y1?0:3),y1+(y0==y1?3:0));g.stroke()};
+
+  for(let i=0;i<0;i++){const x=rnd()*s,L=10+rnd()*40;const gr=g.createLinearGradient(x,3,x,3+L);gr.addColorStop(0,'rgba(80,76,70,.3)');gr.addColorStop(1,'rgba(80,76,70,0)');g.fillStyle=gr;g.fillRect(x,3,2+rnd()*4,L)}
+  // חורי קשירה: מעטים, בהירים וסתומים חלקית
+  for(let ix=0;ix<0;ix++)for(let iy=0;iy<3;iy++){if(rnd()<.35)continue;const x=(ix+.5)*s/3+(rnd()-.5)*10,y=(iy+.5)*s/3+(rnd()-.5)*10;g.fillStyle='rgba(95,90,83,.35)';g.beginPath();g.arc(x,y,2.2,0,7);g.fill()}
+  // קיני חצץ ומלט שנשפך, כתמי מים
+  for(let k=0;k<3;k++){const x=rnd()*s,y=rnd()*s;for(let i=0;i<26;i++){g.fillStyle=`rgba(70,66,60,${.2+rnd()*.3})`;g.beginPath();g.arc(x+rnd()*22-11,y+rnd()*12-6,1+rnd()*2.6,0,7);g.fill()}}
+  for(let i=0;i<4;i++){const x=rnd()*s,y=rnd()*s*.5,L=80+rnd()*160,w=12+rnd()*30;const gr=g.createLinearGradient(x,y,x,y+L);gr.addColorStop(0,'rgba(68,62,55,.16)');gr.addColorStop(1,'rgba(68,62,55,0)');g.fillStyle=gr;g.fillRect(x,y,w,L)}
+  // כתמי גריז ושמן תבניות, לכלוך ידיים וסימני כלים
+  for(let i=0;i<7;i++){const x=rnd()*s,y=rnd()*s,r=4+rnd()*14;const gr=g.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,'rgba(38,34,28,.5)');gr.addColorStop(.6,'rgba(48,42,34,.25)');gr.addColorStop(1,'rgba(48,42,34,0)');g.fillStyle=gr;g.beginPath();g.ellipse(x,y,r,r*.7,rnd()*3,0,7);g.fill()}
+  for(let i=0;i<10;i++){g.strokeStyle=`rgba(70,64,56,${.08+rnd()*.12})`;g.lineWidth=1+rnd()*2;g.beginPath();const x=rnd()*s,y=rnd()*s;g.moveTo(x,y);g.lineTo(x+rnd()*60-30,y+rnd()*20-10);g.stroke()}
+  for(let i=0;i<5;i++){const x=rnd()*s,y=rnd()*s,r=30+rnd()*60;const gr=g.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,'rgba(120,112,98,.14)');gr.addColorStop(1,'rgba(120,112,98,0)');g.fillStyle=gr;g.fillRect(x-r,y-r,2*r,2*r)}});
+// מפת בליטות: גלים וסטיות רחבות בקיר, תפר בשוליים, נקבוביות
+const tConcB=tex((g,s)=>{g.fillStyle='#808080';g.fillRect(0,0,s,s);for(let i=0;i<40;i++){const x=rnd()*s,y=rnd()*s,r=40+rnd()*160,gr=g.createRadialGradient(x,y,0,x,y,r),v=rnd()<.5?255:0;gr.addColorStop(0,`rgba(${v},${v},${v},${.08+rnd()*.1})`);gr.addColorStop(1,`rgba(${v},${v},${v},0)`);g.fillStyle=gr;g.fillRect(x-r,y-r,2*r,2*r)}
+  for(let i=0;i<4000;i++){const v=rnd()<.5?255:0;g.fillStyle=`rgba(${v},${v},${v},${rnd()*.25})`;g.fillRect(rnd()*s,rnd()*s,2,2)}for(let i=0;i<120;i++){g.fillStyle='rgba(0,0,0,.6)';g.beginPath();g.arc(rnd()*s,rnd()*s,.8+rnd()*1.5,0,7);g.fill()}
+  g.fillStyle='rgba(255,255,255,.7)';g.fillRect(0,0,s,3);g.fillRect(0,0,3,s)});
+// רצפת בטון גסה (יציקה מוחלקת ביד, בלי תבניות)
+const tSlab=tex((g,s)=>{g.fillStyle='#8f8b83';g.fillRect(0,0,s,s);for(let i=0;i<70;i++){const x=rnd()*s,y=rnd()*s,r=25+rnd()*120,gr=g.createRadialGradient(x,y,0,x,y,r),v=rnd()<.5?'215,210,200':'55,52,48';gr.addColorStop(0,`rgba(${v},${.05+rnd()*.08})`);gr.addColorStop(1,`rgba(${v},0)`);g.fillStyle=gr;g.fillRect(x-r,y-r,2*r,2*r)}noise(g,s,40000,.16);
+  for(let i=0;i<30;i++){g.strokeStyle=`rgba(60,57,52,${.015+rnd()*.025})`;g.lineWidth=14+rnd()*20;g.beginPath();const x=rnd()*s,y=rnd()*s;g.arc(x,y,40+rnd()*80,rnd()*6,rnd()*6+1.2);g.stroke()}
+  for(let i=0;i<220;i++){const v=rnd()<.5?62:185;g.fillStyle=`rgba(${v},${v-3},${v-8},${.25+rnd()*.3})`;g.beginPath();g.arc(rnd()*s,rnd()*s,.8+rnd()*2.6,0,7);g.fill()}});
+const tRough=tex((g,s)=>{g.fillStyle='#8f8b83';g.fillRect(0,0,s,s);noise(g,s,34000,.17);for(let i=0;i<50;i++){g.fillStyle=`rgba(50,48,45,${.03+rnd()*.06})`;g.beginPath();g.arc(rnd()*s,rnd()*s,20+rnd()*60,0,7);g.fill()}for(let i=0;i<400;i++){g.fillStyle=`rgba(40,38,35,${.2+rnd()*.3})`;g.fillRect(rnd()*s,rnd()*s,2,2)}});
+// לכלוך אתר על הרצפה: שפכי בטון, אבק, שלוליות, סימני גלגלים, עקבות
+const tDirt=tex((g,s)=>{g.clearRect(0,0,s,s);
+  for(let i=0;i<26;i++){const x=rnd()*s,y=rnd()*s,r=20+rnd()*70,gr=g.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,`rgba(120,112,98,${.25+rnd()*.25})`);gr.addColorStop(1,'rgba(120,112,98,0)');g.fillStyle=gr;g.fillRect(x-r,y-r,2*r,2*r)}
+  for(let i=0;i<8;i++){const x=rnd()*s,y=rnd()*s;g.fillStyle='rgba(40,46,50,.35)';g.beginPath();g.ellipse(x,y,20+rnd()*40,10+rnd()*20,rnd()*3,0,7);g.fill()}
+  for(let k=0;k<3;k++){const y=rnd()*s;g.strokeStyle='rgba(50,46,40,.22)';g.lineWidth=9;for(const o of [0,26]){g.beginPath();g.moveTo(0,y+o);g.bezierCurveTo(s*.3,y+o+rnd()*40,s*.6,y+o-rnd()*40,s,y+o);g.stroke()}}
+  for(let i=0;i<40;i++){g.fillStyle=`rgba(200,195,185,${.3+rnd()*.3})`;g.beginPath();g.arc(rnd()*s,rnd()*s,1+rnd()*5,0,7);g.fill()}
+  for(let i=0;i<30;i++){const x=rnd()*s,y=rnd()*s;g.fillStyle='rgba(60,55,48,.25)';g.beginPath();g.ellipse(x,y,3,6,rnd(),0,7);g.fill()}},1024);
+const tHoney=tex((g,s)=>{g.fillStyle='#6f6b64';g.fillRect(0,0,s,s);for(let i=0;i<500;i++){const v=60+rnd()*90|0;g.fillStyle=`rgb(${v},${v-3},${v-8})`;g.beginPath();g.ellipse(rnd()*s,rnd()*s,4+rnd()*12,3+rnd()*9,rnd()*3,0,7);g.fill();g.fillStyle='rgba(20,18,16,.6)';g.beginPath();g.arc(rnd()*s,rnd()*s,2+rnd()*4,0,7);g.fill()}},256);
+const blob=(g,s,col,a)=>{g.clearRect(0,0,s,s);g.fillStyle=col;g.globalAlpha=a;g.beginPath();const n=14;for(let k=0;k<=n;k++){const t=k/n*Math.PI*2,r=s*(.32+rnd()*.14);const x=s/2+Math.cos(t)*r*(1.2),y=s/2+Math.sin(t)*r*.8;k?g.lineTo(x,y):g.moveTo(x,y)}g.fill();for(let k=0;k<10;k++){g.beginPath();g.ellipse(s*(.2+rnd()*.6),s*(.25+rnd()*.5),s*(.05+rnd()*.12),s*(.03+rnd()*.06),rnd()*3,0,7);g.fill()}g.globalAlpha=1};
+const tRep=tex((g,s)=>{blob(g,s,'#c4bfb2',.92);g.globalCompositeOperation='source-atop';noise(g,s,5000,.1);for(let i=0;i<14;i++){g.strokeStyle=`rgba(240,236,228,${.1+rnd()*.12})`;g.lineWidth=8+rnd()*10;g.beginPath();g.arc(rnd()*s,rnd()*s,20+rnd()*50,rnd()*3,rnd()*3+1.4);g.stroke()}g.globalCompositeOperation='source-over'},256);
+const tHeli=tex((g,s)=>{g.fillStyle='#b4b1aa';g.fillRect(0,0,s,s);noise(g,s,9000,.05);for(let i=0;i<40;i++){g.strokeStyle=`rgba(255,255,255,${.03+rnd()*.04})`;g.lineWidth=20;g.beginPath();g.arc(rnd()*s,rnd()*s,40+rnd()*80,0,7);g.stroke()}g.strokeStyle='rgba(60,58,55,.35)';g.lineWidth=2;g.strokeRect(1,1,s-2,s-2)});
+const tBrush=tex((g,s)=>{g.fillStyle='#a5a199';g.fillRect(0,0,s,s);noise(g,s,15000,.1);for(let y=0;y<s;y+=3){g.strokeStyle=`rgba(${rnd()<.5?255:40},${rnd()<.5?255:40},${rnd()<.5?255:40},.07)`;g.beginPath();g.moveTo(0,y);g.lineTo(s,y+rnd()*2);g.stroke()}g.strokeStyle='rgba(55,52,48,.55)';g.lineWidth=5;for(let x=-s;x<s*2;x+=64){g.beginPath();g.moveTo(x,0);g.lineTo(x+s*.18,s/2);g.lineTo(x,s);g.stroke()}});
+const tBlock=tex((g,s)=>{g.fillStyle='#6f6c66';g.fillRect(0,0,s,s);const b=s/2;for(let r=0;r<2;r++)for(let k=-1;k<3;k++){const x=k*b+(r%2?b/2:0),y=r*b,v=124+rnd()*18|0;g.fillStyle=`rgb(${v},${v-1},${v-5})`;g.fillRect(x+5,y+5,b-10,b-10);
+    for(let i=0;i<320;i++){const c=rnd()<.5?88:168;g.fillStyle=`rgba(${c},${c},${c-6},${.15+rnd()*.25})`;g.beginPath();g.arc(x+5+rnd()*(b-12),y+5+rnd()*(b-12),.8+rnd()*1.8,0,7);g.fill()}
+    if(rnd()<.3){g.fillStyle='#4f4c47';g.beginPath();const cx=x+(rnd()<.5?6:b-6),cy=y+(rnd()<.5?6:b-6);g.moveTo(cx,cy);g.lineTo(cx+(cx>x+b/2?-14:14),cy);g.lineTo(cx,cy+(cy>y+b/2?-10:10));g.fill()}
+    if(rnd()<.5){g.fillStyle=`rgba(150,146,138,${.6+rnd()*.3})`;const ex=x+8+rnd()*(b-30);g.beginPath();g.ellipse(ex,y+b-6,10+rnd()*22,3+rnd()*5,0,0,7);g.fill()}
+    if(rnd()<.12){g.fillStyle='rgba(232,195,74,.85)';for(let i=0;i<7;i++){g.beginPath();g.arc(x+b-6+rnd()*8,y+10+rnd()*(b-20),2+rnd()*3,0,7);g.fill()}}}noise(g,s,9000,.08)});
+const tPlas=tex((g,s)=>{g.fillStyle='#d9d6ce';g.fillRect(0,0,s,s);noise(g,s,9000,.06);for(let i=0;i<30;i++){g.strokeStyle=`rgba(150,145,135,${.06+rnd()*.06})`;g.lineWidth=18;g.beginPath();g.arc(rnd()*s,rnd()*s,40+rnd()*90,rnd()*3,rnd()*3+1.2);g.stroke()}},256);
+const stripeT=(a,b,w)=>tex((g,s)=>{g.fillStyle=a;g.fillRect(0,0,s,s);g.fillStyle=b;for(let x=0;x<s;x+=w*2)g.fillRect(x,0,w,s)},256);
+const tYB=tex((g,s)=>{g.fillStyle='#f2c230';g.fillRect(0,0,s,s);g.fillStyle='#1d1f22';for(let i=-s;i<s*2;i+=64){g.beginPath();g.moveTo(i,0);g.lineTo(i+32,0);g.lineTo(i-s+32,s);g.lineTo(i-s,s);g.fill()}});
+const tRW=stripeT('#f4f4f0','#c8302a',64),tBW=stripeT('#f4f4f0','#2a5fb0',64),tKW=stripeT('#f4f4f0','#1d1f22',64);
+const tGrate=tex((g,s)=>{g.fillStyle='#0b0c0d';g.fillRect(0,0,s,s);for(let x=0;x<s;x+=24){const gr=g.createLinearGradient(x,0,x+12,0);gr.addColorStop(0,'#8f969b');gr.addColorStop(.4,'#e4e8ea');gr.addColorStop(1,'#9aa1a6');g.fillStyle=gr;g.fillRect(x,0,12,s)}g.fillStyle='#c3c8cb';g.fillRect(0,0,s,10);g.fillRect(0,s-10,s,10)},256);
+const tPaver=tex((g,s)=>{g.fillStyle='#4a4846';g.fillRect(0,0,s,s);const n=8,w=s/n;for(let r=0;r<n;r++)for(let c=0;c<n/2;c++){const off=r%2?w:0,v=r==0||r==7?[58,60,63]:r==3||r==4?[150,62,52]:[[170,168,162],[150,148,142],[184,180,172]][(rnd()*3)|0];g.fillStyle=`rgb(${v})`;g.fillRect(c*2*w+off+2,r*w+2,2*w-4,w-4)}noise(g,s,8000,.08)});
+const tStone=tex((g,s)=>{g.fillStyle='#bfb39c';g.fillRect(0,0,s,s);const rh=s/4;for(let r=0;r<4;r++){let x=r%2?-s/6:0;while(x<s){const w=s/3+rnd()*s/6,v=200+rnd()*30|0;g.fillStyle=`rgb(${v},${v-10},${v-28})`;g.fillRect(x+3,r*rh+3,w-6,rh-6);x+=w}}noise(g,s,12000,.1)});
+const tAlu=tex((g,s)=>{g.fillStyle='#8d9296';g.fillRect(0,0,s,s);for(let y=0;y<s;y+=2){g.fillStyle=`rgba(255,255,255,${rnd()*.05})`;g.fillRect(0,y,s,1)}g.fillStyle='#4a4e52';for(let x=0;x<s;x+=s/3)g.fillRect(x,0,5,s);g.fillRect(0,s/2,s,5)});
+const tLouv=tex((g,s)=>{g.fillStyle='#7d858a';g.fillRect(0,0,s,s);const lv=(y0,y1)=>{g.fillStyle='#4a5055';g.fillRect(s*.12,y0-4,s*.76,y1-y0+8);for(let y=y0;y<y1;y+=14){const gr=g.createLinearGradient(0,y,0,y+12);gr.addColorStop(0,'#b9c0c4');gr.addColorStop(.5,'#8c9499');gr.addColorStop(1,'#2a2e31');g.fillStyle=gr;g.fillRect(s*.12,y,s*.76,11)}};lv(s*.06,s*.3);lv(s*.72,s*.94);g.strokeStyle='#5c6367';g.lineWidth=8;g.strokeRect(4,4,s-8,s-8)},512);
+const tTile=tex((g,s)=>{g.fillStyle='#4f4f4f';g.fillRect(0,0,s,s);g.fillStyle='#cfcac0';g.fillRect(2,2,s-4,s-4);noise(g,s,4000,.05)},256);
+const tTank=tex((g,s)=>{g.fillStyle='#7da0b8';g.fillRect(0,0,s,s);g.strokeStyle='#5e7f96';g.lineWidth=6;for(let x=0;x<s;x+=s/4)for(let y=0;y<s;y+=s/4)g.strokeRect(x,y,s/4,s/4);for(let i=0;i<16;i++){g.fillStyle='rgba(255,255,255,.12)';g.beginPath();g.arc((i%4+.5)*s/4,((i/4|0)+.5)*s/4,s/12,0,7);g.fill()}},256);
+function rep(t,u,v){const c=t.clone();c.needsUpdate=true;c.repeat.set(u,v);return c}
+const MS={};const std=(o,k)=>{if(k&&MS[k])return MS[k];if(o.map&&typeof tConc!='undefined'&&o.map.image===tConc.image&&!o.bumpMap){const b=tConcB.clone();b.needsUpdate=true;b.repeat.copy(o.map.repeat);o.bumpMap=b;o.bumpScale=.05}const m=new THREE.MeshStandardMaterial(Object.assign({roughness:.85,metalness:0},o));__GFX(m);if(k)MS[k]=m;return m};
+
+/* ---------- בנייה ---------- */
+const parts=[];
+function P(m,u,par){if(u&&u.base)u={...u};m.castShadow=!u.ns;m.receiveShadow=true;m.userData=u;u.base=m.material;(par||G).add(m);parts.push(m);return m}
+function B(w,h,d,x,y,z,mat,u,par){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);return P(m,u,par)}
+function Cy(r,h,x,y,z,mat,u,rot,par,seg){const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,seg||16),mat);m.position.set(x,y,z);if(rot)m.rotation.set(...rot);return P(m,u,par)}
+function T(pts,r,mat,u,par){const c=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(...p)),false,'catmullrom',.02);return P(new THREE.Mesh(new THREE.TubeGeometry(c,pts.length*16,r,10,false),mat),u,par)}
+function lbl(t,col,bg,fs){const c=document.createElement('canvas');c.width=512;c.height=256;const g=c.getContext('2d');if(bg!='none'){g.fillStyle=bg;g.beginPath();(g.roundRect?g.roundRect(10,10,492,236,40):g.rect(10,10,492,236));g.fill()}g.fillStyle=col;g.font=`800 ${fs||130}px Heebo, Arial`;g.textAlign='center';g.textBaseline='middle';g.direction='rtl';g.fillText(t,256,136);const tx=new THREE.CanvasTexture(c);tx.encoding=THREE.sRGBEncoding;tx.anisotropy=4;return new THREE.MeshBasicMaterial({map:tx,transparent:true,depthWrite:false,toneMapped:false})}
+/* מדבקה על משטח: flat=רצפה, אחרת קיר עם סיבוב ry */
+function sign(t,col,bg,x,y,z,w,ry,flat,u,fs){const m=new THREE.Mesh(new THREE.PlaneGeometry(w,w/2),lbl(t,col,bg,fs));if(flat)m.rotation.x=-Math.PI/2;else m.rotation.y=ry||0;m.position.set(x,y,z);m.renderOrder=2;u=Object.assign({ns:1,k:'sign'},u||{});return P(m,u)}
+/* מידות: חניון x -16..16, z -10..10, גובה 2.9. מעבר z -3..3. רמפה לרחוב מזרח (x 16..25), ירידה מערב (x -16..-25) */
+const X0=-16,X1=16,Z0=-10,Z1=10,H=2.9,RL=9,SX=X1+RL,streetY=H;
+const N={st:0,tr:'שלד'},S0=(n,k)=>({st:0,tr:'שלד',n,k:k||'struct'});
+const concW=(L,h)=>std({map:rep(tConc,L/2.6,(h||H)/2.6)});
+const roughM=std({map:rep(tRough,8,5)});
+B(X1-X0,.3,Z1-Z0,0,-.15,0,roughM,S0('רצפת בטון (גסה)','floor'));
+const dirtM=new THREE.MeshStandardMaterial({map:rep(tDirt,2,1.3),transparent:true,depthWrite:false,roughness:.95});
+const dirt=new THREE.Mesh(new THREE.PlaneGeometry(X1-X0-.4,Z1-Z0-.4),dirtM);dirt.rotation.x=-Math.PI/2;dirt.position.y=.006;P(dirt,{st:0,to:ST('floor'),n:'לכלוך אתר: אבק, שפכי בטון, שלוליות וסימני גלגלים',tr:'ניקיון',k:'floor',ns:1});
+// פסולת: שק מלט קרוע, ערמות חול, קרשי טפסנות
+const debris=[];const dbM=std({color:0x8a7b62,roughness:1}),wdM=std({color:0xb48a5a,roughness:.9});
+[[-6,6.5],[9,-5],[3,7.2]].forEach(([x,z])=>{const pg=new THREE.SphereGeometry(.7,20,10,0,Math.PI*2,0,Math.PI/2),pa=pg.attributes.position;for(let q=0;q<pa.count;q++){const f=.75+rnd()*.5;pa.setX(q,pa.getX(q)*f);pa.setZ(q,pa.getZ(q)*(.6+rnd()*.5));pa.setY(q,pa.getY(q)*(.18+rnd()*.12))}pg.computeVertexNormals();const m=new THREE.Mesh(pg,std({map:rep(tRough,1,1),color:0xb5a888,roughness:1}));m.position.set(x,0,z);P(m,{st:0,to:ST('paint'),n:'ערמת חול ופסולת בנייה',tr:'ניקיון',k:'debris'})});
+for(let i=0;i<5;i++){const m=B(2.4,.03,.18,12+rnd()*2,.02+i*.03,6+rnd()*.6,wdM,{st:0,to:ST('block'),n:'קרשי טפסנות',tr:'שלד',k:'debris'});m.rotation.y=rnd()*.3}
+// קירות דיפון עם פתחים לרמפות במעבר
+B(X1-X0+.8,H,.4,0,H/2,Z0-.2,concW(32),S0('קיר דיפון'));B(X1-X0+.8,H,.4,0,H/2,Z1+.2,concW(32),S0('קיר דיפון'));
+[X0-.2,X1+.2].forEach(x=>{B(.4,H,7,x,H/2,-6.5,concW(7),S0('קיר דיפון'));B(.4,H,7,x,H/2,6.5,concW(7),S0('קיר דיפון'));B(.4,.5,6,x,H-.25,0,concW(6,.5),S0('קורת פתח לרמפה'))});
+// עמודים וקורות
+const cols=[];for(const x of [-7.5,0,7.5,15])for(const z of [-3.3,3.3])cols.push([x,z]);
+const colM=std({map:rep(tConc,.4,1.1)});cols.forEach(([x,z])=>B(.5,H,.5,x,H/2,z,colM,S0('עמוד')));
+const beamM=std({map:rep(tConc,6,.3)});[-3.3,3.3].forEach(z=>B(X1-X0,.55,.4,0,H-.275,z,beamM,S0('קורה','beam')));
+[-7.5,0,7.5,15].forEach(x=>B(.4,.55,Z1-Z0,x,H-.275,0,beamM,S0('קורה','beam')));
+// תקרה
+const ceilM=std({map:rep(tConc,8,5)}),ceilG=std({map:rep(tConc,8,5),transparent:true,opacity:.3,depthWrite:false}),ceilW=std({map:rep(tex((g,s)=>{g.fillStyle='#eeede8';g.fillRect(0,0,s,s);noise(g,s,14000,.05);for(let i=0;i<120;i++){g.fillStyle=`rgba(90,86,80,${.25+rnd()*.3})`;g.beginPath();g.ellipse(rnd()*s,rnd()*s,1+rnd()*2.5,1+rnd()*1.5,rnd()*3,0,7);g.fill()}g.strokeStyle='rgba(150,146,140,.4)';g.lineWidth=2;g.beginPath();g.moveTo(0,s*.5);g.lineTo(s,s*.5);g.stroke()}),8,5),roughness:.92});
+B(X1-X0+.8,.3,Z1-Z0+.8,0,H+.15,0,ceilG,{...N,n:'תקרת החניון',k:'ceil',ns:1});
+// רמפות
+const ang=Math.atan2(H,RL),rl=Math.hypot(H,RL);
+function rampAt(sx,dir,lv,nm){const g=new THREE.Group();g.position.set(sx+dir*RL/2,dir>0?H/2:-H/2,0);g.rotation.z=ang;G.add(g);
+  B(rl,.3,6,0,-.15,0,std({map:rep(tRough,3,2)}),{...N,n:nm,k:'ramp',lv},g);
+  B(rl,.02,5.6,0,.012,0,std({map:rep(tBrush,4,3),roughness:.9}),{st:ST('ramp'),n:'רמפה · בטון מוברש עם חריצים',tr:'רצפות',k:'rampf',lv},g);
+  return g}
+const rUp=rampAt(X1,1,0,'רמפה לרחוב / לקומה שמעל'),rDn=rampAt(X0,-1,'notLast','ירידה לקומה הבאה');
+[[1,X1],[-1,X0]].forEach(([d,x])=>[-3.2,3.2].forEach(z=>{const lv=d<0?'notLast':0;const y0=d>0?0:-H;B(RL,H+1.2,.3,x+d*RL/2,y0+(H+1.2)/2,z+(z>0?.15:-.15),concW(9,4),{...N,n:'קיר רמפה',k:'struct',lv})}));
+// קיני חצץ (רואים בשלד, נעלמים בתיקון) ותיקונים
+const honeyM=std({map:tex((g,s)=>{g.drawImage(tHoney.image,0,0,s,s);g.globalCompositeOperation='destination-in';blob(g,s,'#000',1);g.globalCompositeOperation='source-over'},256),roughness:1,transparent:true,alphaTest:.3}),repM=std({map:tRep,roughness:.95,transparent:true,alphaTest:.3});
+function patch(x,y,z,ry,w,h){const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),honeyM);m.position.set(x,y,z);m.rotation.y=ry;P(m,{st:0,to:ST('fix'),n:'קן חצץ בבטון · צריך תיקון',tr:'שלד',k:'honey',ns:1});
+  const r=new THREE.Mesh(new THREE.PlaneGeometry(w*1.25,h*1.3),repM);r.position.set(x,y,z);r.rotation.y=ry;r.translateZ(.003);P(r,{st:ST('fix'),to:ST('bagar'),n:'תיקון בטון · טיט תיקון',tr:'שלד',k:'rep',ns:1})}
+patch(3,.6,Z0+.015,0,1.2,.6);patch(8,1.9,Z0+.015,0,.8,.5);patch(-12,.4,Z1-.015,Math.PI,1.4,.5);patch(5,2.2,Z1-.015,Math.PI,.7,.4);patch(X1-.015,1.1,-7,-Math.PI/2,1.1,.7);
+cols.forEach(([x,z],i)=>{if(i%2)return;patch(x,.5+rnd()*1.3,z+.256,0,.3,.4)});
+const plugM=std({color:0xc8c2b4});for(let x=X0+1;x<X1;x+=1.3)for(const y of [.7,1.6,2.4]){const p=new THREE.Mesh(new THREE.CircleGeometry(.03,10),plugM);p.position.set(x,y,Z1-.012);p.rotation.y=Math.PI;P(p,{st:ST('fix'),to:ST('bagar'),n:'חור קשירה סתום',tr:'שלד',k:'rep',ns:1})}
+
+/* ---------- איטום וניקוז ---------- */
+{const wpm=std({color:0x3a432c,roughness:.5,metalness:.05}),u={st:ST('drain'),n:'איטום בתחתית הקיר בגובה 40 ס"מ (ביטומני, ירוק כהה)',tr:'איטום',k:'wp',ns:1};
+  B(6,.4,.012,-7,.2,Z0+.042,wpm,u);B(X1-(-10),.4,.012,(X1-10)/2,.2,Z1-.042,wpm,u);[[X0+.012,1],[X1-.012,-1]].forEach(([x])=>{B(.012,.4,7,x,.2,-6.5,wpm,u);B(.012,.4,7,x,.2,6.5,wpm,u)})}
+// תעלת ניקוז רוחבית בתחתית כל רמפה (כל המים מהרמפה מתנקזים אליה)
+{const tgz=tex((g,s2)=>{g.fillStyle='#050505';g.fillRect(0,0,s2,s2);for(let y=0;y<s2;y+=32){const gr=g.createLinearGradient(0,y,0,y+14);gr.addColorStop(0,'#9aa1a6');gr.addColorStop(.45,'#f0f3f5');gr.addColorStop(1,'#8c9398');g.fillStyle=gr;g.fillRect(0,y,s2,14)}g.fillStyle='#cfd4d7';g.fillRect(0,0,22,s2);g.fillRect(s2-22,0,22,s2)},256);const gm=std({map:rep(tgz,1,48),metalness:.15,roughness:.35}),u={st:ST('drain'),n:'תעלת ניקוז לכל רוחב הרמפה · בסוף הרמפה (רשת אלומיניום)',tr:'איטום',k:'drain',ns:1};
+  B(.35,.05,5.8,X1-.3,.03,0,gm,u);B(.42,.06,5.9,X1-.3,.0,0,std({color:0x050505}),u);
+  B(.35,.04,6.4,SX-.45,streetY+.022,0,gm,{...u,lv:'top',n:'תעלת ניקוז מתחת לשער (רשת אלומיניום, שחור בפנים)'});B(.4,.05,6.5,SX-.45,streetY+.0,0,std({color:0x111213}),{...u,lv:'top',n:'תעלת ניקוז מתחת לשער'});
+  B(.35,.04,5.8,X0-RL-.3,-H+.02,0,gm,{...u,lv:'notLast',n:'תעלת ניקוז בתחתית הירידה לקומה הבאה'})}
+
+
+B(.8,.05,.8,-9.4,.025,9.2,std({map:rep(tGrate,3,1)}),{st:ST('drain'),n:'בור ניקוז (שוחה) עם משאבה טבולה',tr:'איטום',k:'drain',ns:1});
+
+/* ---------- בלוקים ---------- */
+const bl=(w,d,x,z,n)=>B(w,H,d,x,H/2,z,std({map:rep(tBlock,Math.max(w,d)/1.2,H/1.2),roughness:.95}),{st:ST('block'),n:n+' · בלוק 60×60',tr:'בנאי',k:'blk'});
+// חדר משאבות x -16..-10, z 4..10 ; חדר חשמל x -16..-10, z -10..-4 ; לובי x -4..4, z -10..-5.5 ; מחסנים x 5..16, z -10..-8
+/* קיר בלוק עם פתחי דלת אמיתיים (אפשר להיכנס) */
+function blW(ax,c,a,b,ops,n,t){t=t||.2;let p=a;const seg=(u0,u1,y0,y1)=>{if(u1-u0<.01)return;const w=u1-u0,h=y1-y0,m=std({map:rep(tBlock,w/1.2,h/1.2),roughness:.95}),uu={st:ST('block'),n:n+' · בלוק 60×60',tr:'בנאי',k:'blk'};if(ax=='x')B(w,h,t,(u0+u1)/2,(y0+y1)/2,c,m,uu);else B(t,h,w,c,(y0+y1)/2,(u0+u1)/2,m,uu)};
+  ops.sort((x,y)=>x[0]-y[0]).forEach(([at,w])=>{seg(p,at-w/2,0,H);seg(at-w/2,at+w/2,2.3,H);p=at+w/2});seg(p,b,0,H)}
+blW('x',4,-16,-10,[],'קיר חדר משאבות');blW('z',-10,4,10,[[8.5,1.1]],'קיר חדר משאבות');
+blW('x',-4,-16,-10,[],'קיר חדר חשמל');blW('z',-10,-10,-4,[[-5.5,1.1]],'קיר חדר חשמל');
+blW('x',-5.5,-4,4,[[-2,1.3],[2,1.3]],'קיר לובי');bl(.2,4.5,-4,-7.75,'קיר לובי');bl(.2,4.5,4,-7.75,'קיר לובי');bl(.2,4.5,0,-7.75,'קיר חדר מדרגות');
+{const lm=std({map:rep(tConc,.6,.15)});[[-2,-5.5,1.6,0],[2,-5.5,1.6,0],[-10,8.5,1.4,1],[-10,-5.5,1.4,1],[-2,-9.9,1.5,0]].forEach(([x,z,w,r])=>{const m=B(w,.2,.22,x,2.2,z,lm,{st:ST('block'),n:'לינטל בטון מעל הדלת',tr:'בנאי',k:'blk'});if(r)m.rotation.y=Math.PI/2})}
+const STO=[];for(let i=0;i<5;i++){const x0=5+i*2.2;bl(.12,2,x0,-9,'מחיצת מחסן');STO.push(x0+1.1)}bl(.12,2,16,-9,'מחיצת מחסן');blW('x',-8,5,16,STO.map(x=>[x,1.0]),'חזית מחסנים',.12);{const lm=std({map:rep(tConc,.4,.1)});STO.forEach(x=>B(1.3,.2,.14,x,2.1,-8,lm,{st:ST('block'),n:'לינטל מעל דלת מחסן',tr:'בנאי',k:'blk'}))}
+// בגר
+const plM=std({map:rep(tPlas,4,2),roughness:.9});
+[-3.3,3.3].forEach(z=>B(X1-X0,.57,.42,0,H-.285,z,plM,{st:ST('bagar'),to:ST('paint'),n:'טיח על הקורה',tr:'טייח',k:'bag'}));[-7.5,0,7.5,15].forEach(x=>B(.42,.57,Z1-Z0,x,H-.285,0,plM,{st:ST('bagar'),to:ST('paint'),n:'טיח על הקורה',tr:'טייח',k:'bag'}));
+B(X1-X0-.2,H-.1,.02,0,H/2,Z0+.012,plM,{st:ST('bagar'),to:ST('paint'),n:'בגר: החלקת קיר',tr:'טייח',k:'bag',ns:1});B(X1-X0-.2,H-.1,.02,0,H/2,Z1-.012,plM,{st:ST('bagar'),to:ST('paint'),n:'בגר: החלקת קיר',tr:'טייח',k:'bag',ns:1});
+cols.forEach(([x,z])=>B(.52,H-.6,.52,x,(H-.6)/2,z,plM,{st:ST('bagar'),to:ST('paint'),n:'בגר: החלקת עמוד',tr:'טייח',k:'bag'}));
+
+/* ---------- חשמל ---------- */
+const condM=std({color:0x2d8a3e,roughness:.55}),boxM=std({color:0x2d8a3e,roughness:.6});
+const eBox=(x,y,z,n)=>B(.1,.1,.05,x,y,z,boxM,{st:ST('elec'),n,tr:'חשמלאי',k:'el'});
+cols.forEach(([x,z])=>{const zz=z+(z>0?-.28:.28);eBox(x+.1,1.3,zz,'קופסת חשמל (שקע / לחצן)');Cy(.012,H-1.35,x+.1,1.35+(H-1.35)/2,zz,condM,{st:ST('elec'),n:'צנרת חשמל לתקרה',tr:'חשמלאי',k:'el'})});
+[[-9.88,1.2,6.5],[-9.88,1.2,-6],[-3.88,1.2,-6.5],[2,1.2,-5.38],[X1-.3,1.4,7]].forEach(([x,y,z])=>eBox(x,y,z,'נקודת חשמל'));
+const trayM=std({color:0x9aa0a3,metalness:.6,roughness:.4});
+const tWire=tex((g,s)=>{g.clearRect(0,0,s,s);g.strokeStyle='#c9cdd0';g.lineWidth=3;for(let x=0;x<=s;x+=32){g.beginPath();g.moveTo(x,0);g.lineTo(x,s);g.stroke()}for(let y=0;y<=s;y+=64){g.beginPath();g.moveTo(0,y);g.lineTo(s,y);g.stroke()}},256);
+const wireM=new THREE.MeshStandardMaterial({map:rep(tWire,60,1),transparent:true,alphaTest:.3,side:THREE.DoubleSide,metalness:.5,roughness:.4});
+{const ty=2.28,tz=1.6,u={st:ST('elec'),n:'מגש רשת לכבלים (סל)',tr:'חשמלאי',k:'sys'};B(30,.005,.3,0,ty,tz,wireM,u);B(30,.08,.005,0,ty+.04,tz-.15,wireM,u);B(30,.08,.005,0,ty+.04,tz+.15,wireM,u);
+  [[0x2d8a3e,-.08],[0x2d8a3e,-.03],[0xe8e8e2,.03],[0x1d1f22,.08],[0x2d8a3e,.11]].forEach(([c,dz],i)=>Cy(.012,29.5,0,ty+.015+(i%2)*.012,tz+dz,std({color:c,roughness:.6}),{...u,n:'כבלי חשמל במגש'},[0,0,Math.PI/2]));
+  const rdM=std({color:0x8b8f92,metalness:.7,roughness:.35}),unM=std({color:0xb5babd,metalness:.6,roughness:.35});for(let x=-14;x<=14;x+=2){Cy(.008,H-ty-.02,x,(H+ty)/2,tz-.17,rdM,{...u,n:'מוט תלייה למגש'},null,null,6);Cy(.008,H-ty-.02,x,(H+ty)/2,tz+.17,rdM,{...u,n:'מוט תלייה למגש'},null,null,6);B(.04,.04,.42,x,ty-.025,tz,unM,{...u,n:'פרופיל יוניסטראט'})}}
+// צנרת חשמל PVC אפורה על התקרה עם תופסנים, יורדת בשרשורי על הקורות
+{const pv=std({color:0xd4d6d4,roughness:.55}),u={st:ST('elec'),n:'צינור חשמל PVC על התקרה',tr:'חשמלאי',k:'el'};
+  [[-6,-14,6],[5.5,-14,6]].forEach(([z,a,b])=>{T([[a,H-.03,z],[b,H-.03,z]],.012,pv,u);for(let x=a+1;x<b;x+=1.5)B(.04,.012,.035,x,H-.012,z,pv,{...u,n:'תופסן (שלה)'})});
+  [-7.5,0,7.5].forEach(x=>T([[x-.3,H-.03,-6],[x-.25,H-.05,-6],[x-.25,H-.56,-5.6],[x-.25,H-.56,-3.8]],.013,std({color:0xc9ccca,roughness:.6}),{...u,n:'שרשורי חשמל גמיש מעל הקורה'}))}
+T([[-12,2.66,1.6],[-14,2.66,1.6],[-14,2.66,-4.2]],.025,condM,{st:ST('elec'),n:'צנרת חשמל לחדר החשמל',tr:'חשמלאי',k:'el'});
+
+/* נקודות חשמל בקירות: מתגים ושקעים במחסנים ובלובי, קופסאות ביקורת, לוח קומתי */
+{const eu={st:ST('elec'),tr:'חשמלאי',k:'el'},wp=std({color:0xf2f2ee,roughness:.4});
+  
+  [[-3.2,-5.38],[-.8,-5.38],[3.2,-5.38]].forEach(([x,z])=>{B(.08,.08,.03,x,.4,z,wp,{...eu,n:'שקע בלובי'});B(.08,.08,.03,x,1.15,z,wp,{...eu,n:'מתג בלובי'})});
+  [[-7.5,2.4,-3.04],[7.5,2.4,-3.04],[0,2.4,3.04],[-9.88,2.2,-2]].forEach(([x,y,z])=>B(.14,.14,.06,x,y,z,std({color:0x8f9396}),{...eu,n:'קופסת ביקורת חשמל'}));
+  B(.5,.7,.14,3.6,1.5,-5.38,std({color:0xd9dbd6,metalness:.25}),{...eu,n:'לוח חשמל קומתי (תאורה ושקעים בחניון)'})}
+/* ---------- משקופים ---------- */
+const frM=std({color:0x5e6366,metalness:.6,roughness:.4});
+function frame(x,z,w,h,rot,n){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rot;G.add(g);const u={st:ST('frame'),n,tr:'בנאי',k:'frame'};B(.06,h,.24,-w/2,h/2,0,frM,u,g);B(.06,h,.24,w/2,h/2,0,frM,u,g);B(w+.12,.06,.24,0,h,0,frM,u,g);return g}
+frame(-2,-5.5,1.2,2.1,0,'משקוף דלת אש · לובי');frame(2,-5.5,1.2,2.1,0,'משקוף דלת אש · מדרגות');frame(-10,8.5,1.0,2.1,Math.PI/2,'משקוף חדר משאבות');frame(-10,-5.5,1.0,2.1,Math.PI/2,'משקוף חדר חשמל');
+STO.forEach(x=>frame(x,-8,.9,2.0,0,'משקוף מחסן'));frame(-2,-9.9,1.1,2.2,0,'משקוף מעלית');
+
+/* ---------- מתלים ---------- */
+const rodM=std({color:0x8b8f92,metalness:.7,roughness:.35}),uniM=std({color:0xb5babd,metalness:.6,roughness:.35});
+for(let x=X0+1.5;x<X1-.5;x+=2.5){[-.3,.3].forEach(dz=>Cy(.008,.32,x,H-.16,dz,rodM,{st:ST('hang'),n:'מוט הברגה (מתלה)',tr:'מערכות',k:'hang'},null,null,6));B(.04,.04,1.2,x,H-.33,0,uniM,{st:ST('hang'),n:'פרופיל תלייה',tr:'מערכות',k:'hang'});
+  [-6,6].forEach(z=>Cy(.008,.3,x,H-.15,z,rodM,{st:ST('hang'),n:'מוט הברגה (מתלה)',tr:'מערכות',k:'hang'},null,null,6))}
+for(let x=X0+2;x<X1-1;x+=3)Cy(.008,.5,x,H-.25,-2.2,rodM,{st:ST('hang'),n:'מתלה לתעלת אוורור',tr:'מערכות',k:'hang'},null,null,6);
+
+/* ---------- ספרינקלרים ---------- */
+const sprM=std({color:0xc42b2b,roughness:.5}),headM=std({color:0xd8d8d2,metalness:.6,roughness:.3});
+const RX=-9.6,RZ=3.7;
+{const bv=std({color:0x1e4fa3,metalness:.3,roughness:.45}),fl=std({color:0x8f9396,metalness:.5,roughness:.35}),u={st:ST('spr'),n:'תחנת מגופים ומד מים (מגופים כחולים)',tr:'ספרינקלרים',k:'sys'};
+  [RX-.35,RX-.6].forEach((x,i)=>{Cy(.05,H-.25,x,(H-.25)/2+.1,RZ,i?std({color:0x2b2e31,roughness:.5}):sprM,{...u,n:i?'צינור ניקוז':'קו הזנה'});if(!i)[.5,.9,1.5].forEach(y=>{Cy(.09,.08,x,y,RZ,bv,u);Cy(.1,.015,x,y+.05,RZ,fl,u);Cy(.1,.015,x,y-.05,RZ,fl,u)});Cy(.06,.05,x+.12,.9,RZ,bv,{...u,n:'ידית מגוף פרפר'},[0,0,Math.PI/2])});
+  B(.45,.55,.2,RX-.25,1.55,RZ+.45,std({color:0xc9ccce,roughness:.45}),{...u,n:'לוח פיקוד ספרינקלרים'})}Cy(.075,H+.3,RX,H/2,RZ,sprM,{st:ST('spr'),n:'קו ספרינקלרים אנכי (רייזר) · עובר בין הקומות',tr:'ספרינקלרים',k:'sys'});
+[[1.0,'מגוף ראשי',0x2a2c2e],[1.5,'שסתום אזעקה (תחנת ספרינקלרים)',0x9e1f1f],[1.9,'מד לחץ ומתג זרימה',0x2a2c2e]].forEach(([y,n,c])=>Cy(.12,.14,RX,y,RZ,std({color:c,metalness:.4}),{st:ST('spr'),n,tr:'ספרינקלרים',k:'sys'}));
+Cy(.1,.03,RX+.18,1.0,RZ,std({color:0xc8a23a,metalness:.6}),{st:ST('spr'),n:'גלגל מגוף',tr:'ספרינקלרים',k:'sys'},[0,0,Math.PI/2]);
+T([[RX,2.62,RZ],[RX,2.62,0],[X1-1,2.62,0]],.06,sprM,{st:ST('spr'),n:'קו ספרינקלרים ראשי',tr:'ספרינקלרים',k:'sys'});
+T([[RX,2.62,0],[X0+1,2.62,0]],.06,sprM,{st:ST('spr'),n:'קו ספרינקלרים ראשי',tr:'ספרינקלרים',k:'sys'});
+{const cpM=std({color:0x9e211f,metalness:.4,roughness:.35}),hr=std({color:0xb5babd,metalness:.6,roughness:.3});
+  for(let x=X0+1.6;x<X1-1;x+=3){Cy(.075,.07,x,2.62,0,cpM,{st:ST('spr'),n:'מצמד חריץ (גרוב) עם ברגים',tr:'ספרינקלרים',k:'sys'},[0,0,Math.PI/2]);[-1,1].forEach(sd=>Cy(.012,.05,x,2.62+sd*.07,0,hr,{st:ST('spr'),n:'בורג מצמד',tr:'ספרינקלרים',k:'sys'},[Math.PI/2,0,0]))}
+  for(let x=X0+2.8;x<X1-1;x+=3){const r=new THREE.Mesh(new THREE.TorusGeometry(.068,.006,6,20),hr);r.rotation.y=Math.PI/2;r.position.set(x,2.62,0);P(r,{st:ST('hang'),n:'מתלה טבעת לצינור',tr:'מערכות',k:'hang'})}}
+Cy(.022,.06,-13,2.57,7,headM,{st:ST('spr'),n:'ראש ספרינקלר · חדר משאבות',tr:'ספרינקלרים',k:'head'});Cy(.022,.06,-13,2.57,5,headM,{st:ST('spr'),n:'ראש ספרינקלר · חדר משאבות',tr:'ספרינקלרים',k:'head'});
+for(let x=-8;x<14;x+=3)Cy(.022,.06,x,2.04,-2.2,headM,{st:ST('spr'),n:'ראש ספרינקלר מתחת לתעלת האוורור (תעלה רחבה מ-1.2 מ\')',tr:'ספרינקלרים',k:'head'});
+STO.forEach(x=>Cy(.022,.06,x+.5,2.57,-9.0,headM,{st:ST('spr'),n:'ראש ספרינקלר במחסן (50 ס"מ מגוף התאורה)',tr:'ספרינקלרים',k:'head'}));
+/* פנים המחסן: ריצוף, פנלים, גוף תאורה, מתג ושקע צמודים לקיר מבפנים */
+{const tt=tex((g,s2)=>{g.fillStyle='#d8d4cb';g.fillRect(0,0,s2,s2);g.strokeStyle='#a9a49a';g.lineWidth=3;g.strokeRect(1,1,s2-2,s2-2);for(let i=0;i<900;i++){g.fillStyle=`rgba(120,115,105,${rnd()*.2})`;g.fillRect(rnd()*s2,rnd()*s2,2,2)}},128),sk=std({color:0xcfcbc2,roughness:.4}),pl2=std({color:0xf7f7f3,roughness:.35}),dk=std({color:0x1c1d1f});
+  const dk2=std({color:0x5d6267,roughness:.5});const acc=(x,y,t)=>{const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');g.fillStyle='#ffffff';g.fillRect(0,0,128,128);g.strokeStyle='#6b7075';g.lineWidth=8;g.strokeRect(4,4,120,120);g.strokeStyle='#b9bcbf';g.lineWidth=3;g.strokeRect(12,12,104,104);if(t=='so'){g.fillStyle='#dcdbd6';g.beginPath();g.arc(64,64,40,0,7);g.fill();g.strokeStyle='#8d9094';g.lineWidth=3;g.stroke();g.fillStyle='#111';[[46,56,-.5],[82,56,.5],[64,86,0]].forEach(([a,b,r])=>{g.save();g.translate(a,b);g.rotate(r);g.fillRect(-4,-9,8,18);g.restore()})}else{g.fillStyle='#e9e9e5';g.fillRect(30,24,68,80);g.strokeStyle='#7d8185';g.lineWidth=3;g.strokeRect(30,24,68,80);g.fillStyle='#cfd0cc';g.fillRect(30,64,68,40);g.fillStyle='#e8402e';g.fillRect(58,88,12,8)}const tx=new THREE.CanvasTexture(c);const m=new THREE.Mesh(new THREE.BoxGeometry(.095,.095,.035),[dk2,dk2,dk2,dk2,dk2,new THREE.MeshStandardMaterial({map:tx,roughness:.35})]);m.position.set(x,y,-8.32);m.rotation.y=Math.PI/2;P(m,{st:ST('paint'),n:t=='so'?'שקע במחסן (צמוד לקיר)':'מתג תאורה למחסן (צמוד לקיר)',tr:'חשמלאי',k:'acc'})};
+  STO.forEach(x=>{B(2.06,.014,1.86,x,.029,-9.0,std({map:rep(tt,2.06/.6,1.86/.6),roughness:.6}),{st:ST('floor'),n:'ריצוף מחסן 60×60',tr:'רצף',k:'tile',ns:1});
+    B(2.06,.07,.01,x,.07,-9.94,sk,{st:ST('floor'),n:'פנל (שיפולים)',tr:'רצף',k:'tile',ns:1});[-1,1].forEach(sd=>B(.01,.07,1.86,x+sd*1.02,.07,-9.0,sk,{st:ST('floor'),n:'פנל (שיפולים)',tr:'רצף',k:'tile',ns:1}));
+    acc(x+1.04-.015,1.15,'sw');acc(x+1.04-.015,.35,'so');{const cm=std({color:0x8e9398,roughness:.5});Cy(.011,H-1.2,x+1.04-.015,1.19+(H-1.2)/2,-8.32,cm,{st:ST('elec'),n:'צינור חשמל גלוי (מוגן) למתג ולשקע',tr:'חשמלאי',k:'el'});Cy(.011,.69,x+1.04-.015,.74,-8.32,cm,{st:ST('elec'),n:'צינור חשמל גלוי לשקע',tr:'חשמלאי',k:'el'})}
+    B(.6,.05,.12,x,H-.03,-9.0,std({color:0xffffff,emissive:0xfff4dc,emissiveIntensity:1}),{st:ST('light'),n:'גוף תאורה לד במחסן',tr:'חשמלאי',k:'lamp'});B(.64,.02,.14,x,H-.005,-9.0,std({color:0xd9dcde,metalness:.4}),{st:ST('light'),n:'גוף תאורה',tr:'חשמלאי',k:'lamp'})})}
+for(let x=X0+1.5;x<X1-.5;x+=2.5){[[-1,-9.2],[1,9.2]].forEach(([s,ze0])=>{const ze=(x>-4.4&&x<4.4&&s<0)?-5.2:(x>4.6&&s<0)?-7.7:(x<-9.6)?s*3.7:ze0;T([[x,2.62,0],[x,2.62,ze]],.022,sprM,{st:ST('spr'),n:'קו ספרינקלרים משני',tr:'ספרינקלרים',k:'sys'});for(let z=s*2;Math.abs(z)<Math.abs(ze)-.2;z+=s*3){Cy(.022,.06,x,2.57,z,headM,{st:ST('spr'),n:'ראש ספרינקלר',tr:'ספרינקלרים',k:'head'});Cy(.045,.006,x,2.535,z,headM,{st:ST('spr'),n:'ראש ספרינקלר',tr:'ספרינקלרים',k:'head'})}})}
+
+{const slM=std({color:0x9a9890,roughness:.8}),su={st:ST('spr'),n:'שרוול במעבר הצנרת דרך הקורה',tr:'ספרינקלרים',k:'sys'};
+  [-7.5,0,7.5,15].forEach(bx=>Cy(.085,.43,bx,2.62,0,slM,su,[0,0,Math.PI/2]));
+  for(let x=X0+1.5;x<X1-.5;x+=2.5)[-3.3,3.3].forEach(z=>Cy(.045,.43,x,2.62,z,slM,su,[Math.PI/2,0,0]));
+  [-7.5,0,7.5].forEach(bx=>{[6.6,-6.6].forEach(z=>Cy(.1,.43,bx,2.45,z,slM,{...su,st:ST('sew'),n:'שרוול לביוב במעבר דרך הקורה',tr:'אינסטלטור'},[0,0,Math.PI/2]));Cy(.06,.43,bx,2.5,-1,slM,{...su,st:ST('sew'),n:'שרוול לקו המים במעבר דרך הקורה',tr:'אינסטלטור'},[0,0,Math.PI/2])})}
+/* ---------- ביוב ומים ---------- */
+const sewM=std({color:0x5d6268,roughness:.55}),watM=std({color:0x2f7fe0,roughness:.45});
+const sU={st:ST('sew'),tr:'אינסטלטור',k:'sys'},coM=std({color:0x2b2e31,roughness:.6});
+// שני מאספים ראשיים Ø160 בשיפוע אל בור השאיבה
+T([[14,2.48,6.6],[-8.9,2.36,6.6],[-9.4,2.3,7.4],[-9.4,2.28,9.7],[-9.4,.35,9.72],[-9.4,.12,9.35]],.08,sewM,{...sU,n:'מאסף ביוב ראשי Ø160 · שיפוע 1% לבור'});
+T([[14,2.48,-6.6],[-8.9,2.36,-6.6],[-9.4,2.3,-4.3],[-9.4,2.3,3.0],[-9.4,2.3,7.4]],.08,sewM,{...sU,n:'מאסף ביוב ראשי Ø160 · שיפוע 1%'});
+[[-6,9.6],[3,9.6],[11,9.6]].forEach(([x,z])=>{Cy(.055,H,x,H/2,z-.1,sewM,{...sU,n:'יורד ביוב מהבניין שמעל Ø110'});T([[x,2.5,z-.1],[x,2.45,6.6]],.055,sewM,{...sU,n:'חיבור למאסף Ø110'});Cy(.07,.04,x,.4,z-.18,coM,{...sU,n:'פתח ביקורת'},[Math.PI/2,0,0])});
+[[-5,-9.6],[4.6,-9.6],[13.5,-9.6]].forEach(([x,z])=>{Cy(.055,H,x,H/2,z+.1,sewM,{...sU,n:'יורד ביוב מהבניין שמעל Ø110'});T([[x,2.5,z+.1],[x,2.45,-6.6]],.055,sewM,{...sU,n:'חיבור למאסף Ø110'});Cy(.07,.04,x,.4,z+.18,coM,{...sU,n:'פתח ביקורת'},[Math.PI/2,0,0])});
+[[-8.9,6.6],[-8.9,-6.6],[-9.4,7.4]].forEach(([x,z])=>Cy(.085,.05,x,2.36,z,coM,{...sU,n:'פתח ביקורת בשינוי כיוון'}));
+[[-3,9.6],[8,9.6],[0,-9.6]].forEach(([x,z])=>Cy(.025,H,x,H/2,z+(z>0?-.08:.08),std({color:0xeeeeea}),{...sU,n:'קו ניקוז מזגנים מהדירות'}));
+Cy(.3,.06,-9.4,.03,9.2,std({color:0x4a4d50,metalness:.4}),{...sU,n:'מכסה בור שאיבה'});
+T([[X1-.3,2.5,-1],[-11.8,2.5,-1],[-11.8,2.5,4.2]],.04,watM,{st:ST('sew'),n:'קו מים ראשי לחדר המשאבות',tr:'אינסטלטור',k:'sys'});
+
+/* יורדי ביוב לאורך עמודים, עם שלות, עד לרצפה (לקומה שמתחת) */
+{const u={st:ST('sew'),tr:'אינסטלטור',k:'sys'},cl=std({color:0xb5babd,metalness:.6,roughness:.3});[[-7.5,3.3,.33,0],[0,3.3,.33,0],[7.5,-3.3,-.33,0],[0,-3.3,0,-.33]].forEach(([x,z,dx,dz])=>{const px=x+dx,pz=z+dz+(dz?0:.0);Cy(.055,H,px,H/2,pz,sewM,{...u,n:'יורד ביוב לאורך העמוד Ø110'});[.6,1.5,2.4].forEach(y=>{const r=new THREE.Mesh(new THREE.TorusGeometry(.062,.008,6,18),cl);r.rotation.x=Math.PI/2;r.position.set(px,y,pz);P(r,{...u,n:'שלה (חבק) לעמוד'})});Cy(.07,.04,px,.45,pz,std({color:0x2b2e31}),{...u,n:'פתח ביקורת ביורד'})})}
+/* ---------- אוורור ---------- */
+const tGalv=tex((g,s)=>{g.fillStyle='#a3a9ae';g.fillRect(0,0,s,s);for(let i=0;i<900;i++){const v=140+((rnd()*60)|0);g.fillStyle=`rgba(${v},${v+4},${v+8},.35)`;g.beginPath();g.moveTo(rnd()*s,rnd()*s);for(let k=0;k<5;k++)g.lineTo(rnd()*s,rnd()*s);g.fill()}g.fillStyle='#7d8388';g.fillRect(0,0,6,s);g.fillStyle='#c8cdd1';g.fillRect(6,0,3,s);g.fillStyle='#5f6569';for(let y=20;y<s;y+=60){g.beginPath();g.arc(14,y,3,0,7);g.fill()}},256);
+const ductM=std({map:rep(tGalv,26/1.2,1),color:0xd4d8db,metalness:.6,roughness:.33});const ductMs=std({map:tGalv,color:0xd4d8db,metalness:.6,roughness:.33});
+B(26,.25,.7,1,2.2,-2.2,ductM,{st:ST('vent'),n:'תעלת יניקת עשן מפח מגולוון (חיבורי פלנץ כל 1.2 מ\')',tr:'מיזוג',k:'sys'});
+for(let x=-11.6;x<14;x+=1.2)B(.03,.29,.74,x,2.2,-2.2,std({color:0x7f868b,metalness:.6,roughness:.4}),{st:ST('vent'),n:'פלנץ חיבור בין קטעי תעלה',tr:'מיזוג',k:'sys'});
+const tGrl=tex((g,s)=>{g.fillStyle='#c9cdd0';g.fillRect(0,0,s,s);g.fillStyle='#24272a';g.fillRect(14,14,s-28,s-28);for(let y=18;y<s-18;y+=12){const gr=g.createLinearGradient(0,y,0,y+9);gr.addColorStop(0,'#e3e6e8');gr.addColorStop(1,'#8d9397');g.fillStyle=gr;g.fillRect(16,y,s-32,7)}},128);
+for(let x=-10;x<14;x+=3){B(.6,.18,.02,x,2.2,-1.84,std({map:tGrl,metalness:.4,roughness:.4}),{st:ST('vent'),n:'גריל יניקה עם להבים (אלומיניום)',tr:'מיזוג',k:'sys'});B(.6,.18,.02,x+1.5,2.2,-2.56,std({map:tGrl,metalness:.4,roughness:.4}),{st:ST('vent'),n:'גריל יניקה עם להבים (אלומיניום)',tr:'מיזוג',k:'sys'})}
+const fans=[];[[-1,4.8],[9,4.8],[-6,0.9],[4,.9],[13,.9],[-1,-4.6],[9,-4.6]].forEach(([x,fz])=>{const g=new THREE.Group();g.position.set(x,2.42,fz);G.add(g);const u={st:ST('vent'),n:'מפוח סילון (ג׳ט פן) · לחיצה = הפעלה',tr:'מיזוג',k:'sys',act:'fan'};
+  const cas=new THREE.Mesh(new THREE.CylinderGeometry(.32,.32,1.1,40,1,false),std({color:0x8f959a,metalness:.45,roughness:.38}));cas.rotation.z=Math.PI/2;P(cas,u,g);
+  [-.553,.553].forEach(ex=>{const d=new THREE.Mesh(new THREE.CircleGeometry(.3,40),std({color:0x1b1d1f,roughness:.8}));d.rotation.y=ex>0?Math.PI/2:-Math.PI/2;d.position.x=ex;P(d,{...u,n:'פתח המפוח (רואים את הגלגל דרך הרשת)'},g);const rr=new THREE.Mesh(new THREE.TorusGeometry(.32,.02,8,40),std({color:0x6d7276,metalness:.5}));rr.rotation.y=Math.PI/2;rr.position.x=ex;P(rr,{...u,n:'שפת המפוח'},g)});
+  [-.6,.6].forEach(ex=>{for(let r=.08;r<.32;r+=.06){const t=new THREE.Mesh(new THREE.TorusGeometry(r,.005,5,28),std({color:0xbfc4c8,metalness:.6}));t.rotation.y=Math.PI/2;t.position.x=ex;P(t,{...u,n:'רשת מגן בפתח המפוח'},g)}[0,Math.PI/2].forEach(a=>{const bar=B(.008,.62,.008,ex,0,0,std({color:0xbfc4c8,metalness:.6}),{...u,n:'רשת מגן'},g);bar.rotation.x=a})});
+  Cy(.07,.04,.57,0,0,std({color:0x3a3d40,metalness:.3}),{...u,n:'ציר הגלגל'},[0,0,Math.PI/2],g);
+  const bl=[];for(let k=0;k<6;k++){const b=new THREE.Mesh(new THREE.BoxGeometry(.03,.27,.08),std({color:0x5d6268,metalness:.4}));b.geometry.translate(0,.15,0);b.rotation.x=k*Math.PI/3;b.position.x=.575;P(b,{...u,n:'כנפי המפוח (מאחורי הרשת)'},g);bl.push(b)}fans.push(bl);
+  B(.14,.1,.12,0,.39,0,std({color:0xc9ccce}),{...u,n:'קופסת חיבור חשמל למפוח'},g);
+  const cv=std({color:0x2b2e31,roughness:.6});T([[x,2.81,fz],[x+.2,2.86,fz+.2],[x+.6,2.86,fz+(fz>1.6?-.3:.3)]],.012,cv,{...u,n:'צינור חשמל גמיש למפוח'});
+  [-.35,.35].forEach(dx=>{Cy(.008,.68,dx,.66,0,rodM,{...u,n:'מתלה מפוח'},null,g);B(.12,.03,.7,dx,.33,0,std({color:0x6d7276,metalness:.5}),{...u,n:'תושבת מפוח'},g)})});
+B(1.2,H,1.2,13.5,H/2,Z1-.7,ductM,{st:ST('vent'),n:'פיר שחרור עשן לגג',tr:'מיזוג',k:'sys'});
+
+/* ---------- תאורה וגלאים ---------- */
+const ledM=std({color:0xfffdf3,emissive:0xfff0c0,emissiveIntensity:.15},'led');
+for(let x=X0+2;x<X1;x+=4)[-6,.9,6].forEach(z=>{[-.7,.7].forEach(dx=>{Cy(.004,.12,x+dx,2.88,z,std({color:0x8b8f92,metalness:.7}),{st:ST('light'),n:'שרשרת תלייה לגוף התאורה',tr:'חשמלאי',k:'lamp0'});B(.04,.08,.14,x+dx*1.1,2.77,z,std({color:0x6d7276}),{st:ST('light'),n:'כיסוי קצה (אטם IP65)',tr:'חשמלאי',k:'lamp0'})});B(1.55,.07,.13,x,2.79,z,std({color:0xa9adb0,roughness:.5,metalness:.2}),{st:ST('light'),n:'גוף תאורה מוגן מים (IP65)',tr:'חשמלאי',k:'lamp0'});B(1.5,.04,.1,x,2.74,z,ledM,{st:ST('light'),n:'גוף תאורה LED',tr:'חשמלאי',k:'lamp'})});
+cols.forEach(([x,z])=>B(.12,.16,.06,x-.1,1.7,z+(z>0?-.28:.28),std({color:0xeeeeea}),{st:ST('light'),n:'גלאי CO',tr:'חשמלאי',k:'co'}));
+{const g=new THREE.Group();g.position.set(X1-.08,1.45,6);g.rotation.y=-Math.PI/2;G.add(g);const u={st:ST('light'),n:'רכזת גילוי אש ובקרת CO (עם טלפון כבאים)',tr:'חשמלאי',k:'co'};
+  B(.56,.72,.14,0,0,.07,std({color:0xd7dadc,metalness:.3,roughness:.4}),u,g);B(.56,.08,.145,0,.32,.07,std({color:0xc42b2b,roughness:.45}),u,g);
+  const c=document.createElement('canvas');c.width=320;c.height=400;const x=c.getContext('2d');x.fillStyle='#e9ebec';x.fillRect(0,0,320,400);x.fillStyle='#c42b2b';x.fillRect(0,0,320,46);x.fillStyle='#fff';x.font='bold 24px Heebo, Arial';x.textAlign='center';x.direction='rtl';x.fillText('גילוי אש ו־CO',160,32);
+  x.fillStyle='#0d1a14';x.fillRect(30,64,260,92);x.fillStyle='#5ff08f';x.font='bold 20px monospace';x.textAlign='left';x.direction='ltr';x.fillText('SYSTEM NORMAL',46,96);x.fillText('CO  12 ppm',46,124);x.fillText('ZONES 1-8  OK',46,148);
+  [['#3c3','POWER'],['#e33','FIRE'],['#fb3','FAULT'],['#fb3','CO']].forEach(([cl,t],k)=>{const yy=186+k*30;x.fillStyle=cl;x.beginPath();x.arc(48,yy,9,0,7);x.fill();x.fillStyle='#222';x.font='16px Arial';x.fillText(t,66,yy+6)});
+  for(let r=0;r<4;r++)for(let k=0;k<3;k++){x.fillStyle='#cfd2d4';x.fillRect(190+k*36,178+r*34,30,28);x.fillStyle='#333';x.font='16px Arial';x.fillText(String(r*3+k+1).slice(-1),200+k*36,198+r*34)}
+  x.fillStyle='#c42b2b';x.fillRect(30,318,120,44);x.fillStyle='#fff';x.font='bold 18px Arial';x.fillText('SILENCE',44,346);x.fillStyle='#2f6fbf';x.fillRect(170,318,120,44);x.fillStyle='#fff';x.fillText('RESET',200,346);
+  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;const fp=new THREE.Mesh(new THREE.PlaneGeometry(.5,.6),new THREE.MeshStandardMaterial({map:t,roughness:.4}));fp.position.set(0,-.03,.142);P(fp,{...u,ns:1},g);
+  // ארון טלפון כבאים ליד הרכזת
+  B(.22,.3,.1,.42,-.05,.05,std({color:0xc42b2b,roughness:.45}),{...u,n:'ארון טלפון כבאים'},g);B(.18,.24,.01,.42,-.05,.102,std({color:0xbfe0ee,transparent:true,opacity:.4}),{...u,n:'דלת זכוכית'},g);
+  B(.05,.17,.05,.42,-.03,.08,std({color:0x1d1f22}),{...u,n:'שפופרת טלפון כבאים'},g);T([[.42,-.12,.08],[.47,-.16,.08],[.44,-.18,.08]],.006,std({color:0x1d1f22}),{...u,n:'כבל טלפון'},g)}
+{const fu={st:ST('light'),tr:'חשמלאי',k:'co'},red=std({color:0xc8302a,roughness:.45}),strobe=std({color:0xff3b30,emissive:0xff2a20,emissiveIntensity:.8,transparent:true,opacity:.9});
+  [[-3.6,2.3,-5.38,0],[3.6,2.3,-5.38,0],[X1-.03,2.3,-2.0,-Math.PI/2],[X0+.03,2.3,2.0,Math.PI/2],[10,2.3,-7.93,0]].forEach(([x,y,z,r])=>{const g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=r;G.add(g);const a=B(.12,.16,.06,0,0,.03,red,{...fu,n:'צופר + נצנץ (התראת אש)'},g);const b=B(.08,.05,.03,0,.04,.065,strobe,{...fu,n:'נצנץ'},g)});
+  [[-2.8,1.4,-5.38,0],[X1-.03,1.4,-3.6,-Math.PI/2],[X0+.03,1.4,3.6,Math.PI/2]].forEach(([x,y,z,r])=>{const m=B(.09,.09,.03,x,y,z,red,{...fu,n:'לחצן אזעקת אש ידני (שבור זכוכית)'});m.rotation.y=r});
+  [[-6,2.82,0],[6,2.82,0],[-1,2.82,-7.6]].forEach(([x,y,z])=>{Cy(.09,.04,x,y,z,std({color:0xf4f4f2,roughness:.4}),{...fu,n:'רמקול כריזה'});Cy(.07,.005,x,y-.022,z,std({color:0x9a9ea2}),{...fu,n:'רמקול כריזה'})});
+  [[-2,2.55,-7.2],[8,2.82,-9],[12,2.82,-9]].forEach(([x,y,z])=>Cy(.055,.04,x,y,z,std({color:0xf4f4f2}),{...fu,n:'גלאי עשן'}))}
+const exitM=std({color:0x1f9d55,emissive:0x1f9d55,emissiveIntensity:.8});
+{const exU={st:ST('light'),n:'שלט "יציאה" תלוי, מואר משני הצדדים',tr:'חשמלאי',k:'exit'};
+  const exT=()=>{const c=document.createElement('canvas');c.width=512;c.height=170;const g=c.getContext('2d');g.fillStyle='#f4f6f4';g.fillRect(0,0,512,170);g.fillStyle='#14784a';g.fillRect(14,14,484,142);g.fillStyle='#ffffff';g.font='800 92px Heebo, Arial';g.textAlign='right';g.textBaseline='middle';g.direction='rtl';g.fillText('יציאה',300,92);g.fillRect(330,40,100,90);g.fillStyle='#14784a';g.beginPath();g.arc(372,62,10,0,7);g.fill();g.fillRect(360,74,16,34);g.beginPath();g.moveTo(450,60);g.lineTo(490,85);g.lineTo(450,110);g.fill();g.fillStyle='#fff';g.beginPath();g.moveTo(455,70);g.lineTo(480,85);g.lineTo(455,100);g.fill();const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;return new THREE.MeshBasicMaterial({map:t,toneMapped:false})};
+  [[-2,-4.6,0],[8,0,Math.PI/2],[-12,0,Math.PI/2]].forEach(([x,z,r])=>{const g=new THREE.Group();g.position.set(x,2.45,z);g.rotation.y=r;G.add(g);const box=B(.62,.22,.05,0,0,0,std({color:0xeef0ee}),exU,g);[.026,-.026].forEach(dz=>{const p=new THREE.Mesh(new THREE.PlaneGeometry(.58,.19),exT());p.position.z=dz;if(dz<0)p.rotation.y=Math.PI;P(p,{...exU,ns:1},g)});[-.22,.22].forEach(dx=>Cy(.006,.32,dx,.27,0,rodM,exU,null,g))})}
+// אורות אמיתיים בחניון (נדלקים במסירה ובהליכה)
+const bulbs=[];[[-8,0],[0,-4],[8,0],[0,5],[-12,6.5],[-12,-7],[-2,-7.7]].forEach(([x,z])=>{const l=new THREE.PointLight(0xfff3dd,0,11,1.6);l.position.set(x,2.5,z);scene.add(l);bulbs.push(l)});
+
+/* ---------- לובי ---------- */
+const gypM=std({color:0xf4f3ef,roughness:.9});
+B(3.8,.03,4.1,-2,2.6,-7.75,gypM,{st:ST('lobby'),n:'תקרת גבס בלובי',tr:'גבס',k:'gyp',ns:1});
+[[-3,-6.6],[-1,-6.6],[-3,-8.8],[-1,-8.8]].forEach(([x,z])=>Cy(.03,.03,x,2.58,z,headM,{st:ST('lobby'),n:'ראש ספרינקלר שקוע בגבס',tr:'ספרינקלרים',k:'head'}));
+Cy(.12,.02,-2,2.58,-7.7,std({color:0xffffff,emissive:0xfff3d6,emissiveIntensity:.8}),{st:ST('lobby'),n:'תאורה שקועה',tr:'חשמלאי',k:'lamp2'});
+B(3.8,.02,4.1,-2,.012,-7.75,std({map:rep(tTile,5,5),roughness:.35}),{st:ST('lobby'),n:'ריצוף פורצלן בלובי',tr:'רצף',k:'tile',ns:1});
+B(1.0,2.1,.03,-2,1.05,-9.86,std({color:0xc9ccce,metalness:.8,roughness:.25}),{st:ST('lobby'),n:'דלת מעלית (נירוסטה)',tr:'מעליות',k:'lift'});
+B(3.6,H-.4,.02,-2,(H-.4)/2,-9.89,std({color:0xe9e4da}),{st:ST('lobby'),n:'קיר לובי מטויח',tr:'טייח',k:'gyp',ns:1});
+function pSign(draw,w,h,x,y,z,ry,u,par){const W=512,Hh=Math.round(512*h/w),c=document.createElement('canvas');c.width=W;c.height=Hh;const g=c.getContext('2d');g.fillStyle='#e9f7a8';g.fillRect(0,0,W,Hh);g.strokeStyle='#1d4a2a';g.lineWidth=8;g.strokeRect(10,10,W-20,Hh-20);g.fillStyle='#1d4a2a';g.textAlign='center';g.direction='rtl';draw(g,W,Hh);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=4;const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshStandardMaterial({map:t,roughness:.5,emissive:0x2a3310,emissiveIntensity:.6}));m.position.set(x,y,z);m.rotation.y=ry||0;return P(m,Object.assign({ns:1,k:'sign',tr:'שילוט'},u),par)}
+/* ---------- חדר מדרגות: שני מהלכים ופודסט ---------- */
+const tGran=tex((g,s)=>{g.fillStyle='#8f9294';g.fillRect(0,0,s,s);for(let i=0;i<9000;i++){const v=rnd();g.fillStyle=v<.35?'#1d1f21':v<.6?'#e9eaea':v<.8?'#5d6164':'#b5b8ba';g.fillRect(rnd()*s,rnd()*s,1+rnd()*3,1+rnd()*3)}},256);const tLand=tex((g,s)=>{g.fillStyle='#55595d';g.fillRect(0,0,s,s);noise(g,s,6000,.08);g.strokeStyle='#2e3134';g.lineWidth=3;g.strokeRect(0,0,s,s)},128);
+const stC=std({map:rep(tRough,1,1)}),stT=std({map:rep(tGran,1.7,.3),roughness:.35}),stL=std({map:rep(tLand,6,3),roughness:.4}),stR=std({color:0x45494d,roughness:.5}),stN=std({color:0x2b2e31,roughness:.8}),rlM=std({color:0x3a3f44,metalness:.5,roughness:.4});
+const RS=H/16,TD=.28;
+for(let i=0;i<8;i++){const y=(i+1)*RS,z=-6.0-i*TD-TD/2;B(1.7,y,TD,1.0,y/2,z,stC,{st:0,n:'מדרגת בטון יצוקה',tr:'שלד',k:'struct'});
+  B(1.7,.02,TD+.02,1.0,y+.01,z,stT,{st:ST('stairs'),n:'ריצוף מדרגה (שיש / טראצו)',tr:'רצף',k:'stair',ns:1});B(1.6,.022,.05,1.0,y+.012,z+TD/2-.04,stN,{st:ST('stairs'),n:'פס מונע החלקה',tr:'רצף',k:'stair',ns:1})}
+for(let i=0;i<8;i++){const y=H/2+(i+1)*RS,z=-8.24+i*TD+TD/2;B(1.7,.35,TD,3.0,y-.175,z,stC,{st:0,n:'מדרגת בטון יצוקה',tr:'שלד',k:'struct'});
+  B(1.7,.02,TD+.02,3.0,y+.01,z,stT,{st:ST('stairs'),n:'ריצוף מדרגה',tr:'רצף',k:'stair',ns:1});B(1.6,.022,.05,3.0,y+.012,z-TD/2+.04,stN,{st:ST('stairs'),n:'פס מונע החלקה',tr:'רצף',k:'stair',ns:1})}
+B(3.8,H/2,1.62,2,H/4,-9.07,stC,{st:0,n:'פודסט (משטח ביניים) בטון',tr:'שלד',k:'struct'});
+B(3.8,.02,1.64,2,H/2+.01,-9.07,std({map:rep(tLand,6,2.7),roughness:.4}),{st:ST('stairs'),n:'ריצוף פודסט (אריחים כהים 60×60)',tr:'רצף',k:'stair',ns:1});
+B(3.8,.02,.4,2,.012,-5.78,std({map:rep(tLand,6,.7),roughness:.4}),{st:ST('stairs'),n:'ריצוף פודסט כניסה',tr:'רצף',k:'stair',ns:1});
+// קיר מפריד בין המהלכים (בלוק, טיח וצבע לבן), מאחזי יד אפורים על הקירות משני הצדדים, פנלים כהים וקמים
+B(.16,H,2.36,2.0,H/2,-7.12,std({map:rep(tRough,1,2)}),{st:ST('block'),n:'קיר מפריד בין מהלכי המדרגות (בלוק)',tr:'בנאי',k:'blk'});
+const hrM=std({color:0x8e9396,metalness:.35,roughness:.35}),hrU={st:ST('stairs'),n:'מאחז יד עגול Ø4 על הקיר (גובה 0.90 מעל המדרגה)',tr:'מסגר',k:'rail'};
+const rail=(pts,wx)=>{T(pts,.02,hrM,hrU);pts.forEach((p,k)=>{if(k%1==0){Cy(.009,.07,(p[0]+wx)/2,p[1]-.05,p[2],hrM,{...hrU,n:'זרוע מאחז יד'},[0,0,Math.PI/2]);Cy(.025,.01,wx,p[1]-.05,p[2],hrM,{...hrU,n:'רוזטה מאחז יד'},[0,0,Math.PI/2])}})};
+const f1=k=>[[.21,.95,-5.75],[.21,H/2+.9,-8.3]],f2=x=>[[x,H/2+.9,-8.3],[x,H+.9,-5.95]];
+rail([[.21,.95,-5.75],[.21,.95+RS*2.7,-6.6],[.21,H/2+.9,-8.3],[.21,H/2+.9,-9.83]],.11);rail([[1.87,.95,-6.0],[1.87,H/2+.9,-8.24]],1.92);
+rail([[2.13,H/2+.9,-8.24],[2.13,H+.9,-6.0]],2.08);rail([[3.79,H/2+.9,-9.83],[3.79,H/2+.9,-8.3],[3.79,H+.9,-5.95]],3.89);T([[.25,H/2+.9,-9.79],[3.75,H/2+.9,-9.79]],.02,hrM,hrU);
+for(let i=0;i<8;i++){B(1.7,RS,.015,1.0,i*RS+RS/2,-6.0-i*TD,stR,{st:ST('stairs'),n:'קם מדרגה (אבן כהה)',tr:'רצף',k:'stair',ns:1});B(1.7,RS,.015,3.0,H/2+i*RS+RS/2,-8.24+i*TD,stR,{st:ST('stairs'),n:'קם מדרגה (אבן כהה)',tr:'רצף',k:'stair',ns:1});
+  [[.115],[1.915]].forEach(([x])=>B(.012,.09,TD,x,(i+1)*RS+.045,-6.0-i*TD-TD/2,stR,{st:ST('stairs'),n:'פנל (שיפולים) מדורג',tr:'רצף',k:'stair',ns:1}));[[2.085],[3.885]].forEach(([x])=>B(.012,.09,TD,x,H/2+(i+1)*RS+.045,-8.24+i*TD+TD/2,stR,{st:ST('stairs'),n:'פנל (שיפולים) מדורג',tr:'רצף',k:'stair',ns:1}))}
+B(3.8,.09,.012,2,H/2+.045,-9.875,stR,{st:ST('stairs'),n:'פנל בפודסט',tr:'רצף',k:'stair',ns:1});
+// שלט קומה גדול (משתנה לפי הקומה), טלפון כבאים, מתג תאורה עם נורית, שילוט יציאה ותאורה עגולה
+window.__stairSign=()=>pSign((g,W,Hh)=>{g.font='800 54px Heebo, Arial';g.fillText('חדר מדרגות A',W/2,70);g.font='700 34px Heebo, Arial';g.fillText('סאן מרטין 3',W/2,112);g.font='700 30px Heebo, Arial';g.fillText('קומה',W/2,160);g.lineWidth=6;g.strokeRect(W/2-80,172,160,130);g.font='900 110px Heebo, Arial';g.fillText('‎-'+LVL,W/2,280);[[90],[W-90]].forEach(([x])=>{g.fillRect(x-8,170,16,90);g.beginPath();g.moveTo(x-30,255);g.lineTo(x+30,255);g.lineTo(x,300);g.fill()});g.font='600 26px Heebo, Arial';g.fillText('חדר מדרגות זה משרת קומות ‎-3 עד 16',W/2,345);g.font='800 30px Heebo, Arial';g.fillText('היציאה לרחוב בקומת קרקע',W/2,385)},.62,.5,.85,1.75,-5.615,Math.PI,{st:ST('stairs'),n:'שלט קומה בחדר המדרגות (פולט אור)'});
+let stS=__stairSign();window.__stairSignUpd=()=>{const i=parts.indexOf(stS);if(i>=0)parts.splice(i,1);G.remove(stS);stS=__stairSign();paint&&paint()};
+pSign((g,W,Hh)=>{g.fillStyle='#fdfdf6';g.fillRect(14,14,W-28,Hh-28);g.strokeStyle='#c42b2b';g.strokeRect(24,24,W-48,Hh-48);g.fillStyle='#c42b2b';g.font='800 90px Heebo, Arial';g.fillText('טלפון כבאים',W/2,Hh/2+30)},.2,.08,.45,1.5,-5.615,Math.PI,{st:ST('stairs'),n:'שלט "טלפון כבאים"'});
+B(.08,.14,.012,.45,1.36,-5.61,std({color:0xc9cdd0,metalness:.7,roughness:.25}),{st:ST('fire'),n:'שקע טלפון כבאים (נירוסטה)',tr:'כיבוי אש',k:'fire'});Cy(.008,.01,.45,1.37,-5.618,std({color:0x222}),{st:ST('fire'),n:'שקע טלפון',tr:'כיבוי אש',k:'fire'},[Math.PI/2,0,0]);
+B(.09,.09,.012,.3,1.12,-5.61,std({color:0xf7f7f3,roughness:.4}),{st:ST('elec'),n:'מתג תאורה לחדר המדרגות (עם נורית אדומה)',tr:'חשמלאי',k:'sw'});B(.04,.06,.008,.3,1.12,-5.62,std({color:0xffffff,roughness:.3}),{st:ST('elec'),n:'מתג',tr:'חשמלאי',k:'sw'});B(.012,.005,.004,.3,1.145,-5.626,std({color:0xd8302a,emissive:0xd8302a,emissiveIntensity:.8}),{st:ST('elec'),n:'נורית',tr:'חשמלאי',k:'sw',ns:1});
+const runMan=(x,y,z,ry,n)=>{const c=document.createElement('canvas');c.width=256;c.height=128;const g=c.getContext('2d');g.fillStyle='#1f7a3a';g.fillRect(0,0,256,128);g.strokeStyle='#e9f7a8';g.lineWidth=5;g.strokeRect(6,6,244,116);g.fillStyle='#e9f7a8';g.beginPath();g.arc(170,30,11,0,7);g.fill();g.lineWidth=9;g.strokeStyle='#e9f7a8';g.beginPath();g.moveTo(165,42);g.lineTo(150,75);g.lineTo(175,100);g.moveTo(150,75);g.lineTo(125,98);g.moveTo(160,52);g.lineTo(185,64);g.moveTo(160,52);g.lineTo(135,58);g.stroke();for(let k=0;k<4;k++)g.fillRect(30+k*18,96-k*16,20,6);const t=new THREE.CanvasTexture(c);const m=new THREE.Mesh(new THREE.PlaneGeometry(.36,.18),new THREE.MeshStandardMaterial({map:t,emissive:0x0b2a12,emissiveIntensity:.8}));m.position.set(x,y,z);m.rotation.y=ry;P(m,{st:ST('stairs'),n,tr:'שילוט',k:'sign',ns:1})};
+runMan(1.0,H/2+1.25,-9.875,0,'שלט מילוט פולט אור (כיוון יציאה)');runMan(3.0,H/2+1.25,-9.875,0,'שלט מילוט פולט אור');
+{const c=document.createElement('canvas');c.width=256;c.height=128;const g=c.getContext('2d');g.fillStyle='#22c35a';g.fillRect(0,0,256,128);g.fillStyle='#fff';g.font='900 80px Heebo, Arial';g.textAlign='center';g.direction='rtl';g.fillText('יציאה',128,96);const t=new THREE.CanvasTexture(c);const m=new THREE.Mesh(new THREE.PlaneGeometry(.42,.21),new THREE.MeshBasicMaterial({map:t}));m.position.set(2,2.35,-5.64);m.rotation.y=Math.PI;P(m,{st:ST('stairs'),n:'שלט "יציאה" מואר מעל דלת האש',tr:'חשמלאי',k:'exit',ns:1});B(.46,.04,.06,2,2.48,-5.63,std({color:0xeeeeee}),{st:ST('stairs'),n:'גוף שלט יציאה',tr:'חשמלאי',k:'exit'})}
+[[2,H-.03,-9.07],[1.0,H-.03,-5.85]].forEach(([x,y,z])=>{Cy(.17,.05,x,y-.02,z,std({color:0xffffff,emissive:0xfff6e0,emissiveIntensity:.9}),{st:ST('stairs'),n:'גוף תאורה עגול (LED) בחדר המדרגות',tr:'חשמלאי',k:'lamp'})});
+B(.3,.08,.08,2,2.6,-9.85,std({color:0xf4f4f0,emissive:0xffffff,emissiveIntensity:.5}),{st:ST('stairs'),n:'תאורת חירום',tr:'חשמלאי',k:'exit'});
+/* ---------- כיבוי אש ---------- */
+const fireU={st:ST('fire'),tr:'כיבוי אש',k:'fire'};
+function hoseCabOld(x,z,ry,n){const g=new THREE.Group();g.position.set(x,1.25,z);g.rotation.y=ry;G.add(g);
+  B(.75,.95,.26,0,0,.13,std({color:0xc42b2b,roughness:.45,metalness:.2}),{...fireU,n},g);B(.66,.86,.01,0,0,.265,std({color:0xbfe0ee,transparent:true,opacity:.35,roughness:.05}),{...fireU,n:n+' · דלת זכוכית'},g);
+  Cy(.3,.12,-.05,.05,.13,std({color:0xc42b2b,metalness:.3}),{...fireU,n:'גלגלון (זרנוק 30 מ\')'},[Math.PI/2,0,0],g);const hz=new THREE.Mesh(new THREE.TorusGeometry(.22,.035,8,32),std({color:0xd8382e,roughness:.6}));hz.position.set(-.05,.05,.16);P(hz,{...fireU,n:'זרנוק מגולגל'},g);
+  B(.06,.06,.12,.26,-.32,.2,std({color:0x1d1f22,metalness:.5}),{...fireU,n:'מזנק'},g);
+  const sg=new THREE.Mesh(new THREE.PlaneGeometry(.6,.15),lbl('עמדת כיבוי','#ffffff','#c42b2b',100));sg.position.set(0,.6,.27);P(sg,{...fireU,ns:1,n},g);
+  Cy(.08,.5,.55,-.55,.12,std({color:0xc42b2b,metalness:.3}),{...fireU,n:'מטפה אבקה 6 ק"ג'},null,g);Cy(.03,.08,.55,-.26,.12,std({color:0x1d1f22}),{...fireU,n:'מטפה אבקה 6 ק"ג'},null,g);
+  Cy(.03,H-1.25-.48,-.3,(H-1.25+.48)/2,.1,sprM,{...fireU,n:'צנרת הזנה לעמדה'},null,g)}
+const fsT=(()=>{const c=document.createElement('canvas');c.width=256;c.height=200;const g=c.getContext('2d');g.fillStyle='#f6e7c8';g.fillRect(0,0,256,200);g.strokeStyle='#c42b2b';g.lineWidth=8;g.strokeRect(6,6,244,188);g.fillStyle='#c42b2b';g.font='800 80px Heebo, Arial';g.textAlign='center';g.direction='rtl';g.fillText('אש',150,86);g.font='700 26px Heebo, Arial';g.fillText('עמדת',60,48);g.fillText('כיבוי',60,78);g.fillRect(14,110,228,4);[50,128,206].forEach(x=>{g.beginPath();g.arc(x,152,26,0,7);g.fill()});g.fillStyle='#f6e7c8';[50,128,206].forEach(x=>{g.beginPath();g.arc(x,152,12,0,7);g.fill()});const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;return new THREE.MeshBasicMaterial({map:t})})();
+function hoseCab(x,z,ry,n){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;G.add(g);const cm=std({color:0xc12a28,roughness:.5,metalness:.15});
+  {const cu={...fireU,n:n+' · ארון כיבוי (גלגלון, ברז 2", מטפה)'};B(.78,1.25,.015,0,1.05,.0075,cm,cu,g);[-1,1].forEach(sd=>B(.015,1.25,.3,sd*.3825,1.05,.15,cm,cu,g));B(.78,.015,.3,0,1.6675,.15,cm,cu,g);B(.78,.015,.3,0,.4325,.15,cm,cu,g)}const ai='fc'+(window.__FC=(window.__FC||[])).length,dg=new THREE.Group();dg.position.set(.37,0,.305);g.add(dg);const du={...fireU,n:n+' · דלת הארון · לחיצה פותחת',act:ai};
+  B(.74,1.21,.012,-.37,1.05,0,cm,du,dg);B(.5,.5,.006,-.37,1.2,.008,std({color:0xcfe3ea,transparent:true,opacity:.45,roughness:.05}),{...du,n:'חלון זכוכית בדלת'},dg);
+  const sg=new THREE.Mesh(new THREE.PlaneGeometry(.2,.155),fsT);sg.position.set(-.29,1.55,.012);P(sg,{...fireU,ns:1,n:'שלט "אש · עמדת כיבוי"',act:ai},dg);
+  B(.07,.02,.025,-.69,1.0,.02,std({color:0xd6d9db,metalness:.6,roughness:.3}),{...du,n:'ידית הארון'},dg);__FC.push(dg);
+  {const inM=std({color:0x4a0f0e,roughness:.8}),inS=std({color:0x551211,roughness:.8});B(.74,1.21,.006,0,1.05,.019,inM,{...fireU,n:'גב הארון (אדום כהה)'},g);[-1,1].forEach(sd=>B(.004,1.21,.27,sd*.372,1.05,.155,inS,{...fireU,n:'דופן פנימית'},g));B(.74,.004,.27,0,.443,.155,inS,{...fireU,n:'תחתית הארון'},g);B(.74,.004,.27,0,1.657,.155,inS,{...fireU,n:'תקרת הארון'},g)}
+  {const rl=new THREE.Group();rl.position.set(-.05,1.25,.15);g.add(rl);const rm=std({color:0xd9241a,metalness:.05,roughness:.5}),chrR=std({color:0xdfe3e6,metalness:.9,roughness:.2}),hol=std({color:0x3a0d0c,roughness:.8});[-1,1].forEach(sd=>{const r=new THREE.Mesh(new THREE.TorusGeometry(.24,.008,8,40),chrR);r.position.z=sd*.06;P(r,{...fireU,n:'חישוק הגלגלון'},rl);if(sd>0){for(let k=0;k<6;k++){const a=k*Math.PI/3,h=new THREE.Mesh(new THREE.CircleGeometry(.035,16),hol);h.position.set(Math.cos(a)*.14,Math.sin(a)*.14,.066);P(h,{...fireU,n:'גלגלון · פתחי אוורור',ns:1},rl)}const hub=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,.02,20),chrR);hub.rotation.x=Math.PI/2;hub.position.z=.07;P(hub,{...fireU,n:'טבור הגלגלון'},rl)}});[-1,1].forEach(sd=>{const d=new THREE.Mesh(new THREE.CylinderGeometry(.24,.24,.01,32),rm);d.rotation.x=Math.PI/2;d.position.z=sd*.06;P(d,{...fireU,n:'גלגלון (תוף) 30 מ\''},rl)});
+   const hz=new THREE.Mesh(new THREE.CylinderGeometry(.2,.2,.11,32),std({color:0xe9dfc6,roughness:.85}));hz.rotation.x=Math.PI/2;P(hz,{...fireU,n:'זרנוק מגולגל 30 מ\''},rl);for(let k=0;k<6;k++){const t=new THREE.Mesh(new THREE.TorusGeometry(.2,.012,6,32),std({color:0xcfc3a6,roughness:.85}));t.position.z=-.05+k*.02;P(t,{...fireU,n:'זרנוק'},rl)}
+   Cy(.03,.16,0,0,0,std({color:0x9aa0a4,metalness:.6}),{...fireU,n:'ציר הגלגלון'},[Math.PI/2,0,0],rl);Cy(.018,.18,.24,-.02,.0,std({color:0x2b2e31,metalness:.4}),{...fireU,n:'מזנק (ראש ריסוס)'},[0,0,.6],rl)}
+  Cy(.035,.08,.25,1.6,.12,std({color:0xc9a640,metalness:.75,roughness:.3}),{...fireU,n:'ברז כיבוי 2" עם מצמד שטורץ'},[0,0,Math.PI/2],g);
+  {const ex=std({color:0xdc2419,roughness:.42,metalness:.05});Cy(.077,.02,-.26,.5,.15,std({color:0x1d1e20,roughness:.6}),{...fireU,n:'בסיס המטף'},null,g);Cy(.018,.008,-.26,1.02,.175,std({color:0xf4f4f0}),{...fireU,n:'מד לחץ (ירוק = תקין)'},[Math.PI/2,0,0],g);Cy(.011,.009,-.26,1.02,.176,std({color:0x2c9a4a}),{...fireU,n:'מד לחץ'},[Math.PI/2,0,0],g);Cy(.075,.5,-.26,.7,.15,ex,{...fireU,n:'מטף כיבוי אבקה 6 ק"ג'},null,g);B(.1,.16,.004,-.26,.72,.227,std({color:0xf4f0e4}),{...fireU,n:'תווית מטף'},g);T([[-.05,1.01,.15],[.04,.85,.17],[.12,.64,.17],[.16,.52,.16]],.016,std({color:0xe9dfc6,roughness:.85}),{...fireU,n:'קצה הזרנוק'},g);Cy(.022,.14,.17,.53,.16,std({color:0xc9a640,metalness:.75,roughness:.3}),{...fireU,n:'מזנק סילון/ריסוס (פליז)'},[0,0,-.25],g);B(.2,.03,.05,.12,.9,.03,std({color:0x9aa0a4,metalness:.6}),{...fireU,n:'מתלה לזרנוק'},g);const cap=new THREE.Mesh(new THREE.SphereGeometry(.075,16,10,0,Math.PI*2,0,Math.PI/2),ex);cap.position.set(-.26,.95,.15);P(cap,{...fireU,n:'מטף'},g);B(.06,.06,.04,-.26,1.02,.15,std({color:0x2b2e31}),{...fireU,n:'ראש מטף עם מד לחץ'},g);B(.12,.015,.02,-.24,1.06,.15,std({color:0x111111}),{...fireU,n:'ידית מטף'},g);
+   T([[-.23,1.02,.15],[-.19,.95,.19],[-.18,.7,.21]],.008,std({color:0x111111}),{...fireU,n:'צינור מטף'},g)}
+  const pm=sprM;Cy(.035,H-.45,.47,(H+.45)/2,.12,pm,{...fireU,n:'צנרת הזנה לעמדה (מהתקרה)'},null,g);Cy(.035,.1,.42,.45,.12,pm,{...fireU,n:'צנרת הזנה לעמדה'},[0,0,Math.PI/2],g);const el=new THREE.Mesh(new THREE.SphereGeometry(.042,12,10),pm);el.position.set(.47,.45,.12);P(el,{...fireU,n:'קשת 90°'},g);
+  Cy(.048,.05,.47,1.5,.12,std({color:0xa52320,metalness:.4,roughness:.35}),{...fireU,n:'מצמד חריץ (גרוב)'},null,g);Cy(.048,.05,.47,H-.12,.12,std({color:0xa52320,metalness:.4}),{...fireU,n:'מצמד חריץ'},null,g)}
+hoseCab(-3.35,-5.38,0,'עמדת כיבוי אש ליד הלובי');hoseCab(X1-.02,-5.2,-Math.PI/2,'עמדת כיבוי אש בחניון');hoseCab(-9.9,5.6,Math.PI/2,'עמדת כיבוי אש בחניון (על קיר חדר המשאבות)');
+// ברז כיבוי 2" בחדר המדרגות (קו אדום בפינה, תופסנים, ברז שריפה עם מצמד שטורץ ושלט אש)
+[.6,1.8,H/2+.5,H/2+1.6].forEach(y=>{const c=new THREE.Mesh(new THREE.TorusGeometry(.048,.008,6,18),std({color:0xb5babd,metalness:.6}));c.rotation.x=Math.PI/2;c.position.set(3.75,y,-9.75);P(c,{...fireU,n:'תופסן (שלה) לקיר'});B(.04,.03,.08,3.75,y,-9.82,std({color:0x9aa0a4,metalness:.5}),{...fireU,n:'תושבת'})});
+{const y=H/2+1.0;T([[3.75,y,-9.75],[3.6,y,-9.75],[3.55,y+.05,-9.75],[3.55,y+.15,-9.75]],.032,sprM,{...fireU,n:'יציאה לברז שריפה'});Cy(.035,.08,3.55,y+.2,-9.75,sprM,{...fireU,n:'ברז שריפה 2.5"'});const w=new THREE.Mesh(new THREE.TorusGeometry(.05,.008,6,18),sprM);w.rotation.x=Math.PI/2;w.position.set(3.55,y+.3,-9.75);P(w,{...fireU,n:'גלגל ברז שריפה'});Cy(.04,.05,3.55,y+.05,-9.68,std({color:0xd6dadc,metalness:.85,roughness:.2}),{...fireU,n:'מצמד שטורץ (חיבור זרנוק)'},[Math.PI/2,0,0]);
+  pSign((g,W,Hh)=>{g.fillStyle='#c42b2b';g.font='900 120px Heebo, Arial';g.fillText('אש',W/2,140);g.beginPath();g.arc(W/2,260,60,0,7);g.fill();g.font='900 90px Arial';g.fillText('FIRE',W/2,Hh-50)},.1,.2,3.5,y+.55,-9.87,0,{st:ST('fire'),n:'שלט "אש" מעל ברז השריפה'})}
+Cy(.04,H,3.75,H/2,-9.75,sprM,{...fireU,n:'קו כיבוי אנכי בחדר המדרגות'});Cy(.07,.12,3.75,H/2+1.0,-9.6,std({color:0xc8a23a,metalness:.6}),{...fireU,n:'ברז כיבוי 2" עם מצמד שטורץ'},[Math.PI/2,0,0]);
+B(.25,.12,.04,3.75,H/2+1.3,-9.55,std({color:0xc42b2b}),{...fireU,n:'שלט ברז כיבוי'});
+// תריס שחרור עשן בראש חדר המדרגות
+const svM=std({map:tLouv,metalness:.45,roughness:.45});
+B(1.0,.7,.06,2.2,2.25,-9.93,svM,{...fireU,n:'תריס שחרור עשן (נפתח אוטומטית בשריפה)'});B(.18,.12,.12,2.85,2.25,-9.88,std({color:0xc42b2b}),{...fireU,n:'מנוע תריס שחרור עשן'});
+B(.14,.2,.06,.3,1.4,-5.75,std({color:0xc42b2b}),{...fireU,n:'לחצן פתיחה ידנית לשחרור עשן'});
+
+/* ---------- חדר משאבות ---------- */
+const tankM=std({map:rep(tTank,2,2),roughness:.6});
+/* מאגרי מים: חדר בטון אטום עם פתח 80×80 וסולם. "תקרה: שקופה" = רנטגן לתוך המאגר */
+const XRG=new THREE.MeshStandardMaterial({color:0xbcd4e6,transparent:true,opacity:.14,depthWrite:false});const XRF=new THREE.MeshStandardMaterial({color:0xaec6d8,transparent:true,opacity:.22,depthWrite:false}),XRS=new THREE.MeshStandardMaterial({color:0xbcd4e6,transparent:true,opacity:.3,depthWrite:false});const tankW=[],tankWM=std({map:rep(tConc,1,1),roughness:.9}),tankGh=new THREE.MeshStandardMaterial({color:0x9aa,transparent:true,opacity:.18,depthWrite:false});
+const HATCH=[];const pumps=[];
+[[-14.6,8.4,2.2,2.6,'מאגר מים לכיבוי אש',1.1],[-14.6,5.2,2.0,1.5,'מאגר מים לשתייה',1.0]].forEach(([x,z,w,d,n,lvl],ti)=>{const u={st:ST('pump'),n:n+' · חדר בטון אטום (איטום פנימי)',tr:'אינסטלטור',k:'tankw'},t=.15,h=2.3,fx=x+w/2;
+  [[w,h,t,x,h/2,z-d/2],[w,h,t,x,h/2,z+d/2],[t,h,d,x-w/2,h/2,z],[t,h,d,fx,h/2,z]].forEach(a=>tankW.push(B(...a,tankWM,u)));
+  // תקרה סגורה + פתח 80×80 בקיר הפונה לחדר (1.3–2.1) עם דלת נירוסטה על ציר
+  tankW.push(B(w,t,d,x,h,z,tankWM,{...u,n:n+' · תקרת בטון'}));const W8=.8,hz=z,fr=std({color:0xb9bec2,metalness:.7,roughness:.3});
+  const wi=tankW.findIndex(m=>Math.abs(m.position.x-fx)<.01&&Math.abs(m.position.z-z)<.01);if(wi>=0){const m=tankW[wi];G.remove(m);parts.splice(parts.indexOf(m),1);tankW.splice(wi,1)}
+  tankW.push(B(t,1.3,d,fx,.65,z,tankWM,u),B(t,h-2.1,d,fx,(h+2.1)/2,z,tankWM,u),B(t,.8,(d-W8)/2,fx,1.7,z-d/2+(d-W8)/4,tankWM,u),B(t,.8,(d-W8)/2,fx,1.7,z+d/2-(d-W8)/4,tankWM,u));
+  [[.06,.86,.06,fx+.08,1.7,z-.43],[.06,.86,.06,fx+.08,1.7,z+.43],[.06,.06,.92,fx+.08,2.13,z],[.06,.06,.92,fx+.08,1.27,z]].forEach(a=>B(...a,fr,{...u,n:'מסגרת פתח 80×80 (נירוסטה)',k:'pump'}));
+  const hg=new THREE.Group();hg.position.set(fx+.1,1.7,z-.42);G.add(hg);const lid=B(.03,.82,.84,0,0,.42,std({color:0x5b6267,metalness:.3,roughness:.4}),{...u,n:'דלת פתח המאגר (נירוסטה, נעילה) · לחיצה פותחת',k:'pump',act:'hatch'});G.remove(lid);hg.add(lid);
+  const hd=B(.04,.16,.03,.03,0,.76,fr,{...u,n:'ידית ומנעול',k:'pump',act:'hatch'});G.remove(hd);hg.add(hd);HATCH.push(hg);const hx=fx-.3;
+  // מים: רק בתוך המאגר, מתחת לתקרה
+  B(w-.3,lvl,d-.3,x,lvl/2+.02,z,std({color:0x3a8fc0,transparent:true,opacity:.55,roughness:.05}),{...u,n:'מים במאגר (נראים ברנטגן או דרך הפתח)',k:'tankin'});
+  const top=new THREE.Mesh(new THREE.PlaneGeometry(w-.3,d-.3),std({color:0x5fb3e0,transparent:true,opacity:.75,roughness:.02,metalness:.2}));top.rotation.x=-Math.PI/2;top.position.set(x,lvl+.025,z);P(top,{...u,n:'פני המים בתוך המאגר',k:'tankin',ns:1});
+  const fl=new THREE.Mesh(new THREE.SphereGeometry(.1,16,12),std({color:0xe8892c,roughness:.5}));fl.position.set(x-.3,lvl+.05,z);P(fl,{...u,n:'מצוף על פני המים',k:'tankin'});Cy(.015,h-lvl-.1,x-.3,(h+lvl)/2,z,std({color:0x9aa0a4,metalness:.6}),{...u,n:'זרוע מצוף',k:'tankin'});
+  // סולם נירוסטה בתוך המאגר, בדיוק מתחת לפתח
+  const lm=std({color:0xb9bec2,metalness:.7,roughness:.3});[-.2,.2].forEach(dz=>Cy(.02,h-.1,hx+.25,(h-.1)/2,hz+dz,lm,{...u,n:'סולם פנימי מתחת לפתח',k:'tankin'}));for(let y=.3;y<h-.1;y+=.3)Cy(.014,.4,hx+.25,y,hz,lm,{...u,n:'שלב בסולם הפנימי',k:'tankin'},[Math.PI/2,0,0]);
+  // מדרגת גישה מתחת לפתח
+  B(.35,.3,.7,fx+.3,.15,hz,std({map:rep(tRough,1,1)}),{...u,n:'מדרגת בטון לגישה לפתח',k:'pump'});});
+/* חדר משאבות מסודר: מערך משאבות על בסיס בטון לאורך הקיר הדרומי, כל הצנרת עולה בפינה (רחוק מהדלת) */
+[[-14.6,8.4,2.6],[-14.6,5.2,1.5]].forEach(([x,z,d],i)=>{
+  const sp=new THREE.Mesh(new THREE.SphereGeometry(.09,16,12),std({color:0xe8892c,roughness:.5}));sp.position.set(x-.4,1.9,z+d/2+.12);P(sp,{st:ST('pump'),n:'מצוף (שסתום מצוף) למילוי המאגר',tr:'אינסטלטור',k:'pump'});
+  T([[x-.4,2.4,z+d/2+.3],[x-.4,2.4,z+d/2+.12],[x-.4,2.0,z+d/2+.12]],.03,watM,{st:ST('pump'),n:'קו מילוי עם שסתום מצוף',tr:'אינסטלטור',k:'pump'});
+  Cy(.012,2.0,x+.9,1.05,z+d/2+.03,std({color:0xbfe0ee,transparent:true,opacity:.6}),{st:ST('pump'),n:'מד גובה מים (צינור שקוף)',tr:'אינסטלטור',k:'pump'});Cy(.013,(i?1.3:1.6),x+.9,(i?1.3:1.6)/2+.05,z+d/2+.03,std({color:0x2f7fe0,transparent:true,opacity:.8}),{st:ST('pump'),n:'גובה המים במאגר',tr:'אינסטלטור',k:'pump'})});
+{const pu={st:ST('pump'),tr:'אינסטלטור',k:'pump'},sk={...pu,n:'בסיס בטון למערך המשאבות'};
+  B(3.0,.15,1.1,-11.95,.075,4.75,std({map:rep(tRough,1,1)}),sk);
+  const ss=std({color:0xc9ced1,metalness:.75,roughness:.28}),mb=std({color:0x1f4f8f,metalness:.35,roughness:.35}),mr=std({color:0xb8262b,metalness:.35,roughness:.35}),blk=std({color:0x1d1f22,roughness:.5}),fl=std({color:0x8f9396,metalness:.6,roughness:.35});
+  const vpump=(x,z,mot,n,fire)=>{const g=new THREE.Group();g.position.set(x,.15,z);G.add(g);const a=m=>{G.remove(m);g.add(m);return m},u={...pu,n,act:'pump'};
+    a(B(.42,.04,.34,0,.02,0,blk,{...u,n:n+' · פלטת בסיס'}));a(Cy(.12,.12,0,.1,0,ss,{...u,n:n+' · ראש יניקה/סניקה (Inline)'}));
+    [-1,1].forEach(sd=>{a(Cy(.06,.14,sd*.17,.1,0,ss,{...u,n:sd<0?'פתח יניקה':'פתח סניקה'},[0,0,Math.PI/2]));a(Cy(.085,.02,sd*.25,.1,0,fl,{...u,n:'אוגן'},[0,0,Math.PI/2]))});
+    a(Cy(.085,.55,0,.44,0,ss,{...u,n:n+' · גוף רב־דרגתי מנירוסטה'}));for(let k=0;k<4;k++)a(Cy(.006,.55,Math.cos(k*1.57)*.09,.44,Math.sin(k*1.57)*.09,fl,{...u,n:'מוט מתיחה'}));
+    a(Cy(.1,.05,0,.74,0,fl,{...u,n:'ראש המשאבה'}));a(B(.16,.14,.16,0,.84,0,fl,{...u,n:'מגן מצמד (קאפלינג)'}));
+    const mo=a(Cy(.13,.36,0,1.1,0,mot,{...u,n:n+' · מנוע חשמלי'}));for(let k=0;k<10;k++)a(B(.012,.3,.02,Math.cos(k*.628)*.135,1.1,Math.sin(k*.628)*.135,mot,{...u,n:'צלעות קירור במנוע'})).rotation.y=-k*.628;
+    a(Cy(.12,.07,0,1.32,0,blk,{...u,n:'מכסה מאוורר המנוע'}));a(B(.12,.1,.08,0,1.06,.15,blk,{...u,n:'קופסת חיבורים למנוע'}));
+    const lab=a(B(.06,.04,.004,0,1.12,.132,std({color:0xe9e9e4}),{...u,n:'לוחית נתונים: 7.5kW · 50 מ\' · 30 מ"ק/ש'}));return g};
+  const P1=vpump(-12.9,4.75,mb,'משאבה 1 · מים לשתייה'),P2=vpump(-12.1,4.75,mb,'משאבה 2 · מים לשתייה (רזרבה)'),P3=vpump(-11.2,4.75,mr,'משאבת כיבוי אש');
+  const PJ=vpump(-10.55,4.75,mb,'משאבת ג׳וקי (שמירת לחץ בקו הכיבוי)');PJ.scale.setScalar(.6);
+  pumps.push(P1,P2,P3,PJ);
+  // יניקה: מהמאגרים בקו נמוך, מגופים עם גלגל
+  const valve=(x,y,z,ax,n)=>{Cy(.075,.16,x,y,z,std({color:0x1e4fa3,metalness:.3}),{...pu,n},ax=='x'?[0,0,Math.PI/2]:[Math.PI/2,0,0]);const w=new THREE.Mesh(new THREE.TorusGeometry(.08,.008,6,20),std({color:0xc42b2b}));w.position.set(x,y+.2,z);w.rotation.x=Math.PI/2;P(w,{...pu,n:n+' · גלגל הפעלה'});Cy(.008,.16,x,y+.1,z,fl,{...pu,n:'ציר המגוף'})};
+  T([[-13.5,.45,5.2],[-13.1,.45,5.2],[-13.1,.25,5.25],[-12.1,.25,5.25]],.055,watM,{...pu,n:'קו יניקה ממאגר השתייה למשאבות 1–2'});valve(-13.3,.45,5.2,'x','מגוף יניקה');
+  T([[-13.5,.45,7.3],[-11.2,.45,7.3],[-11.2,.25,5.25]],.065,sprM,{...pu,n:'קו יניקה ממאגר הכיבוי למשאבת הכיבוי'});valve(-12.4,.45,7.3,'x','מגוף יניקה כיבוי');
+  // סניקה: מאסף מעל המשאבות, עולה בפינה (x=-10.3, z=4.3) ולא ליד הדלת
+  [-12.9,-12.1].forEach(x=>{T([[x+.25,.25,4.75],[x+.25,.25,4.45],[x+.25,1.55,4.45]],.045,watM,{...pu,n:'סניקה ממשאבה'});valve(x+.25,.9,4.45,'z','מגוף + אל־חוזר')});
+  T([[-12.65,1.55,4.45],[-10.3,1.55,4.45],[-10.3,H,4.45]],.07,watM,{...pu,n:'מאסף סניקה · עולה בפינה לבניין'});
+  T([[-10.95,.25,4.75],[-10.95,.25,4.3],[-10.15,.25,4.3],[-10.15,H,4.3]],.065,sprM,{...pu,n:'קו כיבוי · עולה בפינה לרשת הספרינקלרים'});valve(-10.95,.25+.35,4.3,'z','מגוף ראשי כיבוי (נעול פתוח)');
+  // מכל לחץ (הידרופור) ומד לחץ
+  Cy(.24,.8,-10.45,.55,5.6,std({color:0x2f6fbf,metalness:.3,roughness:.4}),{...pu,n:'מכל לחץ (הידרופור) · שומר על לחץ קבוע'});T([[-10.45,.15,5.6],[-10.45,.15,5.0],[-10.45,1.55,4.6]],.025,watM,{...pu,n:'חיבור מכל לחץ למאסף'});
+  {const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d');g.fillStyle='#fff';g.beginPath();g.arc(32,32,30,0,7);g.fill();g.strokeStyle='#222';g.lineWidth=2;g.stroke();g.strokeStyle='#c42b2b';g.lineWidth=3;g.beginPath();g.moveTo(32,32);g.lineTo(48,18);g.stroke();const t=new THREE.CanvasTexture(c);const m=new THREE.Mesh(new THREE.CircleGeometry(.06,24),new THREE.MeshBasicMaterial({map:t}));m.position.set(-10.3,1.7,4.53);P(m,{...pu,n:'מד לחץ · 6 בר',ns:1})}
+  // שוחת ניקוז: סניקה עולה בפינה הצפונית־מערבית, ליד המאגר
+  B(1.0,.04,1.0,-12.5,.02,9.2,std({color:0x3a3d40,metalness:.4}),{...pu,n:'שוחת ניקוז בחדר המשאבות · 2 משאבות טבולות'});T([[-12.5,.04,9.2],[-12.9,.3,9.75],[-13.35,.3,9.8],[-13.35,H,9.8]],.035,std({color:0x5d6268}),{...pu,n:'סניקה מהשוחה · עולה בפינה'});
+  B(3.0,.03,.22,-11.8,.015,6.6,std({map:rep(tGrate,12,1)}),{...pu,n:'תעלת ניקוז ברצפת חדר המשאבות (רשת אלומיניום)',ns:1});
+  // לוח הסבר על הקיר
+  {const c=document.createElement('canvas');c.width=768;c.height=512;const g=c.getContext('2d');g.fillStyle='#f6f5f0';g.fillRect(0,0,768,512);g.fillStyle='#1f4f8f';g.fillRect(0,0,768,70);g.fillStyle='#fff';g.font='bold 40px Arial';g.textAlign='center';g.direction='rtl';g.fillText('חדר משאבות · איך זה עובד',384,48);
+    const box=(x,y,w,h,col,t)=>{g.fillStyle=col;g.fillRect(x,y,w,h);g.fillStyle='#fff';g.font='bold 24px Arial';g.fillText(t,x+w/2,y+h/2+8)};
+    box(600,110,140,90,'#2f6fbf','מאגר שתייה');box(600,230,140,90,'#b8262b','מאגר כיבוי');box(370,110,160,90,'#1f4f8f','משאבות 1–2');box(370,230,160,90,'#b8262b','משאבת כיבוי');box(130,110,170,90,'#2f6fbf','מכל לחץ');box(130,230,170,90,'#555','ספרינקלרים');
+    g.strokeStyle='#333';g.lineWidth=5;[[600,155,530,155],[370,155,300,155],[600,275,530,275],[370,275,300,275]].forEach(([a,b,c2,d])=>{g.beginPath();g.moveTo(a,b);g.lineTo(c2,d);g.stroke();g.beginPath();g.moveTo(c2,d);g.lineTo(c2+14,d-9);g.lineTo(c2+14,d+9);g.fillStyle='#333';g.fill()});
+    g.fillStyle='#222';g.font='24px Arial';g.textAlign='right';['• משאבה אחת עובדת, השנייה רזרבה ומתחלפות אוטומטית.','• משאבת ג׳וקי שומרת לחץ בקו הכיבוי. משאבת הכיבוי נכנסת בשריפה.','• מגופים ראשיים נעולים במצב פתוח. בדיקה שבועית ע"י אחראי.'].forEach((t,k)=>g.fillText(t,740,380+k*40));
+    const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=4;const m=new THREE.Mesh(new THREE.PlaneGeometry(1.5,1.0),new THREE.MeshStandardMaterial({map:t,roughness:.5}));m.rotation.y=Math.PI;m.position.set(-11.75,1.55,9.88);P(m,{st:ST('pump'),n:'לוח הסבר: מאגרים, משאבות, מכל לחץ וכיבוי',tr:'אינסטלטור',k:'pump',ns:1})}}
+{const t=(()=>{const c=document.createElement('canvas');c.width=256;c.height=384;const g=c.getContext('2d');g.fillStyle='#e6e7e3';g.fillRect(0,0,256,384);g.fillStyle='#0d1820';g.fillRect(28,30,200,120);g.fillStyle='#45e08a';g.font='bold 18px Arial';g.fillText('PUMP 1  RUN',42,62);g.fillStyle='#e0c845';g.fillText('PUMP 2  STBY',42,90);g.fillStyle='#5fd0ff';g.fillText('P=6.2 bar',42,120);
+  [[60,0x22aa55],[128,0xd8302a],[196,0xe0b030]].forEach(([x,cl])=>{g.fillStyle='#'+cl.toString(16).padStart(6,'0');g.beginPath();g.arc(x,200,18,0,7);g.fill()});g.fillStyle='#333';for(let k=0;k<3;k++){g.beginPath();g.arc(60+k*68,270,16,0,7);g.fill();g.fillStyle='#ddd';g.fillRect(56+k*68,258,8,24);g.fillStyle='#333'}g.fillStyle='#c42b2b';g.beginPath();g.arc(128,335,26,0,7);g.fill();g.fillStyle='#fff';g.font='bold 12px Arial';g.fillText('STOP',113,339);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;return t})();const m=new THREE.Mesh(new THREE.BoxGeometry(.2,.9,.6),[new THREE.MeshStandardMaterial({map:t,roughness:.5}),std({color:0xe2e3dd}),std({color:0xe2e3dd}),std({color:0xe2e3dd}),std({color:0xe2e3dd}),std({color:0xe2e3dd})]);m.position.set(-15.86,1.4,6.6);P(m,{st:ST('pump'),n:'לוח פיקוד משאבות: מסך, נוריות, בוררים ולחצן חירום',tr:'חשמלאי',k:'pump'})}
+const pLed=B(.02,.06,.06,-15.75,1.6,6.6,std({color:0x333333,emissive:0x22cc55,emissiveIntensity:0}),{st:ST('pump'),n:'נורית פעולה',tr:'חשמלאי',k:'pump'});
+
+/* ---------- חדר חשמל ---------- */
+function panTex(type,w){const W=Math.round(220*w),H=360,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+  g.fillStyle='#cfd2cd';g.fillRect(0,0,W,H);g.strokeStyle='#8d918c';g.lineWidth=3;g.strokeRect(2,2,W-4,H-4);
+  const brk=(x,y,n,col)=>{for(let k=0;k<n;k++){const bx=x+k*13;g.fillStyle='#f6f6f2';g.fillRect(bx,y,12,34);g.strokeStyle='#9a9a96';g.lineWidth=1;g.strokeRect(bx,y,12,34);g.fillStyle=col||'#1d1f22';g.fillRect(bx+3,y+(k%5==3?18:8),6,9);g.fillStyle='#555';g.fillRect(bx+2,y+2,8,2)}};
+  const rail=(y,x0,x1)=>{g.fillStyle='#a9ada8';g.fillRect(x0,y-4,x1-x0,42);g.fillStyle='#e8e8e4';g.fillRect(x0,y+38,x1-x0,6);};
+  const dial=(x,y,r,lab)=>{g.fillStyle='#222';g.fillRect(x-r-3,y-r-3,2*r+6,2*r+6);g.fillStyle='#fafaf6';g.fillRect(x-r,y-r,2*r,2*r);g.strokeStyle='#333';g.lineWidth=1;g.beginPath();g.arc(x,y+r*.5,r*.9,Math.PI*1.2,Math.PI*1.8);g.stroke();g.strokeStyle='#c42b2b';g.lineWidth=2;g.beginPath();g.moveTo(x,y+r*.5);g.lineTo(x+r*.35,y-r*.3);g.stroke();g.fillStyle='#333';g.font='bold 9px Arial';g.fillText(lab,x-5,y+r*.85)};
+  const lamp=(x,y,col)=>{const r=g.createRadialGradient(x-2,y-2,1,x,y,8);r.addColorStop(0,'#fff');r.addColorStop(.4,col);r.addColorStop(1,'#222');g.fillStyle=r;g.beginPath();g.arc(x,y,8,0,7);g.fill()};
+  const scr=(x,y,ww,hh,txt,col)=>{g.fillStyle='#111';g.fillRect(x,y,ww,hh);g.fillStyle=col||'#52e07a';g.font='bold 13px monospace';g.fillText(txt,x+5,y+hh/2+5)};
+  if(type==0){[[20,'V'],[60,'A'],[100,'A'],[140,'A']].forEach(([x,l])=>x<W-20&&dial(x,30,15,l));[40,64,88].forEach((x,k)=>lamp(W-x,28,['#e33','#3c3','#fb3'][k]));
+    for(let r=0;r<4;r++){rail(70+r*62,10,W-10);brk(16,70+r*62,Math.floor((W-30)/13),r==0?'#1d1f22':null)}
+    g.fillStyle='#222';g.fillRect(W/2-34,322,68,30);g.fillStyle='#c42b2b';g.fillRect(W/2-8,314,16,16);g.fillStyle='#fff';g.font='bold 10px Arial';g.fillText('MCCB 630A',W/2-28,345)}
+  else if(type==1){scr(14,18,W-28,30,'kW 412.6');lamp(24,66,'#3c3');lamp(48,66,'#e33');g.fillStyle='#1d1f22';g.fillRect(W/2-55,90,110,170);g.fillStyle='#3a3d40';g.fillRect(W/2-48,100,96,40);g.fillStyle='#fff';g.font='bold 12px Arial';g.fillText('1600A',W/2-18,124);g.fillStyle='#c42b2b';g.fillRect(W/2-14,160,28,70);g.fillStyle='#f2c230';g.font='bold 11px Arial';g.fillText('ON / I',W/2-18,250);g.fillStyle='#333';g.fillRect(W/2-55,280,110,50)}
+  else if(type==2){const cols=Math.max(3,Math.floor((W-20)/72));for(let r=0;r<4;r++)for(let k=0;k<cols;k++){const x=14+k*((W-28)/cols),y=14+r*86;g.fillStyle='#2a2c2e';g.fillRect(x,y,62,46);g.fillStyle='#b9dccc';g.fillRect(x+6,y+8,50,14);g.fillStyle='#163';g.font='bold 10px monospace';g.fillText(String(10000+((r*7+k*13)*917)%89999).padStart(6,'0'),x+8,y+19);lamp(x+52,y+35,'#e33');g.fillStyle='#fff';g.font='9px Arial';g.fillText('דירה '+(r*cols+k+1),x+6,y+40);brk(x+10,y+52,3)}}
+  else if(type==3){scr(14,16,W-80,28,'ON 18:42');g.fillStyle='#ececea';g.fillRect(W-58,14,44,34);g.fillStyle='#222';g.font='9px Arial';g.fillText('ASTRO',W-52,34);
+    rail(68,10,W-10);for(let k=0;k<Math.floor((W-30)/26);k++){g.fillStyle='#ececea';g.fillRect(16+k*26,68,24,36);g.fillStyle='#4a6';g.fillRect(22+k*26,74,12,6);g.fillStyle='#222';g.fillRect(20+k*26,90,16,6)}
+    for(let r=0;r<3;r++){rail(130+r*60,10,W-10);brk(16,130+r*60,Math.floor((W-30)/13))}
+    [0,1,2].forEach(k=>{const x=30+k*((W-60)/2);g.fillStyle='#333';g.beginPath();g.arc(x,320,14,0,7);g.fill();g.fillStyle='#ddd';g.fillRect(x-3,308,6,24);g.fillStyle='#222';g.font='9px Arial';g.fillText(['ידני','0','אוטו'][k],x-8,348)})}
+  else{g.fillStyle='#c42b2b';g.fillRect(0,0,W,34);g.fillStyle='#fff';g.font='bold 16px Arial';g.fillText('חירום',W/2-22,23);scr(14,46,W-28,40,'GEN READY',undefined);lamp(26,108,'#3c3');lamp(52,108,'#fb3');lamp(78,108,'#e33');
+    g.fillStyle='#1d1f22';g.fillRect(W/2-50,130,100,100);g.fillStyle='#f2c230';g.font='bold 12px Arial';g.fillText('ATS',W/2-12,150);g.fillStyle='#ddd';g.fillRect(W/2-6,160,12,56);g.fillStyle='#fff';g.font='10px Arial';g.fillText('רשת',W/2-44,200);g.fillText('גנרטור',W/2+12,200);
+    rail(250,10,W-10);brk(16,250,Math.floor((W-30)/13),'#c42b2b');g.fillStyle='#c42b2b';g.beginPath();g.arc(W/2,325,16,0,7);g.fill();g.fillStyle='#fff';g.font='bold 9px Arial';g.fillText('STOP',W/2-12,328)}
+  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=4;return t}
+const panM=std({color:0xd9dbd6,metalness:.25,roughness:.5});
+const PANELS=[['לוח ראשי',1.3,'לוח חשמל ראשי של הבניין'],['מעליות',.9,'לוח חשמל מעליות'],['תאורה',.9,'לוח חשמל תאורה'],['כבאים',.8,'לוח כבאים'],['מתח נמוך',.9,'לוח מתח נמוך (תקשורת, גילוי אש, אינטרקום)']];const PT=[0,0,3,4,2];
+let px=-15.6;PANELS.forEach(([t,w,n],i)=>{const x=px+w/2;px+=w+.06;B(w,2.0,.45,x,1.0,-9.75,panM,{st:ST('eroom'),n,tr:'חשמלאי',k:'epan'});
+  sign(t,'#1d1f22','#f2c230',x,1.82,-9.52,Math.min(w*.9,.8),0,0,{st:ST('eroom'),n,tr:'חשמלאי'},t.length>5?74:96);
+  {const fp=new THREE.Mesh(new THREE.PlaneGeometry(w-.04,1.62),new THREE.MeshStandardMaterial({map:panTex(PT[i],w),roughness:.45,metalness:.15}));fp.position.set(x,.86,-9.522);P(fp,{st:ST('eroom'),n:n+' · '+['מפסק ראשי, מאמ"תים, מדי זרם ומתח ונוריות','מפסקים לכל מעלית ומד זרם','מפסקים, מגענים, שעון אסטרונומי ובורר ידני/אוטומטי','מפסק כבאים (ניתוק חירום) ונוריות','שורות מודולים לתקשורת, גילוי אש ואינטרקום'][i],tr:'חשמלאי',k:'epan',ns:1})}
+  [-.5,.5].forEach(d=>{if(w>.75)B(.02,.03,.12,x+d*(w-.15),1.0,-9.5,std({color:0x2b2e31,metalness:.5}),{st:ST('eroom'),n:'ידית / מנעול דלת הלוח',tr:'חשמלאי',k:'epan'})});
+  if(i==0)B(.16,.3,.08,x+.4,1.1,-9.5,std({color:0xc8302a}),{st:ST('eroom'),n:'ידית מפסק ראשי',tr:'חשמלאי',k:'epan'})});
+B(.6,.06,4.5,-15.5,2.4,-7.5,trayM,{st:ST('eroom'),n:'מגש כבלים לחדר החשמל',tr:'חשמלאי',k:'epan'});
+B(4,.02,.8,-13,.012,-8.9,std({color:0x2a2c2e,roughness:.9}),{st:ST('eroom'),n:'שטיח גומי מבודד',tr:'חשמלאי',k:'epan',ns:1});
+
+/* ---------- רחבת כניסה, אבן שפה וקוביות ---------- */
+B(8,.3,14,SX+4,streetY-.15,0,std({map:rep(tRough,3,4)}),{...N,n:'מצע / רחבת כניסה',k:'struct',lv:'top'});
+B(8,.04,14,SX+4,streetY+.02,0,std({map:rep(tPaver,6,10),roughness:.9}),{st:ST('curb'),n:'ריצוף קוביות (אבן משתלבת) ברחבה',tr:'פיתוח',k:'curb',lv:'top',ns:1});
+const curbM=std({color:0xc9c6be,roughness:.8});const curbs=[];
+function curb(w,d,x,y,z,paint,n,lv,par){const m=B(w,.18,d,x,y+.09,z,curbM,{st:ST('curb'),n:n||'אבן שפה',tr:'פיתוח',k:'curb',lv},par);curbs.push([m,paint]);return m}
+curb(8,.15,SX+4,streetY,-7,tBW,'אבן שפה · כחול־לבן (חניה מותרת)','top');curb(8,.15,SX+4,streetY,7,tBW,'אבן שפה · כחול־לבן','top');
+curb(.15,3.6,SX+.4,streetY,-5.2,tRW,'אבן שפה · אדום־לבן (אסור לעצור ליד השער)','top');curb(.15,3.6,SX+.4,streetY,5.2,tRW,'אבן שפה · אדום־לבן','top');
+[[rUp,0],[rDn,'notLast']].forEach(([g,lv])=>[-2.92,2.92].forEach(z=>curb(rl,.16,0,0,z,tKW,'אבן שפה ברמפה · שחור־לבן',lv,g)));
+curb(5,.15,0,0,-5.25,tRW,'אבן שפה ליד דלת האש · אדום־לבן (אסור לחנות)');
+
+/* ---------- צבע ---------- */
+const whiteM=std({color:0xf1f0ec,roughness:.8});
+const greyM=std({color:0x8b9093,roughness:.55,metalness:.05}),accM=std({color:0x3a3e42,roughness:.5});
+cols.forEach(([x,z])=>{B(.53,1.2,.53,x,.6,z,greyM,{st:ST('paint'),n:'צבע אפור בתחתית העמוד (1.20 מ\')',tr:'צבעי',k:'paint'});B(.525,H-1.75,.525,x,1.2+(H-1.75)/2,z,whiteM,{st:ST('paint'),n:'צבע עמוד לבן',tr:'צבעי',k:'paint'})});
+[[Z0+.03,-10,-4],[Z1-.03,-10,X1-.1]].forEach(([z,xa,xb])=>{B(xb-xa,1.2,.012,(xa+xb)/2,.6,z+(z<0?.006:-.006),greyM,{st:ST('paint'),n:'פס אפור בתחתית הקיר (1.20 מ\') · צבע אפוקסי לקירות',tr:'צבעי',k:'paint',ns:1});B(xb-xa,.06,.014,(xa+xb)/2,1.23,z+(z<0?.007:-.007),accM,{st:ST('paint'),n:'פס דקורטיבי כהה מעל הצבע האפור',tr:'צבעי',k:'paint',ns:1})});cols.forEach(([x,z])=>B(.545,.06,.545,x,1.23,z,accM,{st:ST('paint'),n:'פס דקורטיבי בעמוד',tr:'צבעי',k:'paint'}));
+// איי מדרכה מוגבהים ליד עמודים וקירות, אבן שפה אדום־לבן
+cols.forEach(([x,z],i)=>{if(i%2)return;const w=1.6,d=.9,zz=z+(z>0?.2:-.2);B(w,.15,d,x,.075,zz,std({color:0xb8b5ad,roughness:.8}),{st:ST('curb'),n:'אי מוגבה סביב העמוד',tr:'פיתוח',k:'curb'});const c=B(w+.04,.16,.04,x,.08,zz+(z>0?-d/2:d/2),curbM,{st:ST('curb'),n:'אבן שפה · אדום־לבן',tr:'פיתוח',k:'curb'});curbs.push([c,tRW])});
+B(5.6,.15,.6,-7,.075,-5.2,std({color:0xb8b5ad,roughness:.8}),{st:ST('curb'),n:'מדרכה מוגבהת לאורך הקיר',tr:'פיתוח',k:'curb'});
+// עמודי סימון כתומים גמישים ועמודי פלדה שחור־צהוב
+const dlM=std({color:0xe8571f,roughness:.5}),dlW=std({color:0xf4f4f0,emissive:0x888888,emissiveIntensity:.15});
+[[-9,-5.0],[-5.5,-5.0],[X1-1.2,5.5],[-1,3.0]].forEach(([x,z])=>{Cy(.04,.75,x,.38,z,dlM,{st:ST('mark'),n:'עמוד סימון גמיש כתום',tr:'צבעי',k:'line'});[.5,.62].forEach(y=>Cy(.042,.05,x,y,z,dlW,{st:ST('mark'),n:'פס מחזיר אור',tr:'צבעי',k:'line'}));Cy(.09,.02,x,.01,z,std({color:0x2b2e31}),{st:ST('mark'),n:'בסיס עמוד סימון',tr:'צבעי',k:'line'})});
+[[1.4,-3.0],[1.4,3.0]].forEach(([x,z])=>{Cy(.06,.9,x,.45,z,std({map:rep(tYB,1,2)}),{st:ST('mark'),n:'עמוד הגנה מפלדה שחור־צהוב',tr:'צבעי',k:'line'})});
+B(X1-X0-.2,H-.1,.03,0,H/2,Z0+.016,whiteM,{st:ST('paint'),n:'צבע קיר',tr:'צבעי',k:'paint',ns:1});B(X1-X0-.2,H-.1,.03,0,H/2,Z1-.016,whiteM,{st:ST('paint'),n:'צבע קיר',tr:'צבעי',k:'paint',ns:1});
+
+{const dm=std({map:tex((g,s)=>{g.clearRect(0,0,s,s);const gr=g.createRadialGradient(s/2,s,10,s/2,s,s*.9);gr.addColorStop(0,'rgba(90,82,68,.55)');gr.addColorStop(.6,'rgba(120,110,92,.25)');gr.addColorStop(1,'rgba(120,110,92,0)');g.fillStyle=gr;g.fillRect(0,0,s,s);for(let i=0;i<60;i++){g.fillStyle=`rgba(245,242,235,${.2+rnd()*.3})`;g.beginPath();g.arc(s/2+(rnd()-.5)*s*.8,s*(.55+rnd()*.4),1+rnd()*3,0,7);g.fill()}},256),transparent:true,depthWrite:false,roughness:1});
+  [[X0+.03,.5,Z1-.6,Math.PI/2],[X1-.03,.5,-9.4,-Math.PI/2],[-8,.5,Z0+.035,0]].forEach(([x,y,z,r])=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.0),dm);m.position.set(x,y,z);m.rotation.y=r;P(m,{st:ST('paint'),to:ST('floor'),n:'רטיבות בפינה עם פריחת מלחים · בטיפול לפני מסירה',tr:'איטום',k:'damp',ns:1})})}
+/* ברז שטיפה בארון פח */
+{const cm=std({color:0x9aa0a4,metalness:.5,roughness:.4}),u={st:ST('fire'),tr:'אינסטלטור',k:'fire'};B(.45,.55,.2,X1-.12,1.0,3.9,cm,{...u,n:'ארון פח לברז שטיפה'});Cy(.025,.12,X1-.2,.95,3.9,std({color:0xc9a640,metalness:.8}),{...u,n:'ברז שטיפה 3/4"'},[0,0,Math.PI/2]);Cy(.012,1.7,X1-.12,1.85+.0,3.9,watM,{...u,n:'הזנת מים לברז'})}
+/* ---------- דלתות ---------- */
+const fireM=std({color:0xb9b7ae,metalness:.3,roughness:.45}),louvM=std({map:tLouv,metalness:.15,roughness:.55}),hdl=std({color:0xd8d8d2,metalness:.8,roughness:.25});
+const DOORS=[];
+function door(x,z,w,h,rot,mat,n,act){const pv=new THREE.Group();pv.position.set(x,0,z);pv.rotation.y=rot;G.add(pv);const hg=new THREE.Group();hg.position.set(-w/2,0,.06);pv.add(hg);
+  const u={st:ST('doors'),n:n+' · לחיצה = פתיחה',tr:'נגר / מסגר',k:'door',act};B(w-.04,h-.03,.05,w/2,h/2,0,/מחסן/.test(n)?std({color:0x7d858a,metalness:.2,roughness:.5}):mat,{...u},hg);if(!/מחסן/.test(n))B(.12,.025,.04,w-.14,1.05,.05,hdl,{...u},hg);
+  if(mat!==fireM&&!/מחסן/.test(n)){B(w-.04,.2,.055,w/2,.12,0,std({color:0x9aa0a4,metalness:.6,roughness:.35}),{...u,n:'לוח בעיטה (נירוסטה)'},hg);B(.06,.06,.03,w-.14,1.05,-.04,hdl,{...u,n:'ידית'},hg);B(.12,.025,.04,w-.14,1.05,-.05,hdl,{...u},hg)}
+  if(mat===fireM){B(.3,.06,.06,.32,h-.1,.06,std({color:0x6d7276,metalness:.6,roughness:.35}),{...u,n:'מחזיר שמן לדלת אש'},hg);const arm=B(.4,.02,.03,.12,h-.06,.12,std({color:0x4a4e52,metalness:.5}),{...u,n:'זרוע מחזיר'},hg);arm.rotation.y=.5;[1,-1].forEach(sd=>pSign((g,W,Hh)=>{g.font='900 120px Heebo, Arial';g.fillText('דלת אש',W/2,150);g.fillRect(40,175,W-80,8);g.font='900 96px Heebo, Arial';g.fillText('החזק סגורה',W/2,300)},.36,.26,w/2,1.55,sd*.03,sd>0?0:Math.PI,{st:ST('doors'),n:'שלט "דלת אש · החזק סגורה"'},hg))}
+  DOORS.push({hg,open:0,cur:0,act});return hg}
+door(-2,-5.5,1.2,2.1,0,fireM,'דלת אש ללובי','d0');door(2,-5.5,1.2,2.1,0,fireM,'דלת אש לחדר המדרגות','d1');
+door(-10,8.5,1.0,2.1,Math.PI/2,louvM,'דלת רפפה · חדר משאבות','d2');door(-10,-5.5,1.0,2.1,Math.PI/2,fireM,'דלת אש · חדר חשמל','d3');
+STO.forEach((x,i)=>{const hg=door(x,-8,.9,2.0,0,louvM,'דלת רפפה · מחסן','s'+i);const ch=std({color:0xd6dadc,metalness:.85,roughness:.22}),u={st:ST('doors'),n:'ידית מנוף (L) נירוסטה · לחיצה פותחת',tr:'נגר / מסגר',k:'door',act:'s'+i};
+  const bl=std({color:0x8f979c,metalness:.35,roughness:.4}),bk=std({color:0x16181a,roughness:1}),fr=std({color:0x6c7479,metalness:.3,roughness:.45});
+  [[1.42,1.86],[.14,.56]].forEach(([y0,y1])=>{[1,-1].forEach(sd=>{B(.66,y1-y0,.004,.45,(y0+y1)/2,sd*.027,bk,{...u,n:'פתח רפפה (אוורור)'},hg);
+    [[.66,.03,(y0+y1)/2-(y1-y0)/2-.01],[.66,.03,(y0+y1)/2+(y1-y0)/2+.01]].forEach(([w,h,y])=>B(w+.04,h,.012,.45,y,sd*.03,fr,{...u,n:'מסגרת רפפה'},hg));[.11,.79].forEach(x=>B(.03,y1-y0+.05,.012,x,(y0+y1)/2,sd*.03,fr,{...u,n:'מסגרת רפפה'},hg));
+    for(let y=y0+.02;y<y1;y+=.045){const b=B(.64,.04,.006,.45,y,sd*.028,bl,{...u,n:'להב רפפה'},hg);b.rotation.x=sd*.65}})});
+  [1,-1].forEach(sd=>{const rz=sd*.032;const ro=Cy(.028,.012,.76,1.05,rz,ch,{...u,n:'רוזטה עגולה'},[Math.PI/2,0,0],hg);Cy(.022,.01,.76,.97,rz,ch,{...u,n:'רוזטת צילינדר'},[Math.PI/2,0,0],hg);Cy(.009,.016,.76,.97,rz+sd*.006,std({color:0xc9a640,metalness:.8,roughness:.25}),{...u,n:'צילינדר מנעול'},[Math.PI/2,0,0],hg);
+    Cy(.009,.05,.76,1.05,rz+sd*.025,ch,u,[Math.PI/2,0,0],hg);const lv=Cy(.011,.13,.7,1.05,rz+sd*.05,ch,{...u,n:'ידית מנוף נירוסטה'},[0,0,Math.PI/2],hg);const tp=new THREE.Mesh(new THREE.SphereGeometry(.012,10,8),ch);tp.position.set(.635,1.05,rz+sd*.05);P(tp,u,hg)});
+  [.25,1.0,1.75].forEach(y=>Cy(.012,.1,.02,y,0,ch,{...u,n:'ציר דלת',act:null},null,hg));});
+sign('משאבות','#1d1f22','#ffffff',-9.86,2.35,8.5,.9,Math.PI/2,0,{st:ST('doors'),n:'שלט חדר משאבות'},110);
+sign('חדר חשמל','#1d1f22','#ffffff',-9.86,2.35,-5.5,.9,Math.PI/2,0,{st:ST('doors'),n:'שלט חדר חשמל'},100);
+sign('לובי · מעליות','#ffffff','#2d5e4a',-2,2.42,-5.38,1.0,0,0,{st:ST('doors'),n:'שלט לובי'},84);
+
+/* ---------- חיפוי בכניסה ---------- */
+const cladS=std({map:rep(tStone,3,1.2),roughness:.85}),cladA=std({map:rep(tAlu,3,1),metalness:.55,roughness:.35});
+const clads=[];
+[-3.4,3.4].forEach(z=>B(.4,3.7,.4,SX+.2,streetY+1.85,z,concW(1,4),{...N,n:'עמוד כניסה',k:'struct',lv:'top'}));
+B(.4,1.0,7.2,SX+.2,streetY+3.2,0,concW(7,1),{...N,n:'משקוף עליון בכניסה',k:'struct',lv:'top'});
+[-3.4,3.4].forEach(z=>clads.push(B(.5,3.7,.5,SX+.2,streetY+1.85,z,cladS,{st:ST('clad'),n:'חיפוי עמוד הכניסה',tr:'חיפוי',k:'clad',lv:'top'})));
+clads.push(B(.5,1.02,7.7,SX+.2,streetY+3.2,0,cladS,{st:ST('clad'),n:'חיפוי חזית הכניסה',tr:'חיפוי',k:'clad',lv:'top'}));
+[-3.35,3.35].forEach(z=>clads.push(B(RL-.5,1.2,.08,X1+RL/2+.2,streetY+.6,z+(z>0?-.02:.02),cladS,{st:ST('clad'),n:'חיפוי מעקה הרמפה',tr:'חיפוי',k:'clad',lv:'top'})));
+sign('חניון','#ffffff','#2d5e4a',SX+.47,streetY+3.2,0,1.8,Math.PI/2,0,{st:ST('clad'),n:'שלט כניסה לחניון',lv:'top'});
+
+/* ---------- רצפה ---------- */
+const heliM=std({map:rep(tHeli,8,5),roughness:.7}),epoM=std({map:rep(tex((g,s)=>{g.fillStyle='#5b6563';g.fillRect(0,0,s,s);for(let i=0;i<7000;i++){const v=rnd()<.4?190:rnd()<.5?60:120;g.fillStyle=`rgba(${v},${v+4},${v+2},.35)`;g.fillRect(rnd()*s,rnd()*s,1.5,1.5)}},256),12,8),roughness:.62,metalness:0});
+const floorF=B(X1-X0-.3,.02,Z1-Z0-.3,0,.012,0,heliM,{st:ST('floor'),n:'רצפה: בטון מוחלק (הליקופטר)',tr:'רצפות',k:'floorf',ns:1});
+const exhM=std({color:0x3b3f43,roughness:.6});
+B(25,.9,.02,2.5,.45,Z1-.04,exhM,{st:ST('floor'),n:'פס אגזוזים (צבע כהה מאחורי החניות)',tr:'צבעי',k:'exh',ns:1});
+{let xa=5.1;[...STO,16.46].forEach(xd=>{const xb=Math.min(15.9,xd-.58);if(xb-xa>.02)B(xb-xa,.9,.02,(xa+xb)/2,.45,-7.93,exhM,{st:ST('floor'),n:'פס אגזוזים (נקטע בפתחי הדלתות)',tr:'צבעי',k:'exh',ns:1});xa=xd+.58})}
+B(X1-X0-.3,.004,6.4,0,.024,0,std({color:0x3f4846,roughness:.6,metalness:0}),{st:ST('floor'),n:'אפוקסי במעבר (גוון כהה)',tr:'רצפות',k:'exh',ns:1});
+
+/* ---------- סימון ---------- */
+const lineM=std({color:0xf7f7f2,roughness:.6}),stopM=std({color:0xf2c230,roughness:.6});
+const spots=[];
+function row(z0,z1,x0,x1){for(let x=x0;x<=x1+.01;x+=2.5)B(.1,.012,Math.abs(z1-z0),x,.032,(z0+z1)/2,lineM,{st:ST('mark'),n:'קו חניה',tr:'צבעי',k:'line',ns:1});for(let x=x0;x<x1-.01;x+=2.5){const cx=x+1.25;spots.push({x:cx,z:(z0+z1)/2,f:z0>0});B(1.6,.1,.15,cx,.05,z0>0?z1-.5:z0+.5,stopM,{st:ST('mark'),n:'מעצור גלגל',tr:'צבעי',k:'line'})}}
+row(3.6,8.6,-10,15);row(-8.6,-3.6,-10,-5);row(-7.9,-3.6,5,15);
+cols.forEach(([x,z])=>[[.27,.27],[-.27,.27],[.27,-.27],[-.27,-.27]].forEach(([a,b])=>B(.06,1.0,.06,x+a,.5,z+b,std({color:0x1d1f22}),{st:ST('mark'),n:'מגן פינה לעמוד',tr:'צבעי',k:'line'})));
+{const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.fillStyle='#f4f4ee';g.fillRect(20,50,330,28);g.beginPath();g.moveTo(330,14);g.lineTo(500,64);g.lineTo(330,114);g.fill();const t=new THREE.CanvasTexture(c);const aM=new THREE.MeshStandardMaterial({map:t,transparent:true,roughness:.5});
+  [-9,-1,7,13].forEach(x=>[[1.5,Math.PI],[-1.5,0]].forEach(([z,r])=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(2.2,.55),aM);m.rotation.x=-Math.PI/2;m.rotation.z=r;m.position.set(x,.035,z);P(m,{st:ST('mark'),n:'חץ כיוון נסיעה (דו־סטרי)',tr:'צבעי',k:'num',ns:1})}))}
+for(let x=X0+1;x<X1-1;x+=2)B(1.0,.006,.12,x+.5,.033,0,lineM,{st:ST('mark'),n:'קו מרכז מקווקו (הפרדת נתיבים)',tr:'צבעי',k:'line',ns:1});
+for(let x=X0+1;x<X1-1;x+=1.2)[3.15,-3.15].forEach(z=>B(.6,.006,.1,x+.3,.033,z,stopM,{st:ST('mark'),n:'קו שוליים מקווקו צהוב',tr:'צבעי',k:'line',ns:1}));
+let lab=[];
+function hangSign(t,x,y,z,ry,n,arrow){const g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=ry;G.add(g);const W=1.3,Hh=.36,u={st:ST('mark'),n:n||'שלט מואר תלוי',tr:'חשמלאי',k:'exit'};
+  const c=document.createElement('canvas');c.width=768;c.height=212;const x2=c.getContext('2d');x2.fillStyle='#0f8a46';x2.fillRect(0,0,768,212);x2.strokeStyle='#ffffff';x2.lineWidth=8;x2.strokeRect(14,14,740,184);x2.fillStyle='#fff';
+  // דמות רצה + חץ
+  x2.beginPath();x2.arc(690,58,15,0,7);x2.fill();x2.lineWidth=14;x2.strokeStyle='#fff';x2.lineCap='round';x2.beginPath();x2.moveTo(682,78);x2.lineTo(662,125);x2.lineTo(690,165);x2.moveTo(662,125);x2.lineTo(632,160);x2.moveTo(676,92);x2.lineTo(708,108);x2.moveTo(676,92);x2.lineTo(640,98);x2.stroke();
+  x2.fillStyle='#fff';x2.font='900 92px Heebo, Arial';x2.textAlign='center';x2.direction='rtl';x2.fillText(t,370,138);if(arrow){x2.beginPath();x2.moveTo(30,106);x2.lineTo(80,60);x2.lineTo(80,88);x2.lineTo(120,88);x2.lineTo(120,124);x2.lineTo(80,124);x2.lineTo(80,152);x2.fill()}
+  const tx=new THREE.CanvasTexture(c);tx.encoding=THREE.sRGBEncoding;tx.anisotropy=8;const fm=new THREE.MeshBasicMaterial({map:tx});
+  const bx=new THREE.Mesh(new THREE.BoxGeometry(W+.06,Hh+.06,.07),std({color:0xe9ecee,metalness:.4,roughness:.35}));P(bx,u,g);
+  [1,-1].forEach(sd=>{const f=new THREE.Mesh(new THREE.PlaneGeometry(W,Hh),fm);f.position.z=sd*.037;if(sd<0)f.rotation.y=Math.PI;P(f,{...u,ns:1},g)});
+  [-W/2+.12,W/2-.12].forEach(dx=>Cy(.008,H-y-Hh/2,dx,(H-y)/2+Hh/4,0,std({color:0x9aa0a4,metalness:.6}),{...u,n:'מוט תלייה'},null,g));return g}
+function relabel(){lab.forEach(o=>{(o.parent||G).remove(o);const rm=q=>{const i=parts.indexOf(q);if(i>=0)parts.splice(i,1)};rm(o);o.traverse&&o.traverse(rm)});lab=[];
+  spots.forEach((s,i)=>lab.push(sign(String(LVL*100+i+1),'#ffffff','none',s.x,.034,s.f?s.z-1.3:s.z+1.3,1.3,0,1,{st:ST('mark'),n:'מספר חניה '+(LVL*100+i+1),k:'num'})));
+  cols.forEach(([x,z])=>lab.push(sign('‎-'+LVL,'#1d1f22','#f2c230',x,2.0,z+(z>0?-.27:.27),.6,z>0?Math.PI:0,0,{st:ST('mark'),n:'שלט קומה ‎-'+LVL})));
+  STO.forEach((x,i)=>lab.push(sign(String(LVL*100+i+1),'#1d1f22','#ffffff',x,2.25,-7.93,.5,0,0,{st:ST('doors'),n:'מספר מחסן '+(LVL*100+i+1)},120)));
+  lab.push(hangSign(LVL==1?'יציאה לרחוב':'עלייה ל‎-'+(LVL-1),X1-1.2,2.35,-2.4,-Math.PI/2,'שלט מואר תלוי · יציאה',1));
+  if(LVL<3)lab.push(hangSign('ירידה ל‎-'+(LVL+1),X0+1.2,2.35,2.4,Math.PI/2,'שלט מואר תלוי · ירידה',1));
+  paint()}
+
+/* ---------- שער ומחסום ---------- */
+const gateG=new THREE.Group();gateG.position.set(SX-.05,streetY,0);G.add(gateG);
+const gateM=std({color:0x5f6468,metalness:.6,roughness:.35});
+for(let i=0;i<15;i++)B(.06,.16,6.6,0,.1+i*.18,0,gateM,{st:ST('gate'),n:'שער חניון (תריס) · לחיצה = פתיחה',tr:'מנהל עבודה',k:'gate',act:'gate',lv:'top'},gateG);
+B(.5,.45,6.8,SX-.15,streetY+2.92,0,gateM,{st:ST('gate'),n:'ארגז שער',tr:'מנהל עבודה',k:'gate',lv:'top'});
+B(.25,1.1,.25,X1+.9,.55,-2.4,stopM,{st:ST('gate'),n:'עמוד מחסום',tr:'מנהל עבודה',k:'gate'});
+const barG=new THREE.Group();barG.position.set(X1+.9,1.0,-2.4);G.add(barG);
+B(.08,.08,4,0,0,2,std({map:rep(tRW,4,1)}),{st:ST('gate'),n:'מחסום · לחיצה = הרמה',tr:'מנהל עבודה',k:'gate',act:'bar'},barG);
+{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');g.fillStyle='#fff';g.beginPath();for(let k=0;k<8;k++){const a=Math.PI/8+k*Math.PI/4;g.lineTo(128+124*Math.cos(a),128+124*Math.sin(a))}g.fill();g.fillStyle='#c8102e';g.beginPath();for(let k=0;k<8;k++){const a=Math.PI/8+k*Math.PI/4;g.lineTo(128+112*Math.cos(a),128+112*Math.sin(a))}g.fill();g.fillStyle='#fff';g.font='900 64px Heebo, Arial';g.textAlign='center';g.direction='rtl';g.fillText('עצור',128,150);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;
+  [1,-1].forEach(sd=>{const m=new THREE.Mesh(new THREE.CircleGeometry(.2,8,Math.PI/8),new THREE.MeshBasicMaterial({map:t}));m.rotation.y=sd>0?Math.PI/2:-Math.PI/2;m.position.set(sd*.045,0,2);P(m,{st:ST('gate'),n:'תמרור עצור על זרוע המחסום · לחיצה = הרמה',tr:'מנהל עבודה',k:'gate',act:'bar',ns:1},barG)})}
+const ready=new THREE.Sprite(new THREE.SpriteMaterial({map:lbl('מוכן למסירה ✓','#ffffff','#2d5e4a',84).map,depthTest:false,transparent:true}));ready.scale.set(6,3,1);ready.position.set(0,5,0);ready.renderOrder=9;G.add(ready);
+
+/* ---------- מי חונה איפה (דוגמה) ---------- */
+const ownC=[0x2f7fe0,0xd8382e,0x2d8a5e,0x9b59b6,0xe67e22,0x16a085];
+spots.forEach((s,i)=>{const a=101+((i*7)%40);const m=new THREE.Mesh(new THREE.PlaneGeometry(2.3,4.6),new THREE.MeshBasicMaterial({color:ownC[i%6],transparent:true,opacity:.42,depthWrite:false}));m.rotation.x=-Math.PI/2;m.position.set(s.x,.045,s.z);m.userData={n:'חניה · דירה '+a+' (דוגמה)',tr:'שיוך מהחוזה',st:-1,k:'own'};G.add(m);parts.push(m)});
+
+/* ---------- כל הקומות ---------- */
+const ghost=new THREE.Group();G.add(ghost);const ghM=new THREE.MeshBasicMaterial({color:0x7d8a84,transparent:true,opacity:.12,depthWrite:false}),ghE=new THREE.LineBasicMaterial({color:0x5c6a63,transparent:true,opacity:.5});
+function gBox(w,h,d,x,y,z,rz){const g=new THREE.BoxGeometry(w,h,d),m=new THREE.Mesh(g,ghM);m.position.set(x,y,z);if(rz)m.rotation.z=rz;ghost.add(m);const e=new THREE.LineSegments(new THREE.EdgesGeometry(g),ghE);e.position.copy(m.position);e.rotation.copy(m.rotation);ghost.add(e)}
+function mkS(t,x,y){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:lbl(t,'#1f2328','#ffffff',110).map,depthTest:false,transparent:true}));s.scale.set(3.6,1.8,1);s.position.set(x,y,Z1+1);s.renderOrder=9;ghost.add(s);return s}
+function buildGhost(){while(ghost.children.length)ghost.remove(ghost.children[0]);
+  for(let L=0;L<=3;L++){if(L==LVL)continue;const y=(LVL-L)*(H+.3);
+    if(L==0){gBox(30,9,18,-1,y+4.5,0);mkS('קרקע · בניין',-1,y+10)}else{gBox(32,.3,20,0,y-.15,0);cols.forEach(([x,z])=>gBox(.5,H,.5,x,y+H/2,z));mkS('‎-'+L,X0-3,y+1.5);if(L<3)gBox(rl,.3,6,X0-RL/2,y-H/2,0,ang);gBox(rl,.3,6,X1+RL/2,y+H/2,0,ang)}}
+  mkS('‎-'+LVL+' · כאן',X0-3,1.5);ghost.visible=!!ALL}
+
+/* ---------- ציור ---------- */
+let flashT=0,need=1;
+function lvOk(u){if(!u.lv)return true;if(u.lv=='top')return LVL==1;if(u.lv=='notLast')return LVL<3;return true}
+function paint(){const pm=cur>=ST('paint');
+  parts.forEach(p=>{const u=p.userData;if(u.k=='own'){p.visible=own;return}
+  let vis=(u.st==0||cur>=u.st)&&(u.to==null||cur<u.to)&&lvOk(u);let m=u.base;
+  if((u.k=='struct'||u.k=='blk'||u.k=='beam')&&!/רחבת|מצע|רמפה/.test(u.n)){if(cur>=ST('paint'))m=whiteM;else if(cur>=ST('bagar'))m=plM}
+  if(u.k=='tankw'&&!ceil&&u.base===tankWM){if(cur>=ST('paint'))m=whiteM;else if(cur>=ST('bagar'))m=plM}
+  if(u.k=='tankw'&&ceil)m=tankGh;
+  if(WALK&&ceil&&(u.k=='blk'||u.k=='bag'||u.k=='paint'||u.k=='door'||(u.k=='struct'&&/קיר/.test(u.n||''))))m=XRG;
+  if(ceil&&/רצפת בטון|רצפה: |אפוקסי|בטון מוחלק|ריצוף|טיח על הקורה|בגר/.test(u.n||''))m=XRF;if(ceil&&(u.k=='struct'||u.k=='beam')&&!/קיר|רצפ/.test(u.n||''))m=XRS;
+  if(u.k=='ceil'){vis=!!(ceil||WALK)&&!SWIN;m=WALK?(cur>=ST('bagar')?ceilW:ceilM):ceilG}
+  if(u.k=='lamp')m.emissiveIntensity=cur>=ST('gate')||WALK?1.2:.25;
+  if(u.k=='exh')vis=vis&&FLOOR=='epoxy';
+  if(u.k=='curb'&&pm){const pr=curbs.find(c=>c[0]===p);if(pr){if(!p._pm)p._pm=std({map:rep(pr[1],u.n.includes('רמפה')?8:4,1),roughness:.7});m=p._pm}}
+  if(u.k=='clad')m=CLAD=='alu'?cladA:cladS;
+  if(u.k=='floorf')m=FLOOR=='epoxy'?epoM:heliM;
+  if(vis&&flashT>0&&u.st===cur&&u.k!='sign'&&u.k!='num'){if(!p._f)p._f={};if(!p._f[m.uuid]){const f=m.clone();f.emissive=new THREE.Color(0x2fd38a);p._f[m.uuid]=f}const f=p._f[m.uuid];f.emissiveIntensity=.7*flashT;m=f}
+  p.visible=vis;p.material=m});
+  floorF.userData.n=FLOOR=='epoxy'?'רצפה: אפוקסי':'רצפה: בטון מוחלק (הליקופטר)';
+  ready.visible=cur==ST('gate')&&!WALK&&!ALL;
+  const lit=WALK||cur>=ST('gate');bulbs.forEach(b=>b.intensity=lit&&cur>=ST('light')?.9:0);inner.intensity=WALK?(cur>=ST('light')?.28:.45):0;rampSun.intensity=WALK&&LVL==1?2.2:0;hemi.intensity=WALK?.35:.7;
+  scene.background=new THREE.Color(WALK?'#3a4046':(getComputedStyle(document.documentElement).getPropertyValue('--scene').trim()||'#dfe2dc'));need=1}
+function ui(){const s=STG[cur];document.getElementById('hudStage').textContent=`שלב ${cur} מתוך ${STG.length-1}`;
+  document.getElementById('cap').innerHTML=`<b>${cur} · ${s[1]}</b><span class="mu">${s[2]}</span>`;document.getElementById('say').innerHTML=`<b>מה רואים בשלב ${cur}</b><span>${s[3]}</span>`;
+  document.querySelectorAll('#steps button').forEach(b=>{const i=+b.dataset.i;b.classList.toggle('on',i==cur);b.classList.toggle('done',i<cur)});
+  const tg=(id,on,t)=>{const b=document.getElementById(id);b.classList.toggle('on',!!on);if(t)b.textContent=t};
+  tg('ownBtn',own);tg('ceilBtn',ceil,'תקרה: '+(ceil?'שקופה':'מוסתרת'));tg('allBtn',ALL);tg('walkBtn',WALK,WALK?'הליכה · '+SPOTS[spI][0]:'הליכה בחניון');
+  document.getElementById('spotBtn').hidden=!WALK;document.getElementById('xrWBtn').hidden=!WALK;tg('xrWBtn',ceil,ceil?'רנטגן: פועל':'רנטגן');document.getElementById('zm').hidden=!!WALK;document.getElementById('joy').hidden=false;document.getElementById('ceilBtn').hidden=!!WALK;document.getElementById('allBtn').hidden=!!WALK;document.getElementById('ownBtn').hidden=!!WALK;
+  try{localStorage.setItem('sk156b',JSON.stringify({c:cur,f:FLOOR,k:CLAD}))}catch(_){}}
+function go(i,f){if(PKRO&&i!=cur){return}cur=Math.max(0,Math.min(STG.length-1,i));if((PKS[LVL]|0)!=cur){PKS[LVL]=cur;try{parent.postMessage({pk:{l:LVL,c:cur}},'*')}catch(_){}}flashT=f?1:0;ui();paint()}
+
+{const sel=document.getElementById('stSel'),cap=document.getElementById('cap');sel.innerHTML=STG.map((s,i)=>[i,(i+1)+' · '+s[1]+' · '+s[2]]).map(([i,t])=>`<option value="${i}">${t}</option>`).join('');sel.onchange=()=>{go(+sel.value,1)};cap.addEventListener('pointerdown',()=>{sel.value=String(cur)});}
+let ph0='';document.getElementById('steps').innerHTML=STG.map((s,i)=>{let h='';if(s[4]!=ph0){ph0=s[4];h=`<div class="ph">${s[4]}</div>`}return h+`<button type="button" data-i="${i}"><span class="n">${i}</span><span>${s[1]}</span></button>`}).join('');
+document.getElementById('steps').onclick=e=>{const b=e.target.closest('button');if(b){go(+b.dataset.i,1);host.scrollIntoView({block:'start'})}};
+document.getElementById('prev').onclick=()=>go(cur-1,1);document.getElementById('next').onclick=()=>go(cur+1,1);
+document.getElementById('ownBtn').onclick=()=>{own=!own;ui();paint()};document.getElementById('ceilBtn').onclick=()=>{ceil=1-ceil;ui();paint()};document.getElementById('dimBtn').onclick=()=>{DIMON=DIMON?0:1;const b=document.getElementById('dimBtn');b.classList.toggle('on',!!DIMON);b.textContent=DIMON?'מידות ✓':'מידות';buildDims();need=1;showPick(DIMON?'<b>מידות: גובה כל נקודה מהרצפה + מידות חניה, מעבר, תקרה ורמפה</b>':'<b>מידות כבויות</b>')};document.getElementById('xrWBtn').onclick=()=>{ceil=1-ceil;ui();paint();showPick(ceil?'<b>רנטגן: רואים את המים בתוך המאגרים</b>':'<b>רנטגן כבוי</b>')};
+document.getElementById('allBtn').onclick=()=>{ALL=1-ALL;if(ALL){rad=radT=Math.max(rad,72);ph=1.3}else{rad=radT=46;ph=.9}buildGhost();ui();paint()};
+
+/* ---------- הליכה ---------- */
+const SPOTS=[['מעבר מרכזי',13,1.3,-Math.PI/2],['ליד המחסנים',9,-2.4,Math.PI*.85],['מול הלובי',0,-2.4,Math.PI],['בתוך הלובי',-2,-6.4,Math.PI],['חדר המדרגות',2.6,-5.85,Math.PI+.55,.28],['חדר משאבות',-11.2,6.2,-Math.PI*.62],['חדר חשמל',-11,-6.6,-Math.PI*.8],['למעלה ברמפה',X1+7,0,-Math.PI/2],['ירידה לקומה הבאה',X0+1,0,-Math.PI/2]];
+const MV={jx:0,jy:0};{const J=document.getElementById('joy'),kn=document.getElementById('knob');let id=null;const mv=e=>{const r=J.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy;const Rr=r.width/2-12,d=Math.hypot(dx,dy);if(d>Rr){dx*=Rr/d;dy*=Rr/d}kn.style.transform=`translate(${dx}px,${dy}px)`;MV.jx=dx/Rr;MV.jy=-dy/Rr;need=1};J.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();id=e.pointerId;J.setPointerCapture(id);mv(e)});J.addEventListener('pointermove',e=>{if(e.pointerId===id)mv(e)});const up=e=>{if(e.pointerId!==id)return;id=null;MV.jx=MV.jy=0;kn.style.transform=''};J.addEventListener('pointerup',up);J.addEventListener('pointercancel',up)}
+let spI=0,ex=13,ez=0,yaw=-Math.PI/2,pit=0,wx=null,wz=null;
+function stairY(x,z){if(z>-6.0||z<-9.95||x<.1||x>3.9)return null;if(z<=-8.24)return H/2;if(x<1.92)return Math.max(0,Math.min(H/2,(-6.0-z)/TD*RS));if(x>2.08)return Math.max(H/2,Math.min(H,H/2+(z+8.24)/TD*RS));return null}
+function floorY(x,z){if(z!=null){const sy=stairY(x,z);if(sy!=null)return sy}if(x>X1)return Math.min(H,(x-X1)/RL*H);if(x<X0)return LVL<3?-Math.min(H,(X0-x)/RL*H):0;return 0}
+function setSpot(i){spI=(i+SPOTS.length)%SPOTS.length;const s=SPOTS[spI];ex=s[1];ez=s[2];yaw=s[3];pit=s[4]||0;wx=null;ui();need=1}
+document.getElementById('walkBtn').onclick=()=>{WALK=1-WALK;if(WALK){setSpot(0);showPick('<b>הליכה בחניון</b><span class="mu">גוררים כדי להסתכל · לחיצה על הרצפה = הולכים לשם · "למקום הבא" קופץ בין החדרים</span>')}ui();paint()};
+document.getElementById('spotBtn').onclick=()=>setSpot(spI+1);
+
+/* ---------- מצלמה ---------- */
+let th=.62,ph=.9,rad=46;const tgt=new THREE.Vector3(2,0,0),tgtT=tgt.clone();let radT=rad;const P2=new Map();let pinch0=0,moved=0,pm=null,lastTap=0;
+function camSet(){if(WALK){const y=floorY(ex,ez)+1.6;cam.position.set(ex,y,ez);cam.lookAt(ex+Math.sin(yaw)*Math.cos(pit),y+Math.sin(pit),ez+Math.cos(yaw)*Math.cos(pit));return}
+  cam.position.set(tgt.x+rad*Math.sin(ph)*Math.sin(th),tgt.y+rad*Math.cos(ph),tgt.z+rad*Math.sin(ph)*Math.cos(th));cam.lookAt(tgt)}
+const cv=R.domElement;
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);P2.set(e.pointerId,[e.clientX,e.clientY]);moved=0;pm=null;if(P2.size==2){const a=[...P2.values()];pinch0=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])}});
+cv.addEventListener('pointermove',e=>{if(!P2.has(e.pointerId))return;const o=P2.get(e.pointerId);const dx=e.clientX-o[0],dy=e.clientY-o[1];P2.set(e.pointerId,[e.clientX,e.clientY]);moved+=Math.abs(dx)+Math.abs(dy);
+  if(WALK){if(P2.size==1){yaw+=dx*.005;pit=Math.max(-1.2,Math.min(1.2,pit+dy*.004))}need=1;return}
+  if(P2.size==1&&!e.shiftKey&&e.buttons!==2){th-=dx*.008;ph=Math.max(.15,Math.min(1.52,ph-dy*.006))}else if(P2.size==1){panBy(dx,dy)}else if(P2.size==2){const a=[...P2.values()],d=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]),mid=[(a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2];if(pinch0){rad=Math.max(3,Math.min(130,rad*pinch0/d));radT=rad}if(pm)panBy(mid[0]-pm[0],mid[1]-pm[1]);pm=mid;pinch0=d}need=1});
+function panBy(dx,dy){const k=rad*.0016,rx=Math.cos(th),rz=-Math.sin(th),fx=-Math.sin(th),fz=-Math.cos(th);tgt.x+=-rx*dx*k+fx*dy*k;tgt.z+=-rz*dx*k+fz*dy*k;tgtT.copy(tgt)}
+cv.addEventListener('contextmenu',e=>e.preventDefault());
+function focusAt(e){const r=cv.getBoundingClientRect();ray.setFromCamera({x:(e.clientX-r.left)/r.width*2-1,y:-(e.clientY-r.top)/r.height*2+1},cam);const h=ray.intersectObjects(parts.filter(p=>p.visible),false).find(h=>h.object.userData.k!='ceil');if(h){tgtT.copy(h.point);radT=Math.max(5,Math.min(radT,12))}need=1}
+document.getElementById('zm').onclick=e=>{const b=e.target.closest('button');if(!b)return;const z=b.dataset.z;if(z=='in')radT=Math.max(3,radT*.7);if(z=='out')radT=Math.min(130,radT*1.4);if(z=='home'){tgtT.set(2,0,0);radT=46;th=.62;ph=.9}need=1};
+cv.addEventListener('pointerup',e=>{P2.delete(e.pointerId);pinch0=0;pm=null;if(moved<6){const n=performance.now();if(!WALK&&n-lastTap<320){focusAt(e);lastTap=0}else{pick(e);lastTap=n}}});cv.addEventListener('pointercancel',e=>{P2.delete(e.pointerId);pinch0=0});
+cv.addEventListener('wheel',e=>{e.preventDefault();if(WALK){const s=-e.deltaY*.004;ex+=Math.sin(yaw)*s;ez+=Math.cos(yaw)*s}else rad=Math.max(3,Math.min(130,rad*(1+e.deltaY*.001)));radT=rad;need=1},{passive:false});
+const ray=new THREE.Raycaster(),pk=document.getElementById('pick');let pkT=0;
+function showPick(h){pk.innerHTML=h;pk.hidden=false;clearTimeout(pkT);pkT=setTimeout(()=>pk.hidden=true,4500)}
+const FLOORK=['floor','floorf','ramp','rampf','tile','exh','line','num','drain','own','curb'];
+function walkTo(p){const dx=p.x-ex,dz=p.z-ez,d=Math.hypot(dx,dz)||1,s=Math.max(0,d-.4);wx=ex+dx/d*s;wz=ez+dz/d*s;wx=Math.max(X0-RL+.6,Math.min(LVL==1?SX+5:X1+RL-.6,wx));const lim=(wx>X1-.2||wx<X0+.2)?2.6:9.5;wz=Math.max(-lim,Math.min(lim,wz));need=1}
+function pick(e){const r=cv.getBoundingClientRect();ray.setFromCamera({x:(e.clientX-r.left)/r.width*2-1,y:-(e.clientY-r.top)/r.height*2+1},cam);
+  const hit=ray.intersectObjects(parts.filter(p=>p.visible),false).find(h=>h.object.userData.k!='ceil'&&!(h.object.userData.k=='sign'&&WALK&&h.object.rotation.x));if(!hit){pk.hidden=true;return}const u=hit.object.userData;
+  if(u.act){doAct(u.act);return}
+  if(!WALK&&FLOORK.includes(u.k)&&hit.point.y<.4&&hit.point.x>X0&&hit.point.x<X1){document.getElementById('walkBtn').click();ex=hit.point.x;ez=hit.point.z;yaw=Math.atan2(-ex,-ez);pit=0;wx=null;need=1;showPick('<b>נכנסת לכאן · ג׳ויסטיק להליכה</b>');return}
+  if(WALK&&FLOORK.includes(u.k)&&hit.point.y<floorY(hit.point.x,hit.point.z)+.4){walkTo(hit.point);pk.hidden=true;return}
+  showPick(`<b>${u.n}</b><span class="mu">${u.tr||''}${u.st>0?' · שלב '+u.st:''}</span>`)}
+const DIMSC=()=>WALK?1:3.5;const DIMFLOOR=(x,z)=>{const y=floorY(x,z);return y};
+const DIMCAT=[[/שקע|מתג|מפסק(?! ראשי)/,'חשמל',0x2e9e4f,'#1f7a3a',u=>!/קופסת|צנרת/.test(u.n)],[/ראש ספרינקלר/,'ספרינקלר',0xc42b2b,'#9e1f1f'],[/עמדת כיבוי|ארון כיבוי/,'עמדת כיבוי',0xc42b2b,'#9e1f1f'],
+  [/גוף תאורה|פס LED|מנורת/,'תאורה',0xd8a400,'#8a6a00'],[/גלאי/,'גלאי',0x777,'#444'],[/רכזת גילוי/,'רכזת',0xc42b2b,'#9e1f1f'],[/צופר|לחצן אזעקה/,'אזעקה',0xc42b2b,'#9e1f1f'],[/^מפוח סילון/,'מפוח',0x555,'#333']];
+const DIMFIX=()=>{const L=[];const d=(a,b,t)=>L.push([a,b,t]);d([5,.05,3.6],[7.5,.05,3.6],'חניה 2.50');d([5.2,.05,3.6],[5.2,.05,8.6],'חניה 5.00');d([0,.05,-3.2],[0,.05,3.2],'מעבר 6.40');
+  d([12,0,1.6],[12,H,1.6],'גובה תקרה '+H.toFixed(2));d([1,0,-2.0],[1,2.075,-2.0],'מתחת לתעלה 2.07');d([-6,0,.9],[-6,2.42-.33,.9],'מתחת למפוח 2.09');d([X1,.05,-3.2],[X1+RL,H,-3.2],'רמפה '+Math.round(H/RL*100)+'%');
+  d([-16,.05,-10],[-10,.05,-10],'חדר משאבות 6.0');d([1.0,0,-7],[1.0,H/2,-7],'מהלך מדרגות '+(H/2).toFixed(2));return L};
+/* ===== מצב מידות: גבהים של כל נקודה + מידות חדרים ===== */
+const DIMG=new THREE.Group();scene.add(DIMG);let DIMON=0,dimAt=-1;
+function dimLabel(t,x,y,z,col,big){const c=document.createElement('canvas');c.width=256;c.height=72;const g=c.getContext('2d');g.font='800 34px Heebo, Arial';const w=Math.min(250,g.measureText(t).width+28);g.fillStyle=col||'#123a52';g.beginPath();(g.roundRect?g.roundRect(128-w/2,6,w,60,30):g.rect(128-w/2,6,w,60));g.fill();g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.direction='rtl';g.fillText(t,128,38);const tx=new THREE.CanvasTexture(c);tx.encoding=THREE.sRGBEncoding;const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,depthTest:false,transparent:true}));const k=(big?.85:.8)*DIMSC();sp.scale.set(.5*k,.14*k,1);sp.position.set(x,y,z);sp.renderOrder=9;DIMG.add(sp);return sp}
+function dimLine(a,b,col){const g=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...a),new THREE.Vector3(...b)]);const l=new THREE.Line(g,new THREE.LineDashedMaterial({color:col||0x1e88d6,dashSize:.05,gapSize:.03,depthTest:false,transparent:true}));l.computeLineDistances();l.renderOrder=8;DIMG.add(l);
+  [a,b].forEach(p=>{const t=new THREE.Mesh(new THREE.SphereGeometry(.012,8,6),new THREE.MeshBasicMaterial({color:col||0x1e88d6,depthTest:false}));t.position.set(...p);t.renderOrder=8;DIMG.add(t)})}
+
+/* מידה אופקית: מהנקודה עד הקיר/המכשול הקרוב ביותר לאורך הקיר שעליו היא יושבת */
+function dimHoriz(c,col){if(!OB)obBuild();let best=null,bd=.4;for(const o of OB){const [p,x0,x1,z0,z1]=o;if(!p.visible)continue;const dx=Math.max(x0-c.x,0,c.x-x1),dz=Math.max(z0-c.z,0,c.z-z1),d=Math.hypot(dx,dz);if(d<bd){bd=d;best=o}}if(!best)return;
+  const ax=(best[2]-best[1])>(best[4]-best[3]),nx=ax?0:(ex>c.x?1:-1),nz=ax?(ez>c.z?1:-1):0,px=c.x+nx*.32,pz=c.z+nz*.32;let res=null;
+  [-1,1].forEach(s=>{for(let t=.04;t<9;t+=.02){const x=px+(ax?s*t:0),z=pz+(ax?0:s*t);if(blocked(x,z,null)){const d=t+.22;if(d>.12&&(!res||d<res[0]))res=[d,s];break}}});if(!res||res[0]>8.5)return;
+  const [d,s]=res,ox=nx*.03,oz=nz*.03,a=[c.x+ox,c.y,c.z+oz],b=[c.x+ox+(ax?s*d:0),c.y,c.z+oz+(ax?0:s*d)];dimLine(a,b,0x7a4bb0);dimLabel('מהקיר '+Math.round(d*100)+' ס"מ',(a[0]+b[0])/2,c.y-.09,(a[2]+b[2])/2,'#5b3a8c')}
+function buildDims(){while(DIMG.children.length)DIMG.remove(DIMG.children[0]);if(!DIMON)return;dimAt=cur;const seen={},b=new THREE.Box3(),c=new THREE.Vector3();
+  if(WALK)parts.forEach(p=>{if(!p.visible)return;let o=p,vis=true;while(o){if(o.visible===false)vis=false;o=o.parent}if(!vis)return;const u=p.userData;const cat=DIMCAT.find(([r,,,,ok])=>r.test(u.n)&&(!ok||ok(u)));if(!cat)return;
+    b.setFromObject(p);b.getCenter(c);if(Math.hypot(c.x-ex,c.z-ez)>(WALK?6:99))return;const key=cat[1]+'|'+Math.round(c.x*8)+'|'+Math.round(c.z*8)+'|'+Math.round(c.y*8);if(seen[key])return;seen[key]=1;
+    const fy=DIMFLOOR(c.x,c.z),hh=Math.round((c.y-fy)*100);if(hh<2)return;dimLine([c.x,fy,c.z],[c.x,c.y,c.z],cat[2]);dimLabel(cat[1]+' · '+hh+' ס"מ',c.x,c.y+.11,c.z,cat[3]);try{dimHoriz(c)}catch(_){}});
+  DIMFIX().forEach(([a,b2,t,col])=>{dimLine(a,b2,0xd06a1a);dimLabel(t,(a[0]+b2[0])/2,(a[1]+b2[1])/2+.08,(a[2]+b2[2])/2,col||'#a2490f',1)})}
+
+
+/* שילוט צנרת: מדבקה עם שם הקו וחץ זרימה, כל ~3 מ' */
+{const STK={};const stk=(t,bg)=>{const k=t+bg;if(STK[k])return STK[k];const c=document.createElement('canvas');c.width=512;c.height=64;const g=c.getContext('2d');g.fillStyle=bg;g.fillRect(0,0,512,64);g.fillStyle='#fff';g.font='800 38px Heebo, Arial';g.textAlign='center';g.direction='rtl';g.fillText(t+'  ⟵',256,46);const tx=new THREE.CanvasTexture(c);tx.encoding=THREE.sRGBEncoding;return STK[k]=new THREE.MeshBasicMaterial({map:tx,transparent:true})};
+  const CAT=[[/ספרינקלר|כיבוי/,'כיבוי אש · ספרינקלרים','#b8262b'],[/ביוב|מאסף/,'ביוב','#4a4f55'],[/ניקוז|סניקה/,'ניקוז','#2d6a3e'],[/מים|יניקה/,'מים','#1f5fb0']];
+  parts.slice().forEach(p=>{const u=p.userData;if(!p.geometry||p.geometry.type!=='TubeGeometry'||u.k=='sign')return;const cat=CAT.find(([r])=>r.test(u.n||''));if(!cat)return;const path=p.geometry.parameters.path,r=p.geometry.parameters.radius,len=path.getLength();if(len<1.2||r<.02)return;
+    for(let t=.6/len;t<1;t+=Math.max(.25,3/len)){const pt=path.getPointAt(t),tg=path.getTangentAt(t);const m=new THREE.Mesh(new THREE.CylinderGeometry(r+.004,r+.004,.22,16,1,true),stk(cat[1],cat[2]));m.position.copy(pt);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),tg.clone().normalize());P(m,{st:u.st,lv:u.lv,n:'שילוט צנרת: '+cat[1]+' (חץ = כיוון זרימה)',tr:u.tr,k:'sys',ns:1})}})}
+let gateUp=0,gateV=0,barUp=0,barV=0,fanOn=0,fanA=0,pumpOn=0;
+/* פירים בלובי: פיר אינסטלציה ופיר חשמל ותקשורת, עם דלת פלדה שנפתחת ורואים את הקווים העולים */
+window.__SH=[];{const wm=std({color:0xeeeeea,roughness:.85}),dm=std({color:0x767c82,metalness:.45,roughness:.4}),fr=std({color:0x5d6267,metalness:.5,roughness:.4}),blk=std({color:0x3a3c3f,roughness:.9});
+ const sign=(t)=>{const c=document.createElement('canvas');c.width=256;c.height=64;const g=c.getContext('2d');g.fillStyle='#f7f7f2';g.fillRect(0,0,256,64);g.strokeStyle='#c6262e';g.lineWidth=5;g.strokeRect(3,3,250,58);g.fillStyle='#1a1a1a';g.font='bold 24px Heebo, Arial';g.textAlign='center';g.direction='rtl';g.fillText(t,128,41);const tx=new THREE.CanvasTexture(c);tx.encoding=THREE.sRGBEncoding;return new THREE.MeshBasicMaterial({map:tx})};
+ [[-9.15,'פיר אינסטלציה','pl'],[-6.95,'פיר חשמל ותקשורת','el']].forEach(([zc,nm,ty],i)=>{const x0=-3.9,x1=-3.32,W=1.0,u={st:ST('block'),n:nm+' · מחיצת בלוק סביב הפיר',tr:'בנאי',k:'blk'};
+  // מעטפת הפיר: שני צדדים, תקרה פנימית, רקע כהה
+  B(x1-x0,H-.02,.1,(x0+x1)/2,(H-.02)/2,zc-W/2-.05,wm,u);B(x1-x0,H-.02,.1,(x0+x1)/2,(H-.02)/2,zc+W/2+.05,wm,u);B(x1-x0,H-2.25,W,(x0+x1)/2,2.25+(H-2.25)/2,zc,wm,u);B(.01,2.25,W,x0+.01,1.125,zc,blk,{...u,n:nm+' · פנים הפיר'});
+  // משקוף ודלת פלדה על ציר
+  const fu={st:ST('frame'),n:nm+' · משקוף פלדה',tr:'בנאי',k:'frame'};B(.06,2.25,.05,x1,1.125,zc-W/2+.025,fr,fu);B(.06,2.25,.05,x1,1.125,zc+W/2-.025,fr,fu);B(.06,.05,W,x1,2.225,zc,fr,fu);
+  const g=new THREE.Group();g.position.set(x1+.03,0,zc-W/2+.05);G.add(g);const id='sh'+i,du={st:ST('doors'),n:nm+' · דלת פיר (פלדה, נעילה במפתח משולש) · לחיצה פותחת',tr:'נגר / מסגר',k:'door',act:id};
+  B(.035,2.15,W-.1,0,1.1,(W-.1)/2,dm,du,g);B(.04,.04,.12,.03,1.05,W-.22,fr,{...du,n:'מנעול משולש'},g);B(.04,.012,.08,.035,1.12,W-.22,fr,{...du,n:'ידית'},g);
+  const sm=new THREE.Mesh(new THREE.PlaneGeometry(.5,.125),sign(nm));sm.rotation.y=Math.PI/2;sm.position.set(.02,1.65,(W-.1)/2);g.add(sm);__SH.push(g);
+  // תוכן הפיר
+  if(ty=='pl'){[[.06,0x8b9097,'קו ביוב ראשי 160 מ"מ (עולה מקומה לקומה)','sew',-.3],[.035,0x2f7fe0,'קו מים קרים ראשי','sew',-.08],[.03,0xd8382e,'קו מים חמים / סולארי','sew',.08],[.04,0xb32c26,'קו ספרינקלרים אנכי','spr',.26],[.022,0xe0b62a,'קו גז','sew',.4]].forEach(([r,c,n,stg,dz])=>{Cy(r,H,x0+.18,H/2,zc+dz,std({color:c,roughness:.5}),{st:ST(stg),n:nm+' · '+n,tr:'אינסטלטור',k:'sys'});Cy(r+.012,.04,x0+.18,1.4,zc+dz,fr,{st:ST(stg),n:'חבק לקיר',tr:'אינסטלטור',k:'sys'})});
+   B(.12,.18,.12,x0+.2,.95,zc+.08,std({color:0x2b6fc0}),{st:ST('sew'),n:nm+' · מגוף ומד מים לקומה',tr:'אינסטלטור',k:'sys'})}
+  else{B(.04,H,.4,x0+.06,H/2,zc-.15,std({color:0x9aa0a3,metalness:.6,roughness:.4}),{st:ST('elec'),n:nm+' · סולם כבלים אנכי',tr:'חשמלאי',k:'el'});[[-.28,0x1c1c1c],[-.18,0x1c1c1c],[-.08,0x2a5bd7],[.0,0x3a3a3a]].forEach(([dz,c])=>Cy(.018,H,x0+.1,H/2,zc+dz,std({color:c,roughness:.6}),{st:ST('elec'),n:nm+' · כבל הזנה עולה',tr:'חשמלאי',k:'el'}));
+   B(.16,.5,.36,x0+.12,1.3,zc+.25,std({color:0xd9dcde,roughness:.5}),{st:ST('elec'),n:nm+' · ארון תקשורת קומתי',tr:'חשמלאי',k:'el'});B(.16,.3,.36,x0+.12,.7,zc+.25,std({color:0x9e9e9e,roughness:.5}),{st:ST('elec'),n:nm+' · קופסת חיבורים',tr:'חשמלאי',k:'el'})}
+ })}
+/* שוחות בחניון: מכסי יצקת עגולים (ביוב) ומרובעים (ניקוז), עם מסגרת ונעילה */
+{const cv=(sq,t)=>{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');g.fillStyle='#2b2c2e';g.fillRect(0,0,256,256);g.strokeStyle='#4b4d50';g.lineWidth=6;if(sq){for(let k=24;k<232;k+=22){g.beginPath();g.moveTo(k,24);g.lineTo(k,232);g.stroke()}}else{for(let r=24;r<128;r+=18){g.beginPath();g.arc(128,128,r,0,7);g.stroke()}for(let k=0;k<12;k++){const a=k/12*6.28;g.beginPath();g.moveTo(128+Math.cos(a)*24,128+Math.sin(a)*24);g.lineTo(128+Math.cos(a)*118,128+Math.sin(a)*118);g.stroke()}}g.fillStyle='#d9d9d9';g.font='bold 24px Heebo, Arial';g.textAlign='center';g.direction='rtl';g.fillText(t,128,140);const tx=new THREE.CanvasTexture(c);return std({map:tx,metalness:.5,roughness:.55})};
+ const rm=cv(0,'ביוב'),qm=cv(1,'ניקוז'),frm=std({color:0x5d6064,metalness:.6,roughness:.45});
+ [[-6,1.3,0,'שוחת ביוב · מכסה יצקת D400 Ø60'],[5,1.3,0,'שוחת ביוב · מכסה יצקת D400 Ø60'],[11.5,-1.2,1,'שוחת ניקוז · רשת יצקת 50×50'],[-12.5,6.2,1,'שוחת ניקוז ליד חדר המשאבות'],[1,-1.2,1,'שוחת ניקוז · רשת יצקת 50×50']].forEach(([x,z,sq,n])=>{const u={st:ST('floor'),n,tr:'אינסטלטור',k:'mh'};
+  if(sq){B(.62,.014,.62,x,.03,z,frm,u);const m=new THREE.Mesh(new THREE.BoxGeometry(.5,.016,.5),[frm,frm,qm,frm,frm,frm]);m.position.set(x,.032,z);P(m,u)}
+  else{Cy(.36,.014,x,.03,z,frm,u,null,null,32);const m=new THREE.Mesh(new THREE.CylinderGeometry(.3,.3,.016,32),[frm,rm,frm]);m.position.set(x,.032,z);P(m,u)}})}
+parts.forEach(p=>{const u=p.userData;if(u.k=='lamp'&&p.material&&p.material.emissive&&p.material.emissiveIntensity>.3)gGlow(p,.9)});
+function doAct(a){if(/^sh\d/.test(a)){const d=__SH[+a.slice(2)];d.userData.o=!d.userData.o;showPick('<b>'+(d.userData.o?'הפיר פתוח · רואים את הקווים שעולים מקומה לקומה':'הפיר סגור')+'</b>');need=1;return}if(/^fc\d/.test(a)){const d=__FC[+a.slice(2)];d.userData.o=!d.userData.o;showPick('<b>'+(d.userData.o?'עמדת הכיבוי פתוחה · גלגלון 30 מ\', ברז 2" ומטף':'עמדת הכיבוי סגורה')+'</b>');need=1;return}if(a=='hatch'){const o=!HATCH[0].userData.o;HATCH.forEach(h=>{h.userData.o=o;h.rotation.y=o?-1.6:0});showPick('<b>'+(o?'הדלת פתוחה · את המים רואים ברנטגן':'הדלת סגורה ונעולה')+'</b>');need=1;return}if(a=='gate'){gateUp=1-gateUp;showPick('<b>'+(gateUp?'השער נפתח':'השער נסגר')+'</b>')}else if(a=='bar'){barUp=1-barUp}else if(a=='fan'){fanOn=1-fanOn;showPick('<b>'+(fanOn?'מפוחי הסילון פועלים':'המפוחים כבויים')+'</b>')}else if(a=='pump'){pumpOn=1-pumpOn;pLed.material.emissiveIntensity=pumpOn?2.5:0;showPick('<b>'+(pumpOn?'המשאבות פועלות · נורית ירוקה בלוח הפיקוד':'המשאבות כבויות')+'</b>')}
+  else{const d=DOORS.find(x=>x.act==a);if(d)d.open=1-d.open}need=1}
+function size(){const w=host.clientWidth,h=host.clientHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.fov=WALK||w<520?(WALK?62:44):36;cam.updateProjectionMatrix();need=1}
+new ResizeObserver(size).observe(host);size();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paint);new MutationObserver(paint).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+const chs=(id,fn)=>{document.getElementById(id).onclick=e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#'+id+' button').forEach(x=>x.classList.toggle('on',x===b));fn(b.dataset)}};
+chs('lvl',d=>{LVL=+d.l;cur=Math.min(STG.length-1,PKS[LVL]|0);paint();relabel();buildGhost();ui();window.__stairSignUpd&&__stairSignUpd()});
+chs('flr',d=>{FLOOR=d.f;if(cur<ST('floor'))go(ST('floor'),1);paint();ui()});
+chs('clad',d=>{CLAD=d.c;if(cur<ST('clad'))go(ST('clad'),1);paint();ui()});
+document.querySelectorAll('#flr button').forEach(b=>b.classList.toggle('on',b.dataset.f==FLOOR));document.querySelectorAll('#clad button').forEach(b=>b.classList.toggle('on',b.dataset.c==CLAD));
+/* סביבת השתקפות: מתכות (כרום, אלומיניום, פלדה) מחזירות אור כמו במציאות */
+(function(){try{const pm=new THREE.PMREMGenerator(R),es=new THREE.Scene();const c=document.createElement('canvas');c.width=16;c.height=256;const g=c.getContext('2d'),gr=g.createLinearGradient(0,0,0,256);gr.addColorStop(0,'#ffffff');gr.addColorStop(.45,'#e6e8ea');gr.addColorStop(.55,'#9a958d');gr.addColorStop(1,'#5a5650');g.fillStyle=gr;g.fillRect(0,0,16,256);
+  const sk=new THREE.Mesh(new THREE.SphereGeometry(50,32,16),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),side:THREE.BackSide}));es.add(sk);
+  [[0,30,0,30,1,30],[25,12,0,1,10,18],[-20,15,10,1,8,12]].forEach(([x,y,z,w,h,d])=>{const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshBasicMaterial({color:0xffffff}));b.position.set(x,y,z);es.add(b)});
+  const env=pm.fromScene(es,.02).texture;const seen=new Set();
+  const fix=m=>{if(!m||seen.has(m)||!m.isMeshStandardMaterial)return;seen.add(m);if(m.metalness>=.25){m.envMap=env;m.envMapIntensity=.9;m.needsUpdate=true}};
+  G.traverse(o=>{if(o.isMesh){fix(o.material);if(o.userData&&o.userData.base)fix(o.userData.base)}});Object.values(typeof MS!='undefined'?MS:{}).forEach(fix);window.__ENV=env}catch(e){console.warn('env',e)}})();
+ui();relabel();buildGhost();let last=performance.now(),wasWalk=0;
+/* התנגשות: קיר הוא קיר, עמוד הוא עמוד — עוברים רק דרך פתחים ודלתות */
+let OB=null;const obKinds=['struct','blk','tankw','pump','epan','fire','pcar'];
+function obBuild(){OB=[];const b=new THREE.Box3();parts.forEach(p=>{if(!obKinds.includes(p.userData.k||p.userData.kind))return;if(/מדרגת|פודסט/.test(p.userData.n))return;if(p.parent!==G)return;b.setFromObject(p);if(b.min.y<1.5&&b.max.y>.6&&(b.max.x-b.min.x<6||b.max.z-b.min.z<6||true))OB.push([p,b.min.x,b.max.x,b.min.z,b.max.z,b.min.y])})}
+function blocked(x,z,y0){if(!OB)obBuild();const r=.22;for(const [p,x0,x1,z0,z1,my] of OB){if(!p.visible)continue;if(y0!=null&&my>y0+1.5)continue;if(x>x0-r&&x<x1+r&&z>z0-r&&z<z1+r)return true}return false}
+function stairMove(nx,nz){// מעבר בין קומות דרך חדר המדרגות: כל הקומות זהות, לכן מחליפים קומה ושומרים מיקום
+  const y0=floorY(ex,ez),y1=floorY(nx,nz);
+  if(Math.abs(y1-y0)>.6){// ירידה: מהכניסה אל המהלך שמעל (בקומה למטה זה אותו מקום)
+    if(y0<.3&&y1>H-.6){if(LVL>=3){showPick('<b>זו הקומה התחתונה</b>');return true}LVL++;stairLvl();ex=nx;ez=nz;return true}
+    return true}
+  if(y0>H-.4&&nz>-6.0&&nx>2.08&&ez<=-6.0){if(LVL<=1){showPick('<b>מכאן ממשיכים ללובי קומת הקרקע בבניין</b>');return true}LVL--;stairLvl();ex=nx;ez=nz;return true}
+  return false}
+let SWIN=0;const STW=new THREE.Group();scene.add(STW);
+function stairClones(){while(STW.children.length)STW.remove(STW.children[0]);const b=new THREE.Box3(),c=new THREE.Vector3();parts.forEach(p=>{if(!p.visible||!p.isMesh||p.userData.k=='ceil')return;b.setFromObject(p);b.getCenter(c);if(c.x<-.2||c.x>4.2||c.z<-10.2||c.z>-5.35||b.max.x-b.min.x>8.5)return;[H,-H].forEach(dy=>{const m=new THREE.Mesh(p.geometry,p.material);p.updateWorldMatrix(true,false);m.applyMatrix4(p.matrixWorld);m.position.y+=dy;STW.add(m)})})}
+function stairLvl(){relabel();buildGhost();ui();paint();if(SWIN)setTimeout(stairClones,0);window.__stairSignUpd&&__stairSignUpd();showPick('<b>קומה ‎-'+LVL+'</b>');document.querySelectorAll('[data-l]').forEach(b=>b.classList.toggle('on',+b.dataset.l==LVL))}
+function moveTo(nx,nz){if(stairMove(nx,nz))return;const y0=typeof floorY=='function'?floorY(ex,ez):0;if(blocked(ex,ez,y0)){ex=nx;ez=nz;return}if(!blocked(nx,ez,y0))ex=nx;if(!blocked(ex,nz,y0))ez=nz}
+(function loop(t){requestAnimationFrame(loop);if(window.__FC)__FC.forEach(d=>{const tg=d.userData.o?1.75:0;if(Math.abs(d.rotation.y-tg)>.004){d.rotation.y+=(tg-d.rotation.y)*.12;need=1}});if(window.__SH)__SH.forEach(d=>{const tg=d.userData.o?1.7:0;if(Math.abs(d.rotation.y-tg)>.004){d.rotation.y+=(tg-d.rotation.y)*.12;need=1}});if(!WALK){if(tgt.distanceTo(tgtT)>.01){tgt.lerp(tgtT,.12);need=1}if(Math.abs(rad-radT)>.02){rad+=(radT-rad)*.12;need=1}}t=t||performance.now();const dt=Math.min(.05,(t-last)/1000);last=t;
+  if(wasWalk!=WALK){wasWalk=WALK;size()}
+  if(flashT>0){flashT=Math.max(0,flashT-dt*.55);paint()}
+  DOORS.forEach(d=>{if(Math.abs(d.open-d.cur)>.001){d.cur+=(d.open-d.cur)*Math.min(1,dt*5);d.hg.rotation.y=-d.cur*1.6;need=1}});
+  const gT=gateUp?2.5:0;if(Math.abs(gateV-gT)>.001){gateV+=(gT-gateV)*Math.min(1,dt*2.5);gateG.children.forEach((c,i)=>{c.position.y=Math.min(2.72,.1+i*.18+gateV)});need=1}
+  const bT=barUp?1.45:0;if(Math.abs(barV-bT)>.001){barV+=(bT-barV)*Math.min(1,dt*4);barG.rotation.x=-barV;need=1}
+  if(fanOn){fanA+=dt*18;fans.forEach(f=>f.forEach((b,k)=>b.rotation.x=fanA+k*Math.PI/3));need=1}
+  if(pumpOn){pumps.forEach((p,i)=>{p.position.y=.15+Math.sin(t*.09+i)*.002});need=1}
+  if(DIMON&&((WALK&&Math.hypot(ex-(DIMG.userData.ex||0),ez-(DIMG.userData.ez||0))>2&&((DIMG.userData.ex=ex),(DIMG.userData.ez=ez),1))||dimAt!=cur||DIMG.userData.w!==WALK||DIMG.userData.l!==LVL)){DIMG.userData.w=WALK;DIMG.userData.l=LVL;buildDims()}
+  {const inS=WALK&&ex>-.05&&ex<4.05&&ez<-5.45?1:0;if(inS!=SWIN){SWIN=inS;if(inS)stairClones();STW.visible=!!inS;paint();need=1}}
+  if(!WALK&&(Math.abs(MV.jx)>.08||Math.abs(MV.jy)>.08)){const sp=Math.max(2,rad*.5)*dt,fx=-Math.sin(th),fz=-Math.cos(th),jx=Math.abs(MV.jx)>.08?MV.jx:0,jy=Math.abs(MV.jy)>.08?MV.jy:0;tgtT.x+=(fx*jy+Math.cos(th)*jx)*sp;tgtT.z+=(fz*jy-Math.sin(th)*jx)*sp;tgtT.x=Math.max(X0-RL-2,Math.min(X1+RL+6,tgtT.x));tgtT.z=Math.max(-12,Math.min(12,tgtT.z));tgt.copy(tgtT);need=1}
+  if(WALK&&(Math.abs(MV.jx)>.08||Math.abs(MV.jy)>.08)){const jy=Math.abs(MV.jy)>.08?MV.jy:0,jx=Math.abs(MV.jx)>.08?MV.jx:0;yaw-=jx*1.5*dt;const sp=2.2*dt*jy;let nx=Math.max(X0-RL+.6,Math.min(LVL==1?SX+5:X1+RL-.6,ex+Math.sin(yaw)*sp));const lim=(nx>X1-.2||nx<X0+.2)?2.6:9.5;moveTo(nx,Math.max(-lim,Math.min(lim,ez+Math.cos(yaw)*sp)));wx=null;need=1}
+  if(WALK&&wx!=null){const px=ex,pz=ez;moveTo(ex+(wx-ex)*Math.min(1,dt*2.2),ez+(wz-ez)*Math.min(1,dt*2.2));if(Math.hypot(wx-ex,wz-ez)<.02||(Math.abs(px-ex)+Math.abs(pz-ez)<1e-4))wx=null;need=1}
+  if(!need)return;need=0;camSet();R.render(scene,cam)})();
+window.__parts=parts;window.__sk={act:a=>doAct(a),dbg:(x,z)=>{if(!OB)obBuild();return OB.filter(o=>o[0].visible&&x>o[1]-.3&&x<o[2]+.3&&z>o[3]-.3&&z<o[4]+.3).map(o=>o[0].userData.n+" "+o.slice(1).map(v=>v.toFixed(2)).join(","))},pos:()=>[ex,ez,LVL],tp:(x,z)=>{ex=x;ez=z;need=1},mv:(x,y)=>{MV.jx=x;MV.jy=y},go:i=>go(i,0),own:v=>{own=v;ui();paint()},cam:(a,b,r,x,y,z)=>{th=thT=a;ph=phT=b;if(r)rad=r;if(x!=null){tgtT.set(x,y,z);tgt.copy(tgtT)}need=1},walk:i=>{if(!WALK)document.getElementById('walkBtn').click();setSpot(i)},unwalk:()=>{if(WALK)document.getElementById('walkBtn').click()},act:doAct,lvl:l=>{LVL=l;relabel();buildGhost()},all:()=>document.getElementById('allBtn').click(),set:o=>{if(o.f)FLOOR=o.f;if(o.c)CLAD=o.c;paint()},look:(y,p)=>{yaw=y;pit=p;need=1},walkTo:(x,z)=>{walkTo({x,z})}};
+})();
+</script>
+<script>if(parent!==window){const d=document.querySelector(".w>div:first-child");if(d)d.style.display="none"}</script><script>/* המערכת: הקומה שנבחרה */setTimeout(()=>{const m=/[#&]l=([23])/.exec(location.hash);if(m){const b=document.querySelector('#lvl [data-l="'+m[1]+'"]');if(b)b.click()}},400)</script></body></html>
