@@ -174,7 +174,7 @@ const SAY={54:'פלציף בגליל (בידוד) נפרס מעל כל התשת�
 /* הממ"ד: קירות בטון 25 ס"מ מהשלד, דלת הדף, חלון הדף */
 const PHASES=[['שלד ומערכות ברצפה',[0,1,2,3,4,5,6]],['טיח, איטום וריצוף',[7,8,9,54,10,51,11,12]],['ניאגרות, תקרות ומערכות',[13,14,15,16,17,18,19,20,21,22,23,24]],['שפכטל, צבע, דלתות וחלונות',[25,26,27,50,28,29,30,31,52,53]],['גמר ומסירה',[32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49]]];
 const TR={54:'סומסום / בידוד',52:'בודק מוסמך',53:'מיגון',0:'שלד',1:'בנאי',2:'חשמלאי',3:'אינסטלטור',4:'מיזוג',5:'גז',6:'קבלן רטובים',7:'טייח',8:'איטום',9:'איטום',10:'סומסום',11:'רצף',12:'רצף',13:'אינסטלטור',14:'גבס',15:'בנאי',16:'גבס',17:'רצף',18:'ספרינקלרים',19:'מיזוג',20:'חשמלאי',21:'גבס',22:'מיזוג',23:'מנהל עבודה',24:'גבס',25:'צבעי',26:'צבעי',27:'צבעי',50:'דלתות',28:'אלומיניום',29:'ניקיון',30:'צבעי',31:'דלתות',32:'רצף',33:'אבן',34:'ניקיון',35:'אינסטלטור',36:'מטבחים',37:'שיש',38:'רצף',39:'רצף',40:'אינסטלטור',41:'ארונות אמבטיה',42:'מיזוג',43:'צבעי',44:'צבעי',45:'צבעי · חשמלאי',46:'צבעי',47:'אינסטלטור',48:'ניקיון',49:'מנהל עבודה',51:'חימום תת רצפתי'};
-const IX=id=>ORD.indexOf(id);
+const IX=id=>ORD.indexOf(id); /* 716 (יהב 19.11: "1 2 3 8 24… לא בסדר"): המספר שמוצג הוא המקום בסדר העבודה (1–55), לא המזהה הפנימי */
 const COL={cold:0x2f7fe0,hot:0xd8382e,sew:0x8b9097,el:0x2e9e4f,ac:0x1d1f22,acd:0xe8e8e2,gas:0xc9a640,spr:0xc42b2b,duct:0xb9bec4};
 const LEG=[['מים קרים','#2f7fe0'],['מים חמים','#d8382e'],['ביוב','#8b9097'],['שרשורי חשמל','#2e9e4f'],['מיזוג','#1d1f22'],['ניקוז מזגן','#e8e8e2'],['גז','#c9a640'],['ספרינקלרים','#c42b2b']];
 document.getElementById('legend').innerHTML=LEG.map(([n,c])=>`<span><i style="background:${c}"></i>${n}</span>`).join('');
@@ -1162,7 +1162,7 @@ function paint(){
   need=1}
 function ui(){const id=ORD[cur];
   document.getElementById('hudStage').textContent=`שלב ${cur+1} מתוך ${ORD.length}`;
-  document.getElementById('cap').innerHTML=`<b>${id} · ${NM[id]}</b><span class="mu">${TR[id]}</span>`;document.getElementById('say').innerHTML=`<b>מה רואים בשלב ${id}</b><span>${SAY[id]}</span>`;
+  document.getElementById('cap').innerHTML=`<b>${cur+1} · ${NM[id]}</b><span class="mu">${TR[id]}</span>`;document.getElementById('say').innerHTML=`<b>מה רואים בשלב ${cur+1}</b><span>${SAY[id]}</span>`;
   document.getElementById('xrBtn').classList.toggle('on',xr);document.getElementById('xrBtn').textContent=xr?'רנטגן פועל':'רנטגן';document.getElementById('xrs').hidden=!xr;
   document.getElementById('ceilBtn').textContent='תקרה: '+['מוסתרת','שקופה','אטומה'][ceilMode];document.getElementById('ceilBtn').hidden=!!INS;
   const ib=document.getElementById('insBtn');ib.classList.toggle('on',!!INS);ib.textContent=INS?'מבט פנים · '+EYES[insI][0]:'מבט פנים';document.getElementById('roomBtn').hidden=!INS;document.getElementById('dpad').hidden=false;document.getElementById('zm').hidden=!!INS;document.getElementById('joysw').hidden=false;
@@ -1175,7 +1175,7 @@ function ui(){const id=ORD[cur];
 function go(i,flash){cur=Math.max(0,Math.min(ORD.length-1,i));flashT=flash?1:0;ui();paint();focusStage()}
 
 {const sel=document.getElementById('stSel'),cap=document.getElementById('cap');sel.innerHTML=ORD.map((id,i)=>[i,(i+1)+' · '+NM[id]+' · '+TR[id]]).map(([i,t])=>`<option value="${i}">${t}</option>`).join('');sel.onchange=()=>{go(+sel.value,1)};cap.addEventListener('pointerdown',()=>{sel.value=String(cur)});}
-document.getElementById('steps').innerHTML=PHASES.map(([t,ids])=>`<h3>${t}</h3><div class="steps">${ids.map(id=>`<button type="button" data-i="${IX(id)}"><span class="n">${id}</span><span>${NM[id]}</span>${STS[id]==2?'<span class="rs r2">בוצע</span>':STS[id]==1?'<span class="rs r1">בעבודה</span>':''}</button>`).join('')}</div>`).join('');
+document.getElementById('steps').innerHTML=PHASES.map(([t,ids])=>`<h3>${t}</h3><div class="steps">${ids.map(id=>`<button type="button" data-i="${IX(id)}"><span class="n">${IX(id)+1}</span><span>${NM[id]}</span>${STS[id]==2?'<span class="rs r2">בוצע</span>':STS[id]==1?'<span class="rs r1">בעבודה</span>':''}</button>`).join('')}</div>`).join('');
 document.getElementById('steps').addEventListener('click',e=>{const b=e.target.closest('button');if(b){go(+b.dataset.i,1);host.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}});
 document.getElementById('prev').onclick=()=>go(cur-1,1);document.getElementById('next').onclick=()=>go(cur+1,1);
 document.getElementById('styles').onclick=e=>{const b=e.target.closest('button');if(b){style=b.dataset.s;ui();paint()}};
