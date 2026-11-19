@@ -185,7 +185,7 @@ if(!window.THREE){host.insertAdjacentHTML('beforeend','<div class="pick">לא ה
 
 const R=new THREE.WebGLRenderer({antialias:true});R.setPixelRatio(Math.min(1.6,devicePixelRatio||1));R.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();host.insertAdjacentHTML('beforeend','<div class="pick" style="inset:40% 10px auto 10px">ההדמיה נטענת מחדש…</div>');setTimeout(()=>location.reload(),600)});R.outputEncoding=THREE.sRGBEncoding;R.physicallyCorrectLights=false;R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
 /* ===== שכבת גרפיקה: חדות, השתקפויות, הילות אור, גוון קולנועי ===== */
-try{if(localStorage.getItem('sm3_lowgfx')!='1')R.setPixelRatio(Math.min(2,devicePixelRatio||1))}catch(_){}
+/* 715: בטלפון (אייפון סוגר דף שעובר את הזיכרון) — רזולוציה 1.25 לכל היותר, צל 1024 */const MOB=/iPhone|iPad|Android|Mobile/i.test(navigator.userAgent)||Math.min(screen.width,screen.height)<700;try{if(localStorage.getItem('sm3_lowgfx')!='1')R.setPixelRatio(Math.min(MOB?1.25:2,devicePixelRatio||1));else R.setPixelRatio(1)}catch(_){}
 R.domElement.addEventListener('webglcontextlost',()=>{try{localStorage.setItem('sm3_lowgfx','1')}catch(_){}});
 R.domElement.style.filter='contrast(1.06) saturate(1.12)';
 const GENV=(()=>{const c=document.createElement('canvas');c.width=256;c.height=128;const g=c.getContext('2d');const gr=g.createLinearGradient(0,0,0,128);gr.addColorStop(0,'#6fa3d6');gr.addColorStop(.42,'#e3edf3');gr.addColorStop(.5,'#f4efe2');gr.addColorStop(.56,'#a79f8c');gr.addColorStop(1,'#5c574d');g.fillStyle=gr;g.fillRect(0,0,256,128);g.fillStyle='rgba(255,255,255,.95)';g.beginPath();g.ellipse(70,24,22,8,0,0,7);g.fill();g.beginPath();g.ellipse(190,34,30,7,0,0,7);g.fill();const t=new THREE.CanvasTexture(c);t.mapping=THREE.EquirectangularReflectionMapping;t.encoding=THREE.sRGBEncoding;const pm=new THREE.PMREMGenerator(R),e=pm.fromEquirectangular(t).texture;pm.dispose();return e})();
@@ -198,7 +198,7 @@ const gGlow=(mesh,s)=>{const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:G
 host.prepend(R.domElement);
 const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(36,1,.05,1200);
 const hemi=new THREE.HemisphereLight(0xffffff,0xb4b4b0,.72);scene.add(hemi);
-const sun=new THREE.DirectionalLight(0xffffff,.85);sun.position.set(6,10,7);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.bias=-.0004;sun.shadow.normalBias=.02;sun.shadow.radius=3;Object.assign(sun.shadow.camera,{left:-8,right:8,top:8,bottom:-8});scene.add(sun);
+const sun=new THREE.DirectionalLight(0xffffff,.85);sun.position.set(6,10,7);sun.castShadow=true;sun.shadow.mapSize.set(MOB?1024:2048,MOB?1024:2048);sun.shadow.bias=-.0004;sun.shadow.normalBias=.02;sun.shadow.radius=3;Object.assign(sun.shadow.camera,{left:-8,right:8,top:8,bottom:-8});scene.add(sun);
 const G=new THREE.Group();scene.add(G);
 
 /* ---------- textures ---------- */
