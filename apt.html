@@ -852,7 +852,7 @@ WETR.forEach((r,ri)=>{if(r!==big(r.n)&&r.w*r.d<1.2)return;const items=placeWet(r
 /* ---------- מטבח לפי הארונות בתוכנית (cabs / sink / hob) ---------- */
 const splM=(c,L)=>tm(c,39,tSplOpen,tSplGr,L/.6,1,.3,'sp'+L.toFixed(1));
 let KSINK=null,KHOB=null;const hd2=std({color:0x2b2e31,metalness:.6,roughness:.3});
-function kitRun(Lc,sZ,hZ,ups){const zc=Lc/2,X=0,inM=std({color:0xeeebe4,roughness:.6}),iu={st:36,n:'פנים ארון מטבח · מדף',tr:'מטבחים',kind:'fix',vf:()=>KDOORS.some(g=>g.rotation.y>0)};
+function kitRun(Lc,sZ,hZ,ups,holes){const zc=Lc/2,X=0,inM=std({color:0xeeebe4,roughness:.6}),iu={st:36,n:'פנים ארון מטבח · מדף',tr:'מטבחים',kind:'fix',vf:()=>KDOORS.some(g=>g.rotation.y>0)};
   B(.56,.6,Lc,X+.3,.44,zc,cabM,{st:36,n:'ארונות מטבח תחתונים · לחיצה על דלת פותחת',tr:'מטבחים',kind:'fix',vf:()=>!KDOORS.some(g=>g.rotation.y>0)});B(.5,.1,Lc,X+.27,.09,zc,std({color:0x2b2e30}),{st:36,n:'צוקל (סוקל)',tr:'מטבחים',kind:'fix'});
   B(.02,.74,Lc,X+.03,.52,zc,inM,{...iu,n:'גב ארון'});B(.54,.02,Lc,X+.3,.17,zc,inM,{...iu,n:'תחתית ארון'});
   for(let z=0;z<Lc-.05;z+=.6){const w=Math.min(.6,Lc-z)-.006,sink=sZ!=null&&z<=sZ&&z+w>sZ,oven=hZ!=null&&z<=hZ&&z+w>hZ;B(.54,.74,.018,X+.3,.52,z+.009,inM,{...iu,n:'דופן ארון'});if(!sink&&!oven)B(.52,.018,w-.04,X+.3,.52,z+w/2,inM,{...iu,n:'מדף בארון'});
@@ -873,7 +873,7 @@ function kitRun(Lc,sZ,hZ,ups){const zc=Lc/2,X=0,inM=std({color:0xeeebe4,roughnes
     B(.3,.05,.6,X+.2,1.585,hZ,std({color:0xb9bec2,metalness:.7,roughness:.3}),{st:37,n:'קולט אדים נשלף (מתחת לארון)',tr:'מטבחים',kind:'fix'});B(.06,.012,.6,X+.33,1.555,hZ,std({color:0x2b2e31}),{st:37,n:'פס הפעלה של הקולט',tr:'מטבחים',kind:'fix'});
     {const pg=CURG,g=new THREE.Group();g.position.set(X+.03,.62,hZ-.4);g.rotation.y=Math.PI/2;pg.add(g);CURG=g;B(.1,.12,.05,0,0,.025,std({color:0xf4f4f0}),{st:45,n:'שקע תלת פאזי לכיריים (5 פינים, 16A)',tr:'חשמלאי',kind:'acc'});Cy(.035,.04,0,0,.06,std({color:0xc42b2b,roughness:.4}),{st:45,n:'שקע תלת פאזי (CEE אדום)',tr:'חשמלאי',kind:'acc'},[Math.PI/2,0,0]);CURG=pg}
     GASV=B(.05,.05,.08,X+.06,.62,hZ+.4,std({color:0xc9a640,metalness:.4,roughness:.45}),{st:47,n:'ברז גז לכיריים · לחיצה פותחת',tr:'גז',kind:'fix',act:'gas'})}
-  B(.012,.6,Lc,X+.024,1.3,zc,splM(0,Lc),{st:38,n:'חיפוי מטבח 5×15',tr:'רצף',kind:'wtile',fin:c=>splM(c,Lc)});B(.002,.6,Lc,X+.032,1.3,zc,DIRTM(),{st:38,gone:34,n:'נקודות טיח על החיפוי (לפני ניקוי)',tr:'ניקיון',kind:'dirt',noShadow:1});
+  {let sg=[[0,Lc]];(holes||[]).forEach(([a,b])=>{sg=sg.flatMap(([p,q])=>b<=p||a>=q?[[p,q]]:[[p,Math.max(p,a)],[Math.min(q,b),q]])});sg.filter(([p,q])=>q-p>.05).forEach(([p,q])=>{const Ls=q-p,zs=(p+q)/2;B(.012,.6,Ls,X+.024,1.3,zs,splM(0,Ls),{st:38,n:'חיפוי מטבח 5×15',tr:'רצף',kind:'wtile',fin:c=>splM(c,Ls)});B(.002,.6,Ls,X+.032,1.3,zs,DIRTM(),{st:38,gone:34,n:'נקודות טיח על החיפוי (לפני ניקוי)',tr:'ניקיון',kind:'dirt',noShadow:1})})}
   B(.02,.02,Lc,X+.02,.99,zc,silM,{st:40,n:'סיליקון · שיש',tr:'אינסטלטור',kind:'sil'});
   for(let z=.3;z<Lc-.2;z+=1.2){if(sZ!=null&&Math.abs(z-sZ)<.35)continue;chaseV(['z',X,1],z,1.1,H);ebox(['z',X,1],z,1.1,'שקע מטבח')}
   /* ארונות עליונים (לא מעל חלון) */
@@ -896,7 +896,9 @@ function kitIsland(IL,IW,sZ,hZ){const IX0=0,IZ0=0,mT=std({map:rep(tMarb,1,2),rou
   if(tall)kitTall(L);else{
     /* חלונות על אותו קיר: בלי ארונות עליונים מולם */
     let ups=[[0,L]];WR.forEach(wr=>{if((side=='N'||side=='S')!=(wr.ax=='x'))return;if(Math.abs(wr.c-wallC)>.3)return;wr.ops.forEach(o=>{if(o.k=='ent'||o.k=='door'||o.k=='mmdd'||o.k=='vit'||o.k=='win'||o.k=='mwin'||o.k=='wwin'){const pa=loc(wr.ax=='x'?[o.at-o.w/2-.05,wallC]:[wallC,o.at-o.w/2-.05]),pb=loc(wr.ax=='x'?[o.at+o.w/2+.05,wallC]:[wallC,o.at+o.w/2+.05]);const a=L-Math.max(pa[0],pb[0]),b=L-Math.min(pa[0],pb[0]);ups=ups.flatMap(([p,q])=>b<=p||a>=q?[[p,q]]:[[p,Math.max(p,a)],[Math.min(q,b),q]])}})});
-    kitRun(L,sq?L-sq[0]:null,hq?L-hq[0]:null,ups.filter(([p,q])=>q-p>.3));
+    /* 716 (יהב 19.11: "החיפוי נמצא במרפסת שמש"): חיפוי המטבח לא עובר על חלון/ויטרינה באותו קיר — אחרת רואים אותו מהמרפסת דרך החלון */
+    const holes=[];WR.forEach(wr=>{if((side=='N'||side=='S')!=(wr.ax=='x'))return;if(Math.abs(wr.c-wallC)>.3)return;wr.ops.forEach(o=>{if(!/^(win|mwin|wwin|vit|door|ent)$/.test(o.k))return;const pa=loc(wr.ax=='x'?[o.at-o.w/2,wallC]:[wallC,o.at-o.w/2]),pb=loc(wr.ax=='x'?[o.at+o.w/2,wallC]:[wallC,o.at+o.w/2]);holes.push([L-Math.max(pa[0],pb[0]),L-Math.min(pa[0],pb[0])])})});
+    kitRun(L,sq?L-sq[0]:null,hq?L-hq[0]:null,ups.filter(([p,q])=>q-p>.3),holes);
     if(sq){KSINK=F.w(sq[0],.34);KSINK.push(.785)}if(hq)KHOB=F.w(hq[0],.32)}
   CURG=null});
 if(KITR){const tg=KSINK||[KITR.cx,KITR.cz];pipeTo(tg[0],tg[1],'מטבח',.06,0);pipeTo(tg[0]+.04,tg[1]+.04,'מטבח',.1,1);
