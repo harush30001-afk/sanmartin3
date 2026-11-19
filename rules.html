@@ -48,6 +48,14 @@ service cloud.firestore {
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['r', 'rt']) &amp;&amp;
           request.resource.data.r is map &amp;&amp; request.resource.data.r.size() &lt;= 60
         )
+        // גרסה 708: נציג הוועד בסבב חתימות (k == 'pr'): פעם אחת — תשובות ✓/✗ (r), חתימה, שם. שום שדה אחר
+        || (
+          resource.data.get('k', '') == 'pr' &amp;&amp; resource.data.st == 'v' &amp;&amp; request.resource.data.st == 's' &amp;&amp;
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['r', 'st', 'sg', 'nm', 'ts']) &amp;&amp;
+          request.resource.data.r is map &amp;&amp; request.resource.data.r.size() &lt;= 60 &amp;&amp;
+          request.resource.data.sg is string &amp;&amp; request.resource.data.sg.size() &lt; 400000 &amp;&amp;
+          request.resource.data.nm is string &amp;&amp; request.resource.data.nm.size() &lt; 120
+        )
         // גרסה 591: דייר אחרי מסירה (k == 'tw'): רק מוסיף דיווחים לרשימה q (עד 30), שום שדה אחר
         || (
           resource.data.get('k', '') == 'tw' &amp;&amp; resource.data.st == 'v' &amp;&amp;
