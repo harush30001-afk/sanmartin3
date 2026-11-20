@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>מערכת ניהול פרויקטים YH</title><meta name="description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:title" content="מערכת ניהול פרויקטים YH"><meta property="og:description" content="ליקויים לטיפול · לחץ לפתיחה"><meta property="og:image" content="https://harush30001-afk.github.io/sanmartin3/app-512.png"><meta property="og:type" content="website"><link rel="apple-touch-icon" href="app-180.png"><link rel="icon" type="image/png" href="app-180.png">
-<!-- v: d 745 -->
+<!-- v: d 746 -->
 <style>
 #ld{position:fixed;inset:0;z-index:50;background:#15171b;display:flex;align-items:center;justify-content:center;transition:opacity .35s}#ld.out{opacity:0;pointer-events:none}
 
@@ -421,6 +421,7 @@ v.style.display = "block";
 }
 catch (e) { }
 } }
+const DFPB={ he: ["\u05D9\u05E9 \u05D1\u05E2\u05D9\u05D4 \u00B7 \u05E6\u05DC\u05DD", "\u05DE\u05D4 \u05D4\u05D1\u05E2\u05D9\u05D4?", "\u05D1\u05D7\u05E8 \u05E9\u05E4\u05D4"], en: ["Problem \u00B7 photo", "What is the problem?", "Choose language"], ar: ["\u062A\u0648\u062C\u062F \u0645\u0634\u0643\u0644\u0629 \u00B7 \u0635\u0648\u0651\u0631", "\u0645\u0627 \u0647\u064A \u0627\u0644\u0645\u0634\u0643\u0644\u0629\u061F", "\u0627\u062E\u062A\u0631 \u0627\u0644\u0644\u063A\u0629"], ru: ["\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u00B7 \u0444\u043E\u0442\u043E", "\u0412 \u0447\u0451\u043C \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0430?", "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u044F\u0437\u044B\u043A"], zh: ["\u6709\u95EE\u9898 \u00B7 \u62CD\u7167", "\u4EC0\u4E48\u95EE\u9898\uFF1F", "\u9009\u62E9\u8BED\u8A00"], hi: ["\u0938\u092E\u0938\u094D\u092F\u093E \u00B7 \u092B\u094B\u091F\u094B", "\u0915\u094D\u092F\u093E \u0938\u092E\u0938\u094D\u092F\u093E \u0939\u0948?", "\u092D\u093E\u0937\u093E \u091A\u0941\u0928\u0947\u0902"] };
 async function dfRep(tok, i, st, inp) {
 const T = DFL[DFLG] || DFL.he, nf = $("dfnm"), nm = ((nf || {}).value || "").trim();
 if (nf && !nm) {
@@ -435,7 +436,9 @@ return;
 const n = (($("dfn" + i) || {}).value || "").trim();
 if (nm)
 dfNmS(nm);
-if (st == "q" && !n) {
+let n2 = n; if (st == "q" && !n2 && inp && $("dfc" + i)) { try { n2 = (prompt((DFPB[DFLG] || DFPB.he)[1]) || "").trim(); const e = $("dfn" + i); if (e) e.value = n2; } catch (e) { } }
+if (st == "q" && !n2) {
+if (inp) inp.value = "";
 alert(T.qn);
 const e = $("dfn" + i);
 if (e)
@@ -471,7 +474,7 @@ af = [u];
 }
 catch (e) { }
 }
-const rr = { st, n: n.slice(0, 300), af, by: (nm || "").slice(0, 60), t: Date.now() };
+const rr = { st, n: n2.slice(0, 300), af, by: (nm || "").slice(0, 60), t: Date.now() };
 const cd = $("dfc" + i);
 if (cd) {
 cd.style.opacity = ".55";
@@ -672,7 +675,10 @@ return I; const cmp = (a, b) => String(a.loc || "").localeCompare(String(b.loc |
 G.set(k, { n: x.bn || "\u05DB\u05DC\u05DC\u05D9", L: [] }); G.get(k).L.push(x); }); return [...G.values()].flatMap(g => [{ hb: g.n, hn: g.L.length }, ...g.L]); }
 function dfItemsC(tok, d) {
 const T = DFL[DFLG] || DFL.he, R = d.r || {}, I = d.it || [], now = Date.now(), w = I.filter(x => (R[x.id] || {}).st == "d").length, D = d.dn || [];
-return `<div class="row" style="gap:6px;justify-content:flex-end;flex-wrap:wrap">${[["he", "\u05E2\u05D1\u05E8\u05D9\u05EA"], ["en", "English"], ["ar", "\u0627\u0644\u0639\u0631\u0628\u064A\u0629"], ["ru", "\u0420\u0443\u0441\u0441\u043A\u0438\u0439"], ["zh", "\u4E2D\u6587"], ["hi", "\u0939\u093F\u0928\u094D\u0926\u0940"]].map(([k, n]) => `<button class="chip ${DFLG == k ? "on" : ""}" onclick="dfLg('${tok}','${k}')">${n}</button>`).join("")}</div>
+const LG = [["he", "\u05E2\u05D1\u05E8\u05D9\u05EA"], ["en", "English"], ["ar", "\u0627\u0644\u0639\u0631\u0628\u064A\u0629"], ["ru", "\u0420\u0443\u0441\u0441\u043A\u0438\u0439"], ["zh", "\u4E2D\u6587"], ["hi", "\u0939\u093F\u0928\u094D\u0926\u0940"]]; let chosen = 1; try { chosen = !!localStorage.getItem("sm3_dflg"); } catch (e) { }
+if (!chosen) return `<div style="text-align:center;margin:18px 0 10px"><b style="font-size:20px;line-height:1.5">${LG.map(([k]) => esc(DFPB[k][2])).join(" \u00B7 ")}</b></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${LG.map(([k, n]) => `<button class="btn" style="min-height:64px;font-size:20px;font-weight:800;background:#fff;border:1.5px solid #dedad4;border-radius:16px;margin:0" onclick="dfLg('${tok}','${k}')">${n}</button>`).join("")}</div>`;
+const me = d.me || {}, mph = String(me.ph || "").replace(/[^\d+]/g, "");
+return `<div class="dflg" style="display:flex;gap:4px;overflow-x:auto;white-space:nowrap;padding-bottom:2px">${LG.map(([k, n]) => `<button class="chip ${DFLG == k ? "on" : ""}" style="flex:none;min-height:40px;font-size:13px;padding:0 10px" onclick="dfLg('${tok}','${k}')">${n}</button>`).join("")}</div>${mph ? `<a href="tel:${esc(mph)}" style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;margin-top:8px;border:1px solid #dedad4;border-radius:14px;background:#fff;text-decoration:none;color:inherit;font-weight:800">\uD83D\uDCDE ${esc(me.n || "")} \u00B7 <span dir="ltr">${esc(mph)}</span></a>` : ""}
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center;margin:10px 0">${[[I.length - w, T.op], [w, T.wt], [d.sm && d.sm.n != null ? d.sm.n : D.length, T.dn]].map(([n, l]) => `<div style="background:#fff;border:1px solid #dedad4;border-radius:12px;padding:8px 2px"><b style="display:block;font-size:20px">${n}</b><small class="mu">${l}</small></div>`).join("")}</div>
 ${dfSum(d, I, R)}${I.length ? "" : `<h3 style="text-align:center;margin:18px 0">${T.none}</h3>`}`
 + (() => { const G = dfGrp(I), R0 = d.r || {}, isO = x => { const r = R0[x.id]; return !r || r.st == "x" || r.st == "q"; }; if (!G)
@@ -681,7 +687,7 @@ return `<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margi
 const r = R[x.id] || null, open = !r || r.st == "x" || r.st == "q", age = Math.floor((now - (x.t0 || now)) / 86400000), nw = age < 3 && !r;
 return `<div class="dfcd" id="dfc${x.id}">${x.p ? `<img src="${esc(x.p)}" alt="" style="width:100%;border-radius:10px;display:block;margin-bottom:8px">` : ""}<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><b class="dfloc">${esc([(x.loc || "").trim(), x.r].filter(Boolean).join(" \u00B7 ") || "\u2014")}</b><span style="flex:none;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:800;background:#f6e4e0;color:#a8322a">${nw ? T.nw : T.od + " " + age + " " + T.dd}</span></div><div class="dfdf">${esc((x.tl && (x.tl[DFLG] || x.tl[DFLG + "-CN"])) || x.n || "")}</div>${x.tl && (x.tl[DFLG] || x.tl[DFLG + "-CN"]) ? `<div class="mu" style="font-size:12px;direction:rtl">עברית: ${esc(x.n || "")}</div>` : ""}${x.m3 ? `<button class="chip" style="margin-top:8px" onclick="dfM3(${x.id})">${esc(T.m3 || "\u05D4\u05E6\u05D2 \u05D1\u05DE\u05D5\u05D3\u05DC \u05D4\u05D3\u05D9\u05E8\u05D4")}</button>` : ""}${x.pi ? "<span class=\"hopi\">\u05DC\u05D9\u05E7\u05D5\u05D9 \u05DE\u05E4\u05E8\u05D5\u05D8\u05D5\u05E7\u05D5\u05DC \u05E8\u05D0\u05E9\u05D5\u05E0\u05D9</span>" : ""}${x.hm ? "<div><span class=\"hopi b\">\u05DC\u05D9\u05E7\u05D5\u05D9 \u05DE\u05E4\u05E8\u05D5\u05D8\u05D5\u05E7\u05D5\u05DC \u05DE\u05E1\u05D9\u05E8\u05D4</span></div>" : ""}${x.tp && open ? `<div class="row" style="gap:6px;margin-top:8px"><a class="btn sb" style="flex:1;text-decoration:none" href="tel:+972${esc(String(x.tp).replace(/^0/, "").replace(/^972/, ""))}">התקשר לדייר</a><a class="btn wa" style="flex:1;text-decoration:none" href="https://wa.me/972${esc(String(x.tp).replace(/^0/, "").replace(/^972/, ""))}" target="_blank" rel="noopener">וואטסאפ לדייר</a></div>` : ""}${x.au ? auBtn(x.au, x.aus, 1) : ""}
 ${r ? `<div style="margin-top:6px;font-weight:800;color:${r.st == "d" ? "#2f5a3a" : r.st == "x" ? "#a8322a" : "#8a5a12"}">${r.st == "d" ? (r.sg ? "\u2713 " + (T.tsd || DFL.he.tsd) + (r.tn ? " \u00B7 " + esc(r.tn) : "") + " \u00B7 " + fdt(r.t) : T.w) : r.st == "x" ? T.re + (r.n ? ": " + esc(r.n) : "") : T.qs + (r.n ? ": " + esc(r.n) : "")}${r.by && r.st != "x" ? " \u00B7 " + esc(r.by) : ""}</div>${r.st == "d" && (r.af || [])[0] ? `<img src="${esc(r.af[0])}" alt="" style="width:55%;border-radius:8px;margin-top:6px;display:block">` : ""}` : ""}
-${open && x.ts ? `<div id="dfts${x.id}" style="margin-top:8px"><button class="btn stgbig" style="width:100%" onclick="dfTsOpen('${tok}','${x.id}')">${T.ts || DFL.he.ts}</button></div>` : ""}${open && !x.ts ? (`<div class="mu" style="margin-top:8px;font-weight:700">${T.nph || DFL.he.nph}</div><div class="row" style="gap:6px;margin-top:6px"><label class="btn stgbig" style="flex:1;text-align:center">${T.done || DFL.he.done}<input type="file" accept="image/*" capture="environment" hidden onchange="dfRep('${tok}','${x.id}','d',this)"></label></div>`) + `<img id="dfpv${x.id}" alt="" style="display:none;width:40%;border-radius:8px;margin-top:6px"><input id="dfn${x.id}" placeholder="${T.nt2 || T.nt}" style="margin-top:6px">` : ""}</div>`;
+${open && x.ts ? `<div id="dfts${x.id}" style="margin-top:8px"><button class="btn stgbig" style="width:100%" onclick="dfTsOpen('${tok}','${x.id}')">${T.ts || DFL.he.ts}</button></div>` : ""}${open && !x.ts ? (`<div class="mu" style="margin-top:8px;font-weight:700">${T.nph || DFL.he.nph}</div><input id="dfn${x.id}" placeholder="${esc((T.nt2 || T.nt) + " \u00B7 " + (DFPB[DFLG] || DFPB.he)[1])}" style="margin-top:6px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px"><label class="btn stgbig" style="text-align:center;margin:0">${T.done || DFL.he.done}<input type="file" accept="image/*" capture="environment" hidden onchange="dfRep('${tok}','${x.id}','d',this)"></label><label class="btn dfpb" style="text-align:center;margin:0;background:#fff;color:#a8322a;border:1.5px solid #a8322a;font-weight:800;min-height:48px;display:flex;align-items:center;justify-content:center">${esc((DFPB[DFLG] || DFPB.he)[0])}<input type="file" accept="image/*" capture="environment" hidden onchange="dfRep('${tok}','${x.id}','q',this)"></label></div>`) + `<img id="dfpv${x.id}" alt="" style="display:none;width:40%;border-radius:8px;margin-top:6px">` : ""}</div>`;
 })()).join("")
 + (D.length ? `<details style="margin-top:8px"><summary class="mu" style="cursor:pointer">${T.dn} (${D.length})</summary>${D.map(x => `<div class="mu" style="padding:4px 0">✓ ${esc(x.n || "")}${x.loc ? " \u00B7 " + esc(x.loc) : ""}</div>`).join("")}</details>` : "");
 }
