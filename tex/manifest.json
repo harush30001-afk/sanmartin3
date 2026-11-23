@@ -1,0 +1,7 @@
+{
+ "plaster":  {"dir":"plaster","orm":1,"m":1.0,"ns":0.5,"ao":0.6,"src":"polyhaven:white_plaster_02"},
+ "concrete": {"dir":"concrete","orm":1,"m":2.0,"ns":1.0,"src":"polyhaven:concrete_wall_004"},
+ "block":    {"dir":"block","orm":1,"m":2.0,"ns":1.0,"src":"polyhaven:concrete_block_wall"},
+ "wood":     {"dir":"wood","orm":1,"m":0.5,"ns":0.6,"ao":0.5,"src":"polyhaven:white_oak_veneer"},
+ "tileface": {"dir":"tileface","src":"polyhaven:marble_01 (פני אבן לאריחים)"}
+}
