@@ -90,6 +90,7 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .stage3d .joy{bottom:calc(var(--dock) + 24px)}
 .stage3d .joysw{bottom:calc(var(--dock) + 140px)}
 .stage3d .pick{bottom:calc(var(--dock) + 20px)}
+.stage3d:has(.joy:not([hidden])) .pick{left:auto;max-width:calc(100% - 172px)}
 .stage3d .xrs{bottom:calc(var(--dock) + 18px)}
 .stage3d.fs .dock{bottom:calc(env(safe-area-inset-bottom,0px) + 10px)}
 .ttl{display:flex;align-items:center;gap:10px}
