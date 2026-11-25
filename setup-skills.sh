@@ -35,6 +35,16 @@ run claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill
 run claude plugin marketplace add mvanhorn/last30days-skill
 run claude plugin install last30days@last30days-skill
 
+# 8-11: more skills
+run npx -y skills add anthropics/skills --skill frontend-design -g -a claude-code -y
+run npx -y skills add mattpocock/skills --skill grill-me -g -a claude-code -y
+run npx -y skills add vercel-labs/skills --skill find-skills -g -a claude-code -y
+run npx -y skills add cloudflare/security-audit-skill -g -a claude-code -y
+
+# 12: taste-skill
+run claude plugin marketplace add Leonxlnx/taste-skill
+run claude plugin install taste-skill@taste-skill
+
 echo
 echo "== Installed skills (~/.claude/skills) =="
 ls "$HOME/.claude/skills"
