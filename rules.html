@@ -34,19 +34,73 @@ service cloud.firestore {
     // חתימה מרחוק: מי שיש לו את הקישור (מזהה אקראי) יכול לקרוא את הבקשה ולחתום פעם אחת בלבד
     // גרסה 377: הזמנות (t == 'inv') — רק הבעלים יוצר, משנה ומוחק. חבר צוות לא נוגע בהן ולא יכול להתחזות להזמנה
     function isInv(d) { return d.get('t', '') == 'inv'; }
+    // גרסה 858 (בדיקת אבטחה, ממצא 1): כל מסמך sign שייך לפרויקט (prj). מסמך ישן בלי prj שייך לסאן מרטין 3
+    function sPrj(d) { return d.get('prj', 'sm3'); }
+    function isSgn(d) { return d.get('st', '') == 's'; }
+    // צוות הפרויקט של המסמך
+    function sTeam(d) { return member() &amp;&amp; hasProj(sPrj(d)); }
+    // גרסה 858 (יהב: "חתימה שנחתמה = ברזל"): מסמך חתום (st == 's') — רק הבעלים משנה או מוחק. לכל השאר — ברזל
+    // (גם מנהל פרויקט). הזמנות (t == 'inv') ממילא רק של הבעלים
+    function frozen(d) { return isSgn(d) &amp;&amp; !isInv(d); }
+    // מי רואה חתימות ופרטי דיירים: עוזר מנהל עבודה ומעלה, ובעלים. לא מחסנאי, מפקח, לוגיסטיקה או בטיחות
+    function piiJr() { return ['afm', 'fm', 'fms', 'fmf', 'eng', 'pm', 'spm', 'area', 'chief']; }
+    function seePii(p) { return isOwner() || (member() &amp;&amp; p in projs() &amp;&amp; myJr() in piiJr()); }
+    // מסמכי sign חתומים שאין בהם פרטי דייר: תשובת ספק (spr), הרשמת קבלן (reg), קישור לקבלן (ctl)
+    function noPii(d) { return d.get('k', '') in ['spr', 'reg', 'ctl']; }
+    // ממצא 2: תשובה אחת של קבלן מהקישור — "טופל" (d) או "יש בעיה" (q), הערה ותמונה אחת. בלי שם דייר, חתימת דייר או "אומת בת.ז."
+    function dfRepOk(v) {
+      return v is map &amp;&amp; v.keys().hasOnly(['st', 'n', 'af', 'by', 't'])
+        &amp;&amp; v.st in ['d', 'q', 'm']
+        &amp;&amp; v.get('n', '') is string &amp;&amp; v.get('n', '').size() &lt;= 300
+        // 871: "זה לא שלי · בקש העברה" (m) — רק עם הערה
+        &amp;&amp; (v.st != 'm' || v.get('n', '').size() &gt; 0)
+        &amp;&amp; v.get('by', '') is string &amp;&amp; v.get('by', '').size() &lt;= 60
+        &amp;&amp; v.get('t', 0) is number
+        &amp;&amp; v.get('af', []) is list &amp;&amp; v.get('af', []).size() &lt;= 1
+        &amp;&amp; (v.get('af', []).size() == 0 || (v.af[0] is string &amp;&amp; v.af[0].size() &lt; 120000));
+    }
+    // הקבלן משנה לכל היותר ליקוי אחד בכל כתיבה, לא מוחק אף ליקוי מהמפה,
+    // ודחייה של הצוות (st == 'x') מתחלפת רק בדיווח חדש ממנה (תיקון חוזר), לא בדיווח ישן ולא ב-x מזויף
+    function dfOne(o, n) {
+      let ch = n.diff(o);
+      let nv = n.values().removeAll(o.values());
+      let gone = o.values().removeAll(n.values());
+      return ch.removedKeys().size() == 0 &amp;&amp; ch.affectedKeys().size() &lt;= 1
+        &amp;&amp; nv.size() == ch.affectedKeys().size()
+        &amp;&amp; (nv.size() == 0 || (dfRepOk(nv[0])
+          &amp;&amp; (gone.size() == 0 || gone[0].get('st', '') != 'x' || nv[0].t &gt; gone[0].get('t', 0))));
+    }
+    // רשימה שאפשר רק להוסיף לה: כל מה שהיה בה נשאר
+    function keepsAll(oldL, newL) { return oldL.removeAll(newL).size() == 0; }
     match /sign/{tok} {
-      allow get: if true;
-      allow list: if isOwner() || member() || isBot();
-      allow create: if isOwner() || (member() &amp;&amp; !isInv(request.resource.data)) || (isBot() &amp;&amp; request.resource.data.get('k', '') == 'mdl');
-      allow delete: if isOwner() || (member() &amp;&amp; !isInv(resource.data));
+      // קריאה רק לפי מזהה (מי שיש לו את הקישור). אין רשימה של טוקנים — רק הבעלים (אישור הצטרפות) והבוט (תור המודלים בלבד)
+      // לפני חתימה: כל מי שיש לו את הקישור. אחרי חתימה: חתימה ופרטי דייר רק לעוזר מנהל עבודה ומעלה בפרויקט.
+      // המוזמן רואה את הבקשה שהגיש בעצמו (nm == המייל שלו)
+      allow get: if !isSgn(resource.data) || noPii(resource.data) || seePii(sPrj(resource.data))
+        || (isInv(resource.data) &amp;&amp; signed() &amp;&amp; resource.data.get('nm', '') == request.auth.token.email.lower());
+      allow list: if isOwner() || (isBot() &amp;&amp; resource.data.get('k', '') == 'mq');
+      allow create: if isOwner()
+        || (sTeam(request.resource.data) &amp;&amp; !isInv(request.resource.data) &amp;&amp; !isSgn(request.resource.data))
+        // יומן שגיאות AI (aie) — כל חבר צוות, בלי פרויקט, רק יצירה
+        || (member() &amp;&amp; request.resource.data.get('k', '') == 'aie' &amp;&amp; !('prj' in request.resource.data)
+            &amp;&amp; request.resource.data.keys().hasOnly(['k', 'e', 'lg', 'v', 'ts', 'ua', 'kt', 'bt', 'bs', 'u']))
+        || (isBot() &amp;&amp; request.resource.data.get('k', '') == 'mdl');
+      allow delete: if isOwner()
+        || (!frozen(resource.data) &amp;&amp; sTeam(resource.data) &amp;&amp; !isInv(resource.data));
       allow update: if isOwner()
         || (isBot() &amp;&amp; resource.data.get('k', '') == 'mq' &amp;&amp; request.resource.data.k == 'mq')
-        || (member() &amp;&amp; !isInv(resource.data) &amp;&amp; !isInv(request.resource.data))
-        // קבלן מהקישור: רק תשובות (טופל / שאלה) על הליקויים שנשלחו אליו. שום שדה אחר
+        // צוות הפרויקט בלבד, בלי להעביר לפרויקט אחר. מסמך חתום — אף אחד. איש צוות לא מסמן "נחתם" בעצמו
+        || (sTeam(resource.data) &amp;&amp; sPrj(request.resource.data) == sPrj(resource.data)
+            &amp;&amp; !isInv(resource.data) &amp;&amp; !isInv(request.resource.data)
+            &amp;&amp; !isSgn(resource.data) &amp;&amp; !isSgn(request.resource.data))
+        // קבלן מהקישור: רק תשובות (טופל / שאלה) על הליקויים שנשלחו אליו. שום שדה אחר, ובלי חתימה או שם של דייר
+        // ("נחתם ע״י הדייר" — dn[].sgn / sgd / sgi — כותב רק הצוות, במסלול הצוות שלמעלה. הקבלן רק קורא)
         || (
           resource.data.get('k', '') == 'df' &amp;&amp; resource.data.st == 'v' &amp;&amp;
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['r', 'rt']) &amp;&amp;
-          request.resource.data.r is map &amp;&amp; request.resource.data.r.size() &lt;= 60
+          request.resource.data.get('rt', 0) is number &amp;&amp;
+          request.resource.data.r is map &amp;&amp; request.resource.data.r.size() &lt;= 60 &amp;&amp;
+          dfOne(resource.data.get('r', {}), request.resource.data.r)
         )
         // גרסה 708: נציג הוועד בסבב חתימות (k == 'pr'): פעם אחת — תשובות ✓/✗ (r), חתימה, שם. שום שדה אחר
         || (
@@ -56,13 +110,29 @@ service cloud.firestore {
           request.resource.data.sg is string &amp;&amp; request.resource.data.sg.size() &lt; 400000 &amp;&amp;
           request.resource.data.nm is string &amp;&amp; request.resource.data.nm.size() &lt; 120
         )
-        // גרסה 591: דייר אחרי מסירה (k == 'tw'): רק מוסיף דיווחים לרשימה q (עד 30), שום שדה אחר
+        // גרסה 591: דייר אחרי מסירה (k == 'tw'): רק מוסיף דיווחים לרשימה q (עד 30), לא משנה ולא מוחק קודמים. שום שדה אחר
+        // 871: רק אחרי מסירה חתומה + קבלת מפתח (ok == 1, נכתב ע"י הצוות)
         || (
-          resource.data.get('k', '') == 'tw' &amp;&amp; resource.data.st == 'v' &amp;&amp;
+          resource.data.get('k', '') == 'tw' &amp;&amp; resource.data.st == 'v' &amp;&amp; resource.data.get('ok', 0) == 1 &amp;&amp;
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['q', 'qt']) &amp;&amp;
           request.resource.data.q is list &amp;&amp; request.resource.data.q.size() &lt;= 30 &amp;&amp;
-          request.resource.data.q.size() &gt;= resource.data.get('q', []).size()
+          keepsAll(resource.data.get('q', []), request.resource.data.q)
         )
+        // גרסה 855: ממונה בטיחות מהקישור (k == 'sfl'): מוסיף ממצאים (q, עד 120) ומאשר / מחזיר תיקונים (ap). שום שדה אחר
+        || (
+          resource.data.get('k', '') == 'sfl' &amp;&amp; resource.data.st == 'p' &amp;&amp;
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['q', 'qt', 'ap']) &amp;&amp;
+          request.resource.data.get('q', []) is list &amp;&amp; request.resource.data.get('q', []).size() &lt;= 120 &amp;&amp;
+          keepsAll(resource.data.get('q', []), request.resource.data.get('q', [])) &amp;&amp;
+          request.resource.data.get('ap', {}) is map &amp;&amp; request.resource.data.get('ap', {}).size() &lt;= 500
+        )
+        // גרסה 857: קישור לקבלן (k == 'ctl'): בטעינה הראשונה הקבלן רושם פעם אחת רק את op (מספר), לפני שענה
+        || (
+          resource.data.get('k', '') == 'ctl' &amp;&amp; resource.data.st == 'p' &amp;&amp; !('op' in resource.data) &amp;&amp;
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['op']) &amp;&amp;
+          request.resource.data.op is number
+        )
+        // חתימה רגילה מהקישור (דייר, ספק, הרשמת קבלן, אישור הגעה): פעם אחת בלבד, p → s, רק חתימה, שם וזמן
         || (
           resource.data.st == 'p' &amp;&amp; request.resource.data.st == 's' &amp;&amp;
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'sg', 'nm', 'ts']) &amp;&amp;
@@ -71,6 +141,33 @@ service cloud.firestore {
           // מי שמגיש בקשת הצטרפות — רק בשם המייל שאיתו נכנס בפועל, ורק לפני שפג התוקף
           (!isInv(resource.data) || (signed() &amp;&amp; request.resource.data.nm == request.auth.token.email.lower() &amp;&amp; resource.data.get('exp', 0) &gt; request.time.toMillis()))
         );
+    }
+    // גרסה 858: פרטי דיירים וחתימות — אוסף נפרד, מחוץ ל-JSON של הדירה (j), כדי שאפשר יהיה להגביל לפי תפקיד.
+    //   pii/{pid}/tn/{aptKey}  — שם, טלפון, ת.ז. של הדיירים בדירה (משנים כשצריך)
+    //   pii/{pid}/sg/{id}      — תמונת חתימה (נכתבת פעם אחת, לא משתנה ולא נמחקת)
+    match /pii/{pid}/tn/{d} {
+      allow read, create, update: if seePii(pid);
+      allow delete: if isOwner();
+    }
+    // 871: חתימת דייר על "תוקן" מהקישור שלו — מסמך אחד לכל ליקוי (sg_tw_&lt;טוקן&gt;_&lt;ליקוי&gt;), רק כשהקבלן סימן תוקן (qs[ליקוי] == 'w').
+    // נכתבת פעם אחת: אין update / delete לאף אחד, ומסמך קיים לא נכתב שוב (create בלבד)
+    function twSg(pid, id) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['d', 't', 'nm', 'by', 'q'])
+        &amp;&amp; d.d is string &amp;&amp; d.d.size() &lt; 200000 &amp;&amp; d.t is number
+        &amp;&amp; d.nm is string &amp;&amp; d.nm.size() &gt; 0 &amp;&amp; d.nm.size() &lt; 120
+        &amp;&amp; d.q is string &amp;&amp; d.q.matches('[0-9]{1,16}')
+        &amp;&amp; d.by is string &amp;&amp; d.by.matches('tw:[a-z0-9]{10,40}')
+        &amp;&amp; id == 'sg_tw_' + d.by.split(':')[1] + '_' + d.q
+        &amp;&amp; twSgTok(get(/databases/$(database)/documents/sign/$(d.by.split(':')[1])).data, pid, d.q);
+    }
+    function twTokOk(s, p) { return s.get('k', '') == 'tw' &amp;&amp; s.get('st', '') == 'v' &amp;&amp; s.get('ok', 0) == 1 &amp;&amp; s.get('prj', 'sm3') == p; }
+    function twSgTok(s, p, q) { return twTokOk(s, p) &amp;&amp; s.get('qs', {}).get(q, '') == 'w'; }
+    match /pii/{pid}/sg/{d} {
+      allow read: if seePii(pid);
+      allow create: if (seePii(pid) &amp;&amp; request.resource.data.get('d', '') is string &amp;&amp; request.resource.data.get('d', '').size() &lt; 400000)
+        || twSg(pid, d);
+      allow update, delete: if false;
     }
     match /backups/{d} {
       allow read, write: if isOwner();
@@ -97,10 +194,29 @@ service cloud.firestore {
         (c == 'photos' &amp;&amp; canPh(p) &amp;&amp; (!('d' in request.resource.data) || request.resource.data.d.size() &lt; 900000))
       );
     }
+    // גרסה 869 (860.5, יהב 26.11): תמונת "טופל" מקישור הקבלן — נכתבת ישר ל-photos/pf* (מסמך חדש בלבד).
+    // רק d (התמונה, עד 120KB), t ו-by = 'df:' + הטוקן של קישור ליקויים פעיל (sign/tok: k == 'df', st == 'v', ph == 1, אותו פרויקט)
+    function dfPh(id, p) {
+      let d = request.resource.data;
+      return id.matches('pf[0-9a-z]{6,40}') &amp;&amp; d.keys().hasOnly(['d', 't', 'by'])
+        &amp;&amp; d.d is string &amp;&amp; d.d.size() &lt; 120000 &amp;&amp; d.t is number
+        &amp;&amp; d.by is string &amp;&amp; d.by.matches('df:[A-Za-z0-9_-]{6,40}')
+        &amp;&amp; dfTokOk(get(/databases/$(database)/documents/sign/$(d.by.split(':')[1])).data, p);
+    }
+    function dfTokOk(s, p) { return s.get('k', '') == 'df' &amp;&amp; s.get('st', '') == 'v' &amp;&amp; s.get('ph', 0) == 1 &amp;&amp; s.get('prj', 'sm3') == p; }
+    // 871: תמונת ליקוי מהדייר (1–2) — photos/pt* (מסמך חדש בלבד), רק d (עד 120KB), t, by = 'tw:' + טוקן של קישור דייר פעיל
+    // אחרי מסירה חתומה + מפתח (sign/tok: k == 'tw', st == 'v', ok == 1, אותו פרויקט)
+    function twPh(id, p) {
+      let d = request.resource.data;
+      return id.matches('pt[0-9a-z]{6,40}') &amp;&amp; d.keys().hasOnly(['d', 't', 'by'])
+        &amp;&amp; d.d is string &amp;&amp; d.d.size() &lt; 120000 &amp;&amp; d.t is number
+        &amp;&amp; d.by is string &amp;&amp; d.by.matches('tw:[a-z0-9]{10,40}')
+        &amp;&amp; twTokOk(get(/databases/$(database)/documents/sign/$(d.by.split(':')[1])).data, p);
+    }
     // נתוני פרויקט חדש
     match /projects/{pid}/{pc}/{pd} {
       allow read: if (hasProj(pid) &amp;&amp; pc in ['cl','lists','tasks','log','appts','meta','photos','mat','dmg','x']) || (isBot() &amp;&amp; pc == 'photos');
-      allow create: if okw(pid, pc);
+      allow create: if okw(pid, pc) || (pc == 'photos' &amp;&amp; (dfPh(pd, pid) || twPh(pd, pid)));
       // גרסה 422: פרוטוקול מסירה חתום (x/hoS_*) — רק הבעלים משנה או מוחק. אחרי שהבעלים פתח אותו אפשר לחתום מחדש
       allow update: if okw(pid, pc) &amp;&amp; (!(pc == 'x' &amp;&amp; pd.matches('hoS_.*')) || isOwner() || resource.data.get('del', 0) == 1);
       allow delete: if isOwner() &amp;&amp; pc in ['cl','lists','tasks','log','appts','meta','photos','mat','dmg','x'];
@@ -108,7 +224,7 @@ service cloud.firestore {
     // סאן מרטין 3 (הנתונים הקיימים, בלי שינוי מיקום)
     match /{col}/{d} {
       allow read: if (hasProj('sm3') &amp;&amp; col in ['cl','lists','tasks','log','appts','meta','photos','mat','dmg','x']) || (isBot() &amp;&amp; col == 'photos');
-      allow create: if okw('sm3', col);
+      allow create: if okw('sm3', col) || (col == 'photos' &amp;&amp; (dfPh(d, 'sm3') || twPh(d, 'sm3')));
       allow update: if okw('sm3', col) &amp;&amp; (!(col == 'x' &amp;&amp; d.matches('hoS_.*')) || isOwner() || resource.data.get('del', 0) == 1);
       allow delete: if isOwner() &amp;&amp; col in ['cl','lists','tasks','log','appts','meta','photos','mat','dmg','x'];
     }
