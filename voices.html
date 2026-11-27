@@ -79,10 +79,11 @@ const B2 = "https://www.gstatic.com/firebasejs/12.19.0/";
 const CFG = { apiKey: "AIzaSyDaxJFkzVhV1yqsV_ue82a_l2f4ghkn9Eg", authDomain: "sanmartin3-f51ed.firebaseapp.com", projectId: "sanmartin3-f51ed", storageBucket: "sanmartin3-f51ed.firebasestorage.app", messagingSenderId: "988109406674", appId: "1:988109406674:web:64708ae1efb5b8025e880b" };
 const APPCK = "6LcQujQuAAAAAGyaJwMxFSn5-d_J84osY9IizCyA";
 const TEXT = "אהלן אחי, מה העניינים? בדקתי לך — יש שלושה ליקויים פתוחים בקומה 5, שניים אצל החשמלאי. רוצה שאשלח לו?";
+/* הנוסח הקודם שעבד (גרסה ראשונה) — נשמר כגיבוי אם הנוסח החדש נדחה */
+const STYLE_OLD = "Read the following Hebrew text aloud in casual, warm, natural Israeli Hebrew, like a friendly colleague on a construction site. Say only the text: ";
 const STYLE = "Say the following in Hebrew, in a relaxed, friendly, casual Israeli tone — like a friendly colleague from the construction site talking to a friend on the phone. Natural conversational pace, light and warm, not like an announcer or a newsreader:";
 const TTS_MODELS = { n: ["gemini-2.5-flash-preview-tts", "gemini-2.5-flash-tts", "gemini-2.5-pro-preview-tts", "gemini-2.5-pro-tts"], h: ["gemini-2.5-pro-preview-tts", "gemini-2.5-pro-tts", "gemini-2.5-flash-preview-tts", "gemini-2.5-flash-tts"] };
 let Q = "n"; try { if (localStorage.getItem("yhVoiceQ") === "h") Q = "h"; } catch (e) { }
-const LIVE_MODELS = ["gemini-2.5-flash-native-audio-preview-09-2025", "gemini-live-2.5-flash-preview"];
 const VOICES = [ /* [שם, מין, אופי, קבוצה: 0 נבחרים · 1 שאר · 2 עוד גברים] */
   ["Achird", "m", "חברי", 0], ["Leda", "f", "צעירה", 0],
   ["Kore", "f", "תקיפה וברורה", 1], ["Aoede", "f", "קלילה ואוורירית", 1], ["Sulafat", "f", "חמה", 1], ["Zephyr", "f", "בהירה", 1],
@@ -134,47 +135,38 @@ const getAIx = () => AIP || (AIP = (async () => {
 })().catch(e => { AIP = null; throw e; }));
 const timeout = (p, ms, what) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error("timeout " + what)), ms))]);
 const speech = v => ({ voiceConfig: { prebuiltVoiceConfig: { voiceName: v } } });
-const goodTTS = {}; let goodLive = null, ttsDead = false;
+const goodTTS = {}; /* q -> {m, p} : המודל והנוסח שעבדו */
 const LOG = [];
-
+/* תמצית שגיאה: קוד HTTP + סטטוס של Google */
+const errSum = e => { const t = String(e && e.message || e); const c = (t.match(/\[(\d{3})[^\]]*\]/) || t.match(/\b(4\d\d|5\d\d)\b/) || [])[1] || ""; const st = (t.match(/RESOURCE_EXHAUSTED|INVALID_ARGUMENT|NOT_FOUND|PERMISSION_DENIED|UNAVAILABLE|INTERNAL|FAILED_PRECONDITION|DEADLINE_EXCEEDED|UNAUTHENTICATED/) || [])[0] || ""; return { c, st, t }; };
+const PROMPTS = { new: () => STYLE + "\n\n" + TEXT, old: () => STYLE_OLD + TEXT };
 async function viaTTS(F, voice) {
-  let last = null;
-  const q = Q;
-  for (const m of goodTTS[q] ? [goodTTS[q]] : TTS_MODELS[q]) {
+  const q = Q, tries = [], errs = [];
+  if (goodTTS[q]) tries.push(goodTTS[q]);
+  TTS_MODELS[q].forEach(m => tries.push({ m, p: "new" }, { m, p: "old" }));
+  const seen = new Set(), skipOld = new Set(), deadModel = new Set();
+  for (const t of tries) {
+    const key = t.m + "|" + t.p; if (seen.has(key)) continue; seen.add(key);
+    if (deadModel.has(t.m)) continue;
+    if (t.p === "old" && skipOld.has(t.m)) continue;
     try {
-      const md = F.AI.getGenerativeModel(F.ai, { model: m, generationConfig: { responseModalities: ["AUDIO"], speechConfig: speech(voice) } });
-      const r = await timeout(md.generateContent(STYLE + "\n\n" + TEXT), 45000, m);
+      const md = F.AI.getGenerativeModel(F.ai, { model: t.m, generationConfig: { responseModalities: ["AUDIO"], speechConfig: speech(voice) } });
+      const r = await timeout(md.generateContent(PROMPTS[t.p]()), 45000, t.m);
       const c = r.response.candidates && r.response.candidates[0];
       const blob = partsToWav(c && c.content && c.content.parts);
-      if (!blob) throw new Error("no audio in response (" + m + ")");
-      goodTTS[q] = m; LOG.push(m + ": ok"); return { blob, how: m };
-    } catch (e) { last = e; LOG.push(m + ": " + String(e && e.message || e).slice(0, 160)); if (/timeout|Failed to fetch|App Check|PERMISSION|403|401/i.test(String(e && e.message))) break; }
+      if (!blob) throw new Error("[NOAUDIO] no audio in response, finishReason=" + (c && c.finishReason || "?"));
+      goodTTS[q] = t; LOG.push(t.m + "/" + t.p + ": ok");
+      return { blob, how: t.m + (t.p === "old" ? " · נוסח קודם" : "") };
+    } catch (e) {
+      const x = errSum(e); x.m = t.m; x.p = t.p; errs.push(x); LOG.push(t.m + "/" + t.p + ": " + x.t.slice(0, 160));
+      if (/timeout|Failed to fetch|App Check/i.test(x.t) || x.c === "401" || x.c === "403") break; /* בעיית חיבור — אין טעם להמשיך */
+      /* נוסח קודם רק אם הנוסח החדש נדחה (400) או חזר בלי קול */
+      if (t.p === "new" && !(x.c === "400" || x.st === "INVALID_ARGUMENT" || /NOAUDIO/.test(x.t))) skipOld.add(t.m);
+      if (x.c === "404" || x.st === "NOT_FOUND" || x.c === "429") deadModel.add(t.m);
+    }
   }
-  throw last || new Error("TTS failed");
-}
-async function viaLive(F, voice) {
-  if (!F.AI.getLiveGenerativeModel) throw new Error("Live API not in SDK");
-  let last = null;
-  for (const m of goodLive ? [goodLive] : LIVE_MODELS) {
-    let s = null;
-    try {
-      const md = F.AI.getLiveGenerativeModel(F.ai, { model: m, generationConfig: { responseModalities: ["AUDIO"], speechConfig: speech(voice) }, systemInstruction: "You are a voice reader. Repeat the user's Hebrew text exactly, word for word, in casual warm natural Israeli Hebrew. Do not add or answer anything." });
-      s = await timeout(md.connect(), 20000, "live connect " + m);
-      await s.send(TEXT, true);
-      const chunks = []; let rate = 24000;
-      await timeout((async () => {
-        for await (const msg of s.receive()) {
-          if (msg.type !== "serverContent") continue;
-          ((msg.modelTurn && msg.modelTurn.parts) || []).forEach(p => { if (p.inlineData && p.inlineData.data) { chunks.push(b64(p.inlineData.data)); rate = rateOf(p.inlineData.mimeType); } });
-          if (msg.turnComplete || msg.interrupted) break;
-        }
-      })(), 60000, "live receive " + m);
-      if (!chunks.length) throw new Error("no audio from live (" + m + ")");
-      goodLive = m; LOG.push("live " + m + ": ok"); return { blob: wav(joinU8(chunks), rate), how: "Live · " + m };
-    } catch (e) { last = e; LOG.push("live " + m + ": " + String(e && e.message || e).slice(0, 160)); }
-    finally { try { s && s.close(); } catch (e) { } }
-  }
-  throw last || new Error("Live failed");
+  const err = new Error(errs.map(x => x.m + (x.p === "old" ? " (נוסח קודם)" : "") + ": " + ([x.c, x.st].filter(Boolean).join(" ") || "") + " — " + x.t.replace(/^.*?\[\d{3}[^\]]*\]\s*/, "").slice(0, 140)).join("\n") || "TTS failed");
+  err.errs = errs; throw err;
 }
 async function makeAudio(voice) {
   const k = CK + "|" + Q + "|" + voice;
@@ -182,9 +174,7 @@ async function makeAudio(voice) {
   const hit = await idbGet(k);
   if (hit && hit.blob) { MEM.set(k, hit); return hit; }
   const F = await timeout(getAIx(), 20000, "firebase load");
-  let out;
-  if (!ttsDead) { try { out = await viaTTS(F, voice); } catch (e) { if (/timeout|Failed to fetch|App Check/i.test(String(e && e.message))) throw e; if (!goodTTS.n && !goodTTS.h) ttsDead = true; } }
-  if (!out) out = await viaLive(F, voice);
+  const out = await viaTTS(F, voice);
   out.q = Q;
   MEM.set(k, out); idbPut(k, out);
   return out;
@@ -235,11 +225,15 @@ VOICES.forEach(([v, g, ch, grp]) => {
 function setBusy(v, on, label) { const b = cards[v].querySelector(".play"); b.classList.toggle("busy", !!on); b.innerHTML = on ? `<span class="spin"></span>${label || "מכין קול…"}` : "▶ שמע"; }
 function showErr(v, e) {
   const m = cards[v].querySelector(".msg");
-  const t = String(e && e.message || e);
-  const nice = /app.?check|attestation|recaptcha|401|403|PERMISSION/i.test(t) ? "לא הצלחתי להתחבר לשירות הקול. הדף עובד רק מהכתובת של האתר." :
+  const t = String(e && e.message || e), E = (e && e.errs) || [];
+  const has = re => re.test(t) || E.some(x => re.test(x.c + " " + x.st));
+  const nice = has(/429|RESOURCE_EXHAUSTED/) ? "נגמרה כרגע המכסה של שירות הקול (כנראה המכסה היומית החינמית). אפשר לנסות שוב מאוחר יותר או מחר." :
+    /app.?check|attestation|recaptcha/i.test(t) || has(/401|403|PERMISSION_DENIED/) ? "לא הצלחתי להתחבר לשירות הקול. הדף עובד רק מהכתובת של האתר." :
+    has(/400|INVALID_ARGUMENT/) ? "שירות הקול דחה את הבקשה לקול הזה." :
+    has(/404|NOT_FOUND/) ? "מודל הקול לא זמין כרגע." :
     /Failed to fetch|network|timeout|load/i.test(t) ? "לא הצלחתי להגיע לשירות הקול. בדוק אינטרנט ונסה שוב." :
     /playback/i.test(t) ? "הקול מוכן אבל האייפון לא נתן לנגן. לחץ שוב על ▶ שמע." : "לא הצלחתי ליצור את הקול הזה כרגע. נסה שוב עוד רגע.";
-  m.innerHTML = nice + "<small></small>"; m.querySelector("small").textContent = t.slice(0, 220) + (LOG.length ? " | " + LOG.slice(-3).join(" | ") : "");
+  m.innerHTML = nice + "<small></small>"; const sm = m.querySelector("small"); sm.style.whiteSpace = "pre-line"; sm.textContent = t.slice(0, 700);
   m.style.display = "block";
 }
 let playing = null;
