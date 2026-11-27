@@ -19,13 +19,21 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .btn{min-height:48px;border-radius:14px;border:1.5px solid var(--gold);background:#fff;color:var(--green);font-weight:700;font-size:16px;padding:0 18px}
 .btn.pri{background:var(--green);border-color:var(--green);color:#fff}
 .btn:disabled{opacity:.5}
+.sec{font-family:'Frank Ruhl Libre',Georgia,serif;font-size:19px;color:var(--green);margin:22px 0 10px;display:flex;align-items:center;gap:8px}
+.sec small{font-family:inherit;font-size:13px;color:var(--mu);font-weight:400}
+.q{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 12px;font-size:15px;font-weight:700;color:var(--ink)}
+.seg{display:inline-flex;border:1.5px solid var(--gold);border-radius:14px;overflow:hidden}
+.seg button{min-height:44px;padding:0 16px;border:0;background:#fff;color:var(--green);font-weight:700;font-size:15px}
+.seg button.on{background:var(--gold);color:#fff}
+.qn{font-size:12px;color:var(--mu);font-weight:400}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:360px){.grid{grid-template-columns:1fr}}
 .card{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:8px;transition:border-color .2s,box-shadow .2s}
 .card.on{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold2)}
 .card.pick{border-color:var(--green);box-shadow:0 0 0 3px #cfe3d6}
-.top{display:flex;align-items:center;gap:8px}
-.nm{font-weight:800;font-size:18px;letter-spacing:.2px}
+.top{display:flex;align-items:center;gap:6px 8px;flex-wrap:wrap;min-width:0}
+.card{min-width:0}
+.nm{font-weight:800;font-size:18px;letter-spacing:.2px;overflow-wrap:anywhere;min-width:0}
 .tag{font-size:12px;font-weight:700;border-radius:99px;padding:3px 9px;background:#f4efe3;color:#7a5f25}
 .tag.m{background:#e8efe9;color:var(--green)}
 .ch{color:var(--mu);font-size:14px}
@@ -47,11 +55,17 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 <h1>איזה קול יהיה לעוזר?</h1>
 <p class="sub">תלחץ "▶ שמע" על כל קול. הקול שתבחר יהיה הקול של העוזר לכולם.</p>
 <div class="quote"><small>המשפט לדוגמה</small><span id="txt"></span></div>
+<div class="q">איכות: <span class="seg"><button data-q="n" class="on">רגילה</button><button data-q="h">גבוהה</button></span><span class="qn" id="qn"></span></div>
 <div class="bar">
   <button class="btn pri" id="all">▶ השמע את כולם ברצף</button>
   <button class="btn" id="stop" disabled>■ עצור</button>
 </div>
-<div class="grid" id="grid"></div>
+<div class="sec">⭐ הנבחרים כרגע</div>
+<div class="grid" id="g0"></div>
+<div class="sec">כל השאר</div>
+<div class="grid" id="g1"></div>
+<div class="sec">עוד קולות גבר <small>חדש</small></div>
+<div class="grid" id="g2"></div>
 <div class="choice" id="choice"></div>
 <div class="note">
   אין צליל? תוודא שהמתג הצדדי של האייפון לא על שקט, ושהווליום למעלה.<br>
@@ -65,14 +79,19 @@ const B2 = "https://www.gstatic.com/firebasejs/12.19.0/";
 const CFG = { apiKey: "AIzaSyDaxJFkzVhV1yqsV_ue82a_l2f4ghkn9Eg", authDomain: "sanmartin3-f51ed.firebaseapp.com", projectId: "sanmartin3-f51ed", storageBucket: "sanmartin3-f51ed.firebasestorage.app", messagingSenderId: "988109406674", appId: "1:988109406674:web:64708ae1efb5b8025e880b" };
 const APPCK = "6LcQujQuAAAAAGyaJwMxFSn5-d_J84osY9IizCyA";
 const TEXT = "אהלן אחי, מה העניינים? בדקתי לך — יש שלושה ליקויים פתוחים בקומה 5, שניים אצל החשמלאי. רוצה שאשלח לו?";
-const STYLE = "Read the following Hebrew text aloud in casual, warm, natural Israeli Hebrew, like a friendly colleague on a construction site. Say only the text: ";
-const TTS_MODELS = ["gemini-2.5-flash-preview-tts", "gemini-2.5-flash-tts", "gemini-2.5-pro-preview-tts", "gemini-2.5-pro-tts"];
+const STYLE = "Say the following in Hebrew, in a relaxed, friendly, casual Israeli tone — like a friendly colleague from the construction site talking to a friend on the phone. Natural conversational pace, light and warm, not like an announcer or a newsreader:";
+const TTS_MODELS = { n: ["gemini-2.5-flash-preview-tts", "gemini-2.5-flash-tts", "gemini-2.5-pro-preview-tts", "gemini-2.5-pro-tts"], h: ["gemini-2.5-pro-preview-tts", "gemini-2.5-pro-tts", "gemini-2.5-flash-preview-tts", "gemini-2.5-flash-tts"] };
+let Q = "n"; try { if (localStorage.getItem("yhVoiceQ") === "h") Q = "h"; } catch (e) { }
 const LIVE_MODELS = ["gemini-2.5-flash-native-audio-preview-09-2025", "gemini-live-2.5-flash-preview"];
-const VOICES = [
-  ["Kore", "f", "תקיפה וברורה"], ["Aoede", "f", "קלילה ואוורירית"], ["Leda", "f", "צעירה"], ["Sulafat", "f", "חמה"], ["Zephyr", "f", "בהירה"],
-  ["Puck", "m", "אנרגטי"], ["Charon", "m", "רציני ומסביר"], ["Achird", "m", "חברי"], ["Orus", "m", "יציב"], ["Fenrir", "m", "נלהב"]
+const VOICES = [ /* [שם, מין, אופי, קבוצה: 0 נבחרים · 1 שאר · 2 עוד גברים] */
+  ["Achird", "m", "חברי", 0], ["Leda", "f", "צעירה", 0],
+  ["Kore", "f", "תקיפה וברורה", 1], ["Aoede", "f", "קלילה ואוורירית", 1], ["Sulafat", "f", "חמה", 1], ["Zephyr", "f", "בהירה", 1],
+  ["Puck", "m", "אנרגטי", 1], ["Charon", "m", "רציני ומסביר", 1], ["Orus", "m", "יציב", 1], ["Fenrir", "m", "נלהב", 1],
+  ["Zubenelgenubi", "m", "קז'ואל", 2], ["Umbriel", "m", "רגוע וזורם", 2], ["Algieba", "m", "חלק", 2], ["Iapetus", "m", "צלול", 2],
+  ["Sadachbia", "m", "חי ותוסס", 2], ["Sadaltager", "m", "בקיא", 2], ["Schedar", "m", "שקול", 2], ["Enceladus", "m", "נושף, רך", 2],
+  ["Algenib", "m", "צרוד", 2], ["Rasalgethi", "m", "מסביר", 2], ["Alnilam", "m", "תקיף", 2]
 ];
-const CK = "v1|" + TEXT; /* מפתח מטמון: משתנה אם המשפט משתנה */
+const CK = "v2|" + STYLE + "|" + TEXT; /* מפתח מטמון: משתנה אם המשפט משתנה */
 const $ = s => document.querySelector(s);
 $("#txt").textContent = TEXT;
 try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) { }
@@ -115,19 +134,20 @@ const getAIx = () => AIP || (AIP = (async () => {
 })().catch(e => { AIP = null; throw e; }));
 const timeout = (p, ms, what) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error("timeout " + what)), ms))]);
 const speech = v => ({ voiceConfig: { prebuiltVoiceConfig: { voiceName: v } } });
-let goodTTS = null, goodLive = null, ttsDead = false;
+const goodTTS = {}; let goodLive = null, ttsDead = false;
 const LOG = [];
 
 async function viaTTS(F, voice) {
   let last = null;
-  for (const m of goodTTS ? [goodTTS] : TTS_MODELS) {
+  const q = Q;
+  for (const m of goodTTS[q] ? [goodTTS[q]] : TTS_MODELS[q]) {
     try {
       const md = F.AI.getGenerativeModel(F.ai, { model: m, generationConfig: { responseModalities: ["AUDIO"], speechConfig: speech(voice) } });
-      const r = await timeout(md.generateContent(STYLE + TEXT), 45000, m);
+      const r = await timeout(md.generateContent(STYLE + "\n\n" + TEXT), 45000, m);
       const c = r.response.candidates && r.response.candidates[0];
       const blob = partsToWav(c && c.content && c.content.parts);
       if (!blob) throw new Error("no audio in response (" + m + ")");
-      goodTTS = m; LOG.push(m + ": ok"); return { blob, how: "TTS · " + m };
+      goodTTS[q] = m; LOG.push(m + ": ok"); return { blob, how: m };
     } catch (e) { last = e; LOG.push(m + ": " + String(e && e.message || e).slice(0, 160)); if (/timeout|Failed to fetch|App Check|PERMISSION|403|401/i.test(String(e && e.message))) break; }
   }
   throw last || new Error("TTS failed");
@@ -157,14 +177,15 @@ async function viaLive(F, voice) {
   throw last || new Error("Live failed");
 }
 async function makeAudio(voice) {
-  const k = CK + "|" + voice;
+  const k = CK + "|" + Q + "|" + voice;
   if (MEM.has(k)) return MEM.get(k);
   const hit = await idbGet(k);
   if (hit && hit.blob) { MEM.set(k, hit); return hit; }
   const F = await timeout(getAIx(), 20000, "firebase load");
   let out;
-  if (!ttsDead) { try { out = await viaTTS(F, voice); } catch (e) { if (/timeout|Failed to fetch|App Check/i.test(String(e && e.message))) throw e; if (!goodTTS) ttsDead = true; } }
+  if (!ttsDead) { try { out = await viaTTS(F, voice); } catch (e) { if (/timeout|Failed to fetch|App Check/i.test(String(e && e.message))) throw e; if (!goodTTS.n && !goodTTS.h) ttsDead = true; } }
   if (!out) out = await viaLive(F, voice);
+  out.q = Q;
   MEM.set(k, out); idbPut(k, out);
   return out;
 }
@@ -197,17 +218,17 @@ async function playBlob(blob) {
 }
 
 /* ---------- UI ---------- */
-const grid = $("#grid"), cards = {};
+const cards = {};
 let PICK = null; try { PICK = localStorage.getItem("yhVoicePick"); } catch (e) { }
-VOICES.forEach(([v, g, ch]) => {
+VOICES.forEach(([v, g, ch, grp]) => {
   const el = document.createElement("div");
   el.className = "card"; el.dataset.v = v;
-  el.innerHTML = `<div class="top"><span class="nm">${v}</span><span class="tag ${g}">${g == "m" ? "גבר" : "אישה"}</span></div>
+  el.innerHTML = `<div class="top"><span class="nm"${v.length > 10 ? ' style="font-size:15px"' : ""}>${v}</span><span class="tag ${g}">${g == "m" ? "גבר" : "אישה"}</span></div>
   <div class="ch">${ch}</div>
   <button class="play">▶ שמע</button>
   <button class="chooseb">בחר בקול הזה</button>
   <div class="msg"></div><div class="meta"></div>`;
-  grid.appendChild(el); cards[v] = el;
+  $("#g" + grp).appendChild(el); cards[v] = el;
   el.querySelector(".play").addEventListener("click", () => { unlock(); seq = false; setSeq(false); playVoice(v); });
   el.querySelector(".chooseb").addEventListener("click", () => choose(v));
 });
@@ -229,7 +250,7 @@ async function playVoice(v) {
   setBusy(v, true);
   try {
     const a = await makeAudio(v);
-    el.querySelector(".meta").textContent = a.how || "";
+    el.querySelector(".meta").textContent = (a.how ? "מודל: " + a.how : "") + (a.q === "h" && a.how && !/pro/.test(a.how) ? " · גבוהה לא זמינה, הושמע ברגילה" : "");
     if (playing !== v) return;
     setBusy(v, true, "מנגן…");
     await playBlob(a.blob);
@@ -257,6 +278,13 @@ $("#all").addEventListener("click", async () => {
 });
 $("#stop").addEventListener("click", () => { seq = false; playing = null; stopAll(); setSeq(false); $("#stop").disabled = true; });
 au.addEventListener("play", () => { if (au.src !== SILENT) $("#stop").disabled = false; });
+function setQ(q) {
+  Q = q; try { localStorage.setItem("yhVoiceQ", q); } catch (e) { }
+  document.querySelectorAll(".seg button").forEach(b => b.classList.toggle("on", b.dataset.q === q));
+  $("#qn").textContent = q === "h" ? "Gemini Pro TTS · איטי יותר" : "Gemini Flash TTS";
+}
+document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => setQ(b.dataset.q)));
+setQ(Q);
 /* חימום: טוען את הספרייה מראש כדי שהלחיצה הראשונה תהיה מהירה */
 setTimeout(() => { getAIx().catch(() => { }); }, 300);
 </script>
