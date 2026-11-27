@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>בחירת קול לעוזר</title>
+<style>
+:root{--bg:#fbfaf6;--card:#fff;--ink:#1d2420;--mu:#6b706a;--gold:#b08a3e;--gold2:#e9dcc0;--green:#0F4C2F;--line:#ece6d8;--err:#a8322a}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Heebo,Arial,sans-serif;-webkit-text-size-adjust:100%}
+main{max-width:640px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom))}
+h1{font-family:'Frank Ruhl Libre',Georgia,serif;font-size:27px;margin:6px 0 4px;color:var(--green)}
+.sub{color:var(--mu);font-size:15px;line-height:1.5;margin:0 0 14px}
+.quote{background:#fff;border:1px solid var(--line);border-inline-start:4px solid var(--gold);border-radius:14px;padding:12px 14px;font-size:15.5px;line-height:1.55;margin:0 0 14px}
+.quote small{display:block;color:var(--mu);font-size:12.5px;margin-bottom:4px}
+.bar{display:flex;gap:10px;margin:0 0 16px;flex-wrap:wrap}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.btn{min-height:48px;border-radius:14px;border:1.5px solid var(--gold);background:#fff;color:var(--green);font-weight:700;font-size:16px;padding:0 18px}
+.btn.pri{background:var(--green);border-color:var(--green);color:#fff}
+.btn:disabled{opacity:.5}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:360px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:8px;transition:border-color .2s,box-shadow .2s}
+.card.on{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold2)}
+.card.pick{border-color:var(--green);box-shadow:0 0 0 3px #cfe3d6}
+.top{display:flex;align-items:center;gap:8px}
+.nm{font-weight:800;font-size:18px;letter-spacing:.2px}
+.tag{font-size:12px;font-weight:700;border-radius:99px;padding:3px 9px;background:#f4efe3;color:#7a5f25}
+.tag.m{background:#e8efe9;color:var(--green)}
+.ch{color:var(--mu);font-size:14px}
+.play{min-height:46px;border-radius:12px;border:0;background:var(--green);color:#fff;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px}
+.play.busy{background:#5b7a69}
+.spin{width:16px;height:16px;border-radius:50%;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.chooseb{min-height:44px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:14.5px}
+.card.pick .chooseb{border-color:var(--green);background:#eef5f0;color:var(--green);font-weight:800}
+.msg{font-size:13.5px;line-height:1.45;color:var(--err);display:none}
+.msg small{display:block;color:var(--mu);font-size:11px;direction:ltr;text-align:left;word-break:break-word;margin-top:3px}
+.meta{font-size:11px;color:#9a9c95;direction:ltr;text-align:left;min-height:13px}
+.note{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:14px;color:var(--mu);line-height:1.55}
+.choice{margin-top:14px;padding:14px;border-radius:14px;background:#eef5f0;border:1.5px solid var(--green);color:var(--green);font-weight:700;display:none;line-height:1.5}
+</style>
+</head>
+<body>
+<main>
+<h1>איזה קול יהיה לעוזר?</h1>
+<p class="sub">תלחץ "▶ שמע" על כל קול. הקול שתבחר יהיה הקול של העוזר לכולם.</p>
+<div class="quote"><small>המשפט לדוגמה</small><span id="txt"></span></div>
+<div class="bar">
+  <button class="btn pri" id="all">▶ השמע את כולם ברצף</button>
+  <button class="btn" id="stop" disabled>■ עצור</button>
+</div>
+<div class="grid" id="grid"></div>
+<div class="choice" id="choice"></div>
+<div class="note">
+  אין צליל? תוודא שהמתג הצדדי של האייפון לא על שקט, ושהווליום למעלה.<br>
+  כל קול נוצר פעם אחת (כמה שניות) — בפעם השנייה הוא מתנגן מיד.
+</div>
+</main>
+<audio id="au" playsinline preload="auto"></audio>
+<script type="module">
+/* firebasejs 12.19.0 — speechConfig (TTS) ו-Live API נתמכים רשמית בגרסה הזו; 12.0.0 שבאפליקציה לא מגדיר אותם */
+const B2 = "https://www.gstatic.com/firebasejs/12.19.0/";
+const CFG = { apiKey: "AIzaSyDaxJFkzVhV1yqsV_ue82a_l2f4ghkn9Eg", authDomain: "sanmartin3-f51ed.firebaseapp.com", projectId: "sanmartin3-f51ed", storageBucket: "sanmartin3-f51ed.firebasestorage.app", messagingSenderId: "988109406674", appId: "1:988109406674:web:64708ae1efb5b8025e880b" };
+const APPCK = "6LcQujQuAAAAAGyaJwMxFSn5-d_J84osY9IizCyA";
+const TEXT = "אהלן אחי, מה העניינים? בדקתי לך — יש שלושה ליקויים פתוחים בקומה 5, שניים אצל החשמלאי. רוצה שאשלח לו?";
+const STYLE = "Read the following Hebrew text aloud in casual, warm, natural Israeli Hebrew, like a friendly colleague on a construction site. Say only the text: ";
+const TTS_MODELS = ["gemini-2.5-flash-preview-tts", "gemini-2.5-flash-tts", "gemini-2.5-pro-preview-tts", "gemini-2.5-pro-tts"];
+const LIVE_MODELS = ["gemini-2.5-flash-native-audio-preview-09-2025", "gemini-live-2.5-flash-preview"];
+const VOICES = [
+  ["Kore", "f", "תקיפה וברורה"], ["Aoede", "f", "קלילה ואוורירית"], ["Leda", "f", "צעירה"], ["Sulafat", "f", "חמה"], ["Zephyr", "f", "בהירה"],
+  ["Puck", "m", "אנרגטי"], ["Charon", "m", "רציני ומסביר"], ["Achird", "m", "חברי"], ["Orus", "m", "יציב"], ["Fenrir", "m", "נלהב"]
+];
+const CK = "v1|" + TEXT; /* מפתח מטמון: משתנה אם המשפט משתנה */
+const $ = s => document.querySelector(s);
+$("#txt").textContent = TEXT;
+try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) { }
+
+/* ---------- IndexedDB (מטמון בין כניסות) ---------- */
+const MEM = new Map();
+let dbP = null;
+const db = () => dbP || (dbP = new Promise((ok, no) => { try { const r = indexedDB.open("yh-voices", 1); r.onupgradeneeded = () => r.result.createObjectStore("a"); r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error); } catch (e) { no(e); } }));
+const idbGet = async k => { try { const d = await db(); return await new Promise(ok => { const q = d.transaction("a").objectStore("a").get(k); q.onsuccess = () => ok(q.result || null); q.onerror = () => ok(null); }); } catch (e) { return null; } };
+const idbPut = async (k, v) => { try { const d = await db(); d.transaction("a", "readwrite").objectStore("a").put(v, k); } catch (e) { } };
+
+/* ---------- PCM → WAV ---------- */
+const b64 = s => { const b = atob(s), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; };
+const rateOf = mt => +((String(mt || "").match(/rate=(\d+)/) || [])[1] || 24000);
+function wav(pcm, rate) {
+  const h = new DataView(new ArrayBuffer(44)), w = (o, s) => { for (let i = 0; i < s.length; i++) h.setUint8(o + i, s.charCodeAt(i)); };
+  w(0, "RIFF"); h.setUint32(4, 36 + pcm.length, true); w(8, "WAVE"); w(12, "fmt "); h.setUint32(16, 16, true); h.setUint16(20, 1, true); h.setUint16(22, 1, true);
+  h.setUint32(24, rate, true); h.setUint32(28, rate * 2, true); h.setUint16(32, 2, true); h.setUint16(34, 16, true); w(36, "data"); h.setUint32(40, pcm.length, true);
+  return new Blob([h.buffer, pcm], { type: "audio/wav" });
+}
+const joinU8 = arr => { const n = arr.reduce((a, b) => a + b.length, 0), o = new Uint8Array(n); let p = 0; arr.forEach(a => { o.set(a, p); p += a.length; }); return o; };
+function partsToWav(parts) {
+  const au = (parts || []).filter(p => p.inlineData && /^audio\//.test(p.inlineData.mimeType || "") && p.inlineData.data);
+  if (!au.length) return null;
+  const mt = au[0].inlineData.mimeType;
+  if (/wav|mpeg|mp3|ogg/.test(mt)) return new Blob([b64(au[0].inlineData.data)], { type: mt.split(";")[0] });
+  return wav(joinU8(au.map(p => b64(p.inlineData.data))), rateOf(mt));
+}
+
+/* ---------- Firebase AI Logic ---------- */
+let AIP = null;
+const getAIx = () => AIP || (AIP = (async () => {
+  const [A, AI] = await Promise.all([import(B2 + "firebase-app.js"), import(B2 + "firebase-ai.js")]);
+  const app = A.initializeApp(CFG, "voices");
+  const AC = await import(B2 + "firebase-app-check.js");
+  const ck = AC.initializeAppCheck(app, { provider: new AC.ReCaptchaEnterpriseProvider(APPCK), isTokenAutoRefreshEnabled: true });
+  /* בדיקה מוקדמת: בלי אסימון App Check כל בקשה תיתקע — עדיף להגיד מיד */
+  await timeout(AC.getToken(ck), 15000, "App Check token (recaptcha)").catch(e => { throw new Error("App Check: " + (e && e.message || e)); });
+  return { AI, ai: AI.getAI(app, { backend: new AI.GoogleAIBackend() }) };
+})().catch(e => { AIP = null; throw e; }));
+const timeout = (p, ms, what) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error("timeout " + what)), ms))]);
+const speech = v => ({ voiceConfig: { prebuiltVoiceConfig: { voiceName: v } } });
+let goodTTS = null, goodLive = null, ttsDead = false;
+const LOG = [];
+
+async function viaTTS(F, voice) {
+  let last = null;
+  for (const m of goodTTS ? [goodTTS] : TTS_MODELS) {
+    try {
+      const md = F.AI.getGenerativeModel(F.ai, { model: m, generationConfig: { responseModalities: ["AUDIO"], speechConfig: speech(voice) } });
+      const r = await timeout(md.generateContent(STYLE + TEXT), 45000, m);
+      const c = r.response.candidates && r.response.candidates[0];
+      const blob = partsToWav(c && c.content && c.content.parts);
+      if (!blob) throw new Error("no audio in response (" + m + ")");
+      goodTTS = m; LOG.push(m + ": ok"); return { blob, how: "TTS · " + m };
+    } catch (e) { last = e; LOG.push(m + ": " + String(e && e.message || e).slice(0, 160)); if (/timeout|Failed to fetch|App Check|PERMISSION|403|401/i.test(String(e && e.message))) break; }
+  }
+  throw last || new Error("TTS failed");
+}
+async function viaLive(F, voice) {
+  if (!F.AI.getLiveGenerativeModel) throw new Error("Live API not in SDK");
+  let last = null;
+  for (const m of goodLive ? [goodLive] : LIVE_MODELS) {
+    let s = null;
+    try {
+      const md = F.AI.getLiveGenerativeModel(F.ai, { model: m, generationConfig: { responseModalities: ["AUDIO"], speechConfig: speech(voice) }, systemInstruction: "You are a voice reader. Repeat the user's Hebrew text exactly, word for word, in casual warm natural Israeli Hebrew. Do not add or answer anything." });
+      s = await timeout(md.connect(), 20000, "live connect " + m);
+      await s.send(TEXT, true);
+      const chunks = []; let rate = 24000;
+      await timeout((async () => {
+        for await (const msg of s.receive()) {
+          if (msg.type !== "serverContent") continue;
+          ((msg.modelTurn && msg.modelTurn.parts) || []).forEach(p => { if (p.inlineData && p.inlineData.data) { chunks.push(b64(p.inlineData.data)); rate = rateOf(p.inlineData.mimeType); } });
+          if (msg.turnComplete || msg.interrupted) break;
+        }
+      })(), 60000, "live receive " + m);
+      if (!chunks.length) throw new Error("no audio from live (" + m + ")");
+      goodLive = m; LOG.push("live " + m + ": ok"); return { blob: wav(joinU8(chunks), rate), how: "Live · " + m };
+    } catch (e) { last = e; LOG.push("live " + m + ": " + String(e && e.message || e).slice(0, 160)); }
+    finally { try { s && s.close(); } catch (e) { } }
+  }
+  throw last || new Error("Live failed");
+}
+async function makeAudio(voice) {
+  const k = CK + "|" + voice;
+  if (MEM.has(k)) return MEM.get(k);
+  const hit = await idbGet(k);
+  if (hit && hit.blob) { MEM.set(k, hit); return hit; }
+  const F = await timeout(getAIx(), 20000, "firebase load");
+  let out;
+  if (!ttsDead) { try { out = await viaTTS(F, voice); } catch (e) { if (/timeout|Failed to fetch|App Check/i.test(String(e && e.message))) throw e; if (!goodTTS) ttsDead = true; } }
+  if (!out) out = await viaLive(F, voice);
+  MEM.set(k, out); idbPut(k, out);
+  return out;
+}
+
+/* ---------- ניגון: פתיחה בתוך הלחיצה (iOS) ---------- */
+const au = $("#au");
+const SILENT = URL.createObjectURL(wav(new Uint8Array(480), 24000));
+let unlocked = false, actx = null, src = null, curURL = null, stopFn = null;
+function unlock() {
+  try { if (!unlocked) { au.src = SILENT; const p = au.play(); if (p && p.catch) p.catch(() => { }); unlocked = true; } } catch (e) { }
+  try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state !== "running") actx.resume(); const b = actx.createBuffer(1, 1, 22050), s = actx.createBufferSource(); s.buffer = b; s.connect(actx.destination); s.start(0); } catch (e) { }
+}
+function stopAll() { try { au.pause(); } catch (e) { } try { src && src.stop(); } catch (e) { } src = null; if (stopFn) { const f = stopFn; stopFn = null; f(); } }
+async function playBlob(blob) {
+  stopAll();
+  return new Promise(async (done, fail) => {
+    stopFn = done;
+    if (curURL) URL.revokeObjectURL(curURL);
+    curURL = URL.createObjectURL(blob);
+    au.onended = () => { stopFn = null; done(); };
+    au.src = curURL;
+    try { await au.play(); return; } catch (e) { /* נופלים ל-AudioContext */ }
+    try {
+      if (!actx) throw new Error("no AudioContext");
+      const buf = await actx.decodeAudioData(await blob.arrayBuffer());
+      src = actx.createBufferSource(); src.buffer = buf; src.connect(actx.destination);
+      src.onended = () => { src = null; stopFn = null; done(); }; src.start(0);
+    } catch (e) { stopFn = null; fail(new Error("playback blocked: " + (e && e.message || e))); }
+  });
+}
+
+/* ---------- UI ---------- */
+const grid = $("#grid"), cards = {};
+let PICK = null; try { PICK = localStorage.getItem("yhVoicePick"); } catch (e) { }
+VOICES.forEach(([v, g, ch]) => {
+  const el = document.createElement("div");
+  el.className = "card"; el.dataset.v = v;
+  el.innerHTML = `<div class="top"><span class="nm">${v}</span><span class="tag ${g}">${g == "m" ? "גבר" : "אישה"}</span></div>
+  <div class="ch">${ch}</div>
+  <button class="play">▶ שמע</button>
+  <button class="chooseb">בחר בקול הזה</button>
+  <div class="msg"></div><div class="meta"></div>`;
+  grid.appendChild(el); cards[v] = el;
+  el.querySelector(".play").addEventListener("click", () => { unlock(); seq = false; setSeq(false); playVoice(v); });
+  el.querySelector(".chooseb").addEventListener("click", () => choose(v));
+});
+function setBusy(v, on, label) { const b = cards[v].querySelector(".play"); b.classList.toggle("busy", !!on); b.innerHTML = on ? `<span class="spin"></span>${label || "מכין קול…"}` : "▶ שמע"; }
+function showErr(v, e) {
+  const m = cards[v].querySelector(".msg");
+  const t = String(e && e.message || e);
+  const nice = /app.?check|attestation|recaptcha|401|403|PERMISSION/i.test(t) ? "לא הצלחתי להתחבר לשירות הקול. הדף עובד רק מהכתובת של האתר." :
+    /Failed to fetch|network|timeout|load/i.test(t) ? "לא הצלחתי להגיע לשירות הקול. בדוק אינטרנט ונסה שוב." :
+    /playback/i.test(t) ? "הקול מוכן אבל האייפון לא נתן לנגן. לחץ שוב על ▶ שמע." : "לא הצלחתי ליצור את הקול הזה כרגע. נסה שוב עוד רגע.";
+  m.innerHTML = nice + "<small></small>"; m.querySelector("small").textContent = t.slice(0, 220) + (LOG.length ? " | " + LOG.slice(-3).join(" | ") : "");
+  m.style.display = "block";
+}
+let playing = null;
+async function playVoice(v) {
+  const el = cards[v]; el.querySelector(".msg").style.display = "none";
+  Object.values(cards).forEach(c => c.classList.remove("on"));
+  el.classList.add("on"); playing = v;
+  setBusy(v, true);
+  try {
+    const a = await makeAudio(v);
+    el.querySelector(".meta").textContent = a.how || "";
+    if (playing !== v) return;
+    setBusy(v, true, "מנגן…");
+    await playBlob(a.blob);
+  } catch (e) { showErr(v, e); if (seq) throw e; }
+  finally { setBusy(v, false); el.classList.remove("on"); }
+}
+function choose(v) {
+  PICK = v; try { localStorage.setItem("yhVoicePick", v); } catch (e) { }
+  Object.values(cards).forEach(c => c.classList.toggle("pick", c.dataset.v === v));
+  Object.values(cards).forEach(c => c.querySelector(".chooseb").textContent = c.dataset.v === v ? "✓ הקול שבחרת" : "בחר בקול הזה");
+  const c = $("#choice"); c.style.display = "block";
+  c.textContent = `בחרת: ${v}. תכתוב לי בצ'אט "בחרתי ${v}" ואני אגדיר אותו כקול של העוזר לכולם.`;
+}
+if (PICK && cards[PICK]) choose(PICK);
+let seq = false;
+function setSeq(on) { $("#all").disabled = on; $("#stop").disabled = !on && !playing; }
+$("#all").addEventListener("click", async () => {
+  unlock(); seq = true; setSeq(true);
+  for (const [v] of VOICES) {
+    if (!seq) break;
+    try { await playVoice(v); } catch (e) { seq = false; break; }
+    if (seq) await new Promise(r => setTimeout(r, 500));
+  }
+  seq = false; setSeq(false);
+});
+$("#stop").addEventListener("click", () => { seq = false; playing = null; stopAll(); setSeq(false); $("#stop").disabled = true; });
+au.addEventListener("play", () => { if (au.src !== SILENT) $("#stop").disabled = false; });
+/* חימום: טוען את הספרייה מראש כדי שהלחיצה הראשונה תהיה מהירה */
+setTimeout(() => { getAIx().catch(() => { }); }, 300);
+</script>
+</body>
+</html>
