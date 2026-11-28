@@ -21,9 +21,10 @@ q('.fcd-ttl b').textContent=CFG.title||'בניין 1';q('.fcd-ttl small').textCo
 
 // ---------- מידות ----------
 const W=25.14,D=24.54,GH=4.8,FH=3.2;
+const PH=CFG.ph||17,RF=PH+1;/* קומת הפנטהאוז: בניין 1 = 17, בניין 2 = 9 */
 const yF=f=>f<=0?0:GH+(f-1)*FH;
-const BX=3.75,BD=2.1,PHX=5.0,PHD=1.4,TOP=yF(18),PG=4.2;
-const fOf=y=>y<GH-.05?0:y>=TOP-.05?18:Math.min(17,Math.floor((y-GH+.05)/FH)+1);
+const BX=3.75,BD=2.1,PHX=5.0,PHD=1.4,TOP=yF(RF),PG=4.2;
+const fOf=y=>y<GH-.05?0:y>=TOP-.05?RF:Math.min(PH,Math.floor((y-GH+.05)/FH)+1);
 
 // ---------- רנדרר ----------
 const R=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
@@ -96,7 +97,7 @@ function addGeom(k,geo,bk){const g=geo.index?geo.toNonIndexed():geo;const P=g.at
   if(ax>=ay&&ax>=az)B.u.push(z*s,y*s);else if(ay>=az)B.u.push(x*s,z*s);else B.u.push(x*s,y*s)}}
 // קופסה; בבניין — נחתכת בגבולות הקומות כדי שכל קומה תהיה קבוצה נפרדת (חיתוך / שלד)
 function box(k,x0,x1,y0,y1,z0,z1,bk){if(x1<x0)[x0,x1]=[x1,x0];if(y1<y0)[y0,y1]=[y1,y0];if(z1<z0)[z0,z1]=[z1,z0];if(x1-x0<1e-4||y1-y0<1e-4||z1-z0<1e-4)return;
- if(BKT==null&&bk==null){const cuts=[GH];for(let f=2;f<=18;f++)cuts.push(yF(f));for(const c of cuts)if(c>y0+.06&&c<y1-.06){box(k,x0,x1,y0,c,z0,z1);box(k,x0,x1,c,y1,z0,z1);return}}
+ if(BKT==null&&bk==null){const cuts=[GH];for(let f=2;f<=RF;f++)cuts.push(yF(f));for(const c of cuts)if(c>y0+.06&&c<y1-.06){box(k,x0,x1,y0,c,z0,z1);box(k,x0,x1,c,y1,z0,z1);return}}
  addGeom(k,new T.BoxGeometry(x1-x0,y1-y0,z1-z0).translate((x0+x1)/2,(y0+y1)/2,(z0+z1)/2),bk)}
 function railQ(a,b,y0,y1,k,bk){k=k||'rail';const L=Math.hypot(b.x-a.x,b.z-a.z),sc=k=='rail'?.11:(UVS[k]||1),U=L/sc,V=k=='rail'?1:(y1-y0)/sc,nx=(b.z-a.z)/L,nz=-(b.x-a.x)/L;
  const B=buf(bk!=null?bk:BKT!=null?BKT:fOf((y0+y1)/2),k);
@@ -105,9 +106,9 @@ const FAC={front:{ua:'x',su:1,base:D/2,sn:1,half:W/2,bal:true},back:{ua:'x',su:-
 function fb(F,k,u0,u1,y0,y1,w0,w1){const a=F.su*u0,b=F.su*u1,c=F.base+F.sn*w0,d=F.base+F.sn*w1;if(F.ua=='x')box(k,a,b,y0,y1,c,d);else box(k,c,d,y0,y1,a,b)}
 function fpt(F,u,w){const a=F.su*u,c=F.base+F.sn*w;return F.ua=='x'?{x:a,z:c}:{x:c,z:a}}
 function frail(F,u0,u1,y,w){railQ(fpt(F,u0,w),fpt(F,u1,w),y,y+1.05)}
-const PA=[1,4,5,8,11,12,15,17,18],PB=[1,3,6,7,10,13,14,16,17,18];
+const PA=[1,4,5,8,11,12,15].filter(f=>f<PH).concat([PH,RF]),PB=[1,3,6,7,10,13,14,16].filter(f=>f<PH).concat([PH,RF]);
 function pat(F,u){const uw=F.su*u;let sx,sz;if(F.ua=='x'){sx=Math.sign(uw)||1;sz=F.sn}else{sz=Math.sign(uw)||1;sx=F.sn}return sx*sz<0?PA:PB}
-function fieldLen(P,f){let lo=f,hi=f+1;while(lo>1&&!P.includes(lo))lo--;while(hi<18&&!P.includes(hi))hi++;return hi-lo}
+function fieldLen(P,f){let lo=f,hi=f+1;while(lo>1&&!P.includes(lo))lo--;while(hi<RF&&!P.includes(hi))hi++;return hi-lo}
 let H=1;const hash=()=>{H=(H*9301+49297)%233280;return H/233280};
 function win(F,u,yb,w,h,o){o=o||{};const t=.07,wo=o.wo||0,x0=u-w/2,x1=u+w/2,y1=yb+h;
  fb(F,'alu',x0,x1,y1-t,y1,wo-.03,wo+.07);fb(F,'alu',x0,x1,yb,yb+t,wo-.03,wo+.09);fb(F,'alu',x0,x0+t,yb,y1,wo-.03,wo+.07);fb(F,'alu',x1-t,x1,yb,y1,wo-.03,wo+.07);
@@ -124,31 +125,31 @@ function shop(F,u,w,lobby){const y1=lobby?3.9:3.55;fb(F,'dark',u-w/2-.28,u+w/2+.
 
 // ---------- הבניין ----------
 box('stone',-W/2,W/2,0,GH,-D/2,D/2);
-box('stone',-W/2,-BX,GH,yF(17),-D/2,D/2);box('stone',BX,W/2,GH,yF(17),-D/2,D/2);
-box('stone',-W/2,-PHX,yF(17),TOP,-D/2,D/2);box('stone',PHX,W/2,yF(17),TOP,-D/2,D/2);
-box('stone',-BX,BX,GH,yF(17),-D/2+BD,D/2-BD);
-box('clad',-PHX,PHX,yF(17),TOP,-D/2+PHD,D/2-PHD);
-box('plaster',-PHX,PHX,yF(17),yF(17)+.02,-D/2,D/2);
+box('stone',-W/2,-BX,GH,yF(PH),-D/2,D/2);box('stone',BX,W/2,GH,yF(PH),-D/2,D/2);
+box('stone',-W/2,-PHX,yF(PH),TOP,-D/2,D/2);box('stone',PHX,W/2,yF(PH),TOP,-D/2,D/2);
+box('stone',-BX,BX,GH,yF(PH),-D/2+BD,D/2-BD);
+box('clad',-PHX,PHX,yF(PH),TOP,-D/2+PHD,D/2-PHD);
+box('plaster',-PHX,PHX,yF(PH),yF(PH)+.02,-D/2,D/2);
 box('dark',-W/2-.1,W/2+.1,GH-.4,GH-.06,-D/2-.1,D/2+.1,0);box('dark',-W/2-.1,W/2+.1,GH+.06,GH+.35,-D/2-.1,D/2+.1,1);
-box('dark',-W/2-.08,W/2+.08,TOP-.15,TOP-.06,-D/2-.08,D/2+.08,17);box('dark',-W/2-.08,W/2+.08,TOP+.06,TOP+.35,-D/2-.08,D/2+.08,18);
+box('dark',-W/2-.08,W/2+.08,TOP-.15,TOP-.06,-D/2-.08,D/2+.08,PH);box('dark',-W/2-.08,W/2+.08,TOP+.06,TOP+.35,-D/2-.08,D/2+.08,RF);
 for(const key in FAC){const F=FAC[key],h=F.half;
  if(F.bal){
-  for(const s of [-1,1]){bands(F,s<0?-h-.08:BX,s<0?-BX:h+.08);column(F,s*6.3,'A',1,17);column(F,s*10.9,'B',1,16);win(F,s*10.9,yF(17)+1.35,.65,.65)}
-  fb(F,'dark',-.3,.3,GH,yF(17),-.35,.1);fb(F,'stone',-.15,.15,GH,yF(17),-BD,-.35);
+  for(const s of [-1,1]){bands(F,s<0?-h-.08:BX,s<0?-BX:h+.08);column(F,s*6.3,'A',1,PH);column(F,s*10.9,'B',1,PH-1);win(F,s*10.9,yF(PH)+1.35,.65,.65)}
+  fb(F,'dark',-.3,.3,GH,yF(PH),-.35,.1);fb(F,'stone',-.15,.15,GH,yF(PH),-BD,-.35);
   for(const s of [-1,1]){const u0=s<0?-BX:.24,u1=s<0?-.24:BX;
-   for(let f=1;f<=16;f++){const ys=yF(f);
+   for(let f=1;f<=PH-1;f++){const ys=yF(f);
     if(f>1)fb(F,'plaster',u0,u1,ys,ys+.02,-BD,0);
     fb(F,'dark',u0-(s<0?.08:0),u1+(s>0?.08:0),ys+.04,ys+.15,-.04,.18);if(f>1)fb(F,'dark',u0-(s<0?.08:0),u1+(s>0?.08:0),ys-.45,ys-.04,-.04,.18);
     frail(F,u0+.05,u1-.05,ys+.15,.07);win(F,(u0+u1)/2-s*.3,ys+.04,2.1,2.3,{wo:-BD});fb(F,'plaster',u0,u1,ys+FH-.22,ys+FH-.04,-BD,0)}}
-  for(const u of [-2.6,0,2.6])win(F,u,yF(17)+.05,2.2,2.5,{wo:-PHD});
-  fb(F,'dark',-PHX,PHX,yF(17)-.45,yF(17)-.04,-.04,.18);fb(F,'dark',-PHX,PHX,yF(17)+.04,yF(17)+.12,-.04,.18);frail(F,-PHX,PHX,yF(17)+.12,.07);
+  for(const u of [-2.6,0,2.6])win(F,u,yF(PH)+.05,2.2,2.5,{wo:-PHD});
+  fb(F,'dark',-PHX,PHX,yF(PH)-.45,yF(PH)-.04,-.04,.18);fb(F,'dark',-PHX,PHX,yF(PH)+.04,yF(PH)+.12,-.04,.18);frail(F,-PHX,PHX,yF(PH)+.12,.07);
   if(key=='front'){shop(F,0,3.6,true);for(const u of [-10.4,-6.4,6.4,10.4])shop(F,u,3.0)}else for(const u of [-10.4,-6.4,6.4,10.4])win(F,u,1.0,1.6,1.9,{tr:true})
  }else{
-  for(const s of [-1,1]){bands(F,s<0?-h-.08:0,s<0?0:h+.08);column(F,s*3.2,'A',1,17);column(F,s*8.6,'B',1,16)}
-  fb(F,'dark',-.35,.35,GH+.35,TOP-.15,-.02,.06);column(F,-1.6,'C',1,17);column(F,1.6,'C',1,17);
+  for(const s of [-1,1]){bands(F,s<0?-h-.08:0,s<0?0:h+.08);column(F,s*3.2,'A',1,PH);column(F,s*8.6,'B',1,PH-1)}
+  fb(F,'dark',-.35,.35,GH+.35,TOP-.15,-.02,.06);column(F,-1.6,'C',1,PH);column(F,1.6,'C',1,PH);
   if(key=='right')for(const u of [-9,-3.5,3.5,9])shop(F,u,3.0)}}
 // גג: מסגרת בטון (פרגולה), חדר משאבות עם דלת
-BKT=18;
+BKT=RF;
 {const t=.9,y0=TOP+.35,y1=TOP+PG;
  for(const s of [-1,1]){box('clad',-W/2,W/2,y1-t,y1,s*D/2-(s>0?t:0),s*D/2+(s<0?t:0));box('clad',s*W/2-(s>0?t:0),s*W/2+(s<0?t:0),y1-t,y1,-D/2,D/2);
   box('clad',-W/2,W/2,y0,y0+.9,s*D/2-(s>0?t:0),s*D/2+(s<0?t:0));box('clad',s*W/2-(s>0?t:0),s*W/2+(s<0?t:0),y0,y0+.9,-D/2,D/2)}
@@ -197,7 +198,7 @@ BKT=null;
 
 // ---------- רשתות לקבוצות ----------
 const FG=[],SITE=new T.Group(),FEN=new T.Group(),BLD=new T.Group(),MESHES=[];scene.add(BLD,SITE,FEN);
-for(let f=0;f<=18;f++){const g=new T.Group();g.userData.f=f;FG.push(g);BLD.add(g)}
+for(let f=0;f<=RF;f++){const g=new T.Group();g.userData.f=f;FG.push(g);BLD.add(g)}
 function mkMesh(k,b){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(b.p,3));g.setAttribute('normal',new T.Float32BufferAttribute(b.n,3));g.setAttribute('uv',new T.Float32BufferAttribute(b.u,2));
  const m=new T.Mesh(g,M[k]);m.userData.k=k;m.castShadow=!['pave','earth','asph','glass','shop','mesh'].includes(k);m.receiveShadow=true;
  if(k=='rail'||k=='mesh'||k=='rebar'||k=='lat')m.customDepthMaterial=new T.MeshDepthMaterial({depthPacking:T.RGBADepthPacking,map:M[k].map,alphaTest:.5});return m}
@@ -215,9 +216,9 @@ function clear(g){for(let i=g.children.length-1;i>=0;i--){const c=g.children[i];
 let DATA=CFG.data||{fl:{}},MODE='fin',SK=null;
 const has=(o,re)=>Object.keys(o||{}).some(k=>re.test(k)&&o[k]);
 function skInfo(){const sk=DATA.sk;if(!sk||!sk.fl)return null;const fl=sk.fl;let any=0,cur=-1;
- for(let f=0;f<=17;f++){const els=fl[f]||[];if(els.some(e=>Object.keys(e.s||{}).some(k=>e.s[k])))any=1}
+ for(let f=0;f<=PH;f++){const els=fl[f]||[];if(els.some(e=>Object.keys(e.s||{}).some(k=>e.s[k])))any=1}
  if(!any)return null;
- for(let f=0;f<=17;f++){const els=fl[f]||[],S=sk.S||[];const done=els.length&&els.every(e=>S.every(x=>(e.s||{})[x]));if(!done){cur=f;break}}
+ for(let f=0;f<=PH;f++){const els=fl[f]||[],S=sk.S||[];const done=els.length&&els.every(e=>S.every(x=>(e.s||{})[x]));if(!done){cur=f;break}}
  return cur<0?null:{cur,S:sk.S||[],fl}}
 // שלב של אלמנט שלד: 0 כלום · 1 תבנית · 2 ברזל · 3 יצוק (עם תבנית) · 4 יצוק בלי תבנית; stone = סידור אבן (ברנוביץ')
 function elSt(e){const s=e.s||{};const c=has(s,/יציק/),x=has(s,/פירוק/);return{lv:x?4:c?3:has(s,/ברזל/)?2:has(s,/תבנית/)?1:0,stone:has(s,/אבן/),nx:(SK&&SK.S.find(k=>!s[k]))||''}}
@@ -251,7 +252,7 @@ function crane(yTop){BKT='tmp';const x=W/2+7,z=-D/2+3,h=Math.max(30,yTop+14),j=4
 function edgeRail(y){BKT='tmp';for(const s of [-1,1]){for(let x=-W/2;x<=W/2;x+=2.1){box('yel',x-.04,x+.04,y,y+1.15,s*D/2-.04,s*D/2+.04)}for(let z=-D/2;z<=D/2;z+=2.1)box('yel',s*W/2-.04,s*W/2+.04,y,y+1.15,z-.04,z+.04);
   box('yel',-W/2,W/2,y+1.05,y+1.12,s*D/2-.03,s*D/2+.03);box('yel',s*W/2-.03,s*W/2+.03,y+1.05,y+1.12,-D/2,D/2);box('ply',-W/2,W/2,y,y+.15,s*D/2-.02,s*D/2+.02);box('ply',s*W/2-.02,s*W/2+.02,y,y+.15,-D/2,D/2)}BKT=null}
 function buildSkel(){clear(SKG);if(!SK)return;const c=SK.cur,fl=SK.fl;let topY=0;
- for(let f=c;f<=17;f++){const els=fl[f]||[];if(f>c&&!els.some(e=>Object.keys(e.s||{}).some(k=>e.s[k])))break;
+ for(let f=c;f<=PH;f++){const els=fl[f]||[];if(f>c&&!els.some(e=>Object.keys(e.s||{}).some(k=>e.s[k])))break;
   const y0=yF(f);let wl=null;
   for(const e of els){const st=elSt(e),ty=e.ty||(/תקר/.test(e.n)?'c':/רצפ/.test(e.n)?'f':'w');if(!st.lv&&!st.stone)continue;
    if(ty=='f'){skSlab(y0+.001,st);if(st.lv>=3)topY=Math.max(topY,y0)}
@@ -275,9 +276,9 @@ function lbl(lines,col){const c=document.createElement('canvas');c.width=512;c.h
  const rr=(x,y,w,h,r)=>{g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.fill()};rr(6,6,500,188,34);
  g.fillStyle=col;rr(6,150,500*Math.max(.04,Math.min(1,lines[2]||0)),44,20);g.direction='rtl';g.textAlign='center';g.fillStyle='#1f2328';g.font='800 64px Heebo,system-ui,Arial';g.fillText(lines[0],256,78);g.font='600 40px Heebo,system-ui,Arial';g.fillStyle='#4b504c';g.fillText(lines[1],256,134);
  const t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;const s=new T.Sprite(new T.SpriteMaterial({map:t,depthTest:false,transparent:true}));s.userData.own=1;s.scale.set(6.2,2.42,1);s.renderOrder=10;return s}
-function buildDio(f){clear(DIO);ZPICK.length=0;const y=yF(f),fd=(DATA.fl||{})[f]||{},apts=fd.apts||[],Z=f==0?ZG:f==17?ZP:ZT,wallH=2.6;
+function buildDio(f){clear(DIO);ZPICK.length=0;const y=yF(f),fd=(DATA.fl||{})[f]||{},apts=fd.apts||[],Z=f==0?ZG:f==PH?ZP:ZT,wallH=2.6;
  // רצפה: התוכנית האמיתית (קומה טיפוסית) על בטון / ריצוף לפי מצב כל דירה
- const mats={};const fm=k=>mats[k]||(mats[k]=(()=>{const m=new T.MeshStandardMaterial({color:k=='tl'?0xf1ebdf:k=='fin'?0xf5f1e8:0xb9b6b0,roughness:.9,map:(f>=1&&f<=16)?planTex:null});m.userData.own=1;return m})());
+ const mats={};const fm=k=>mats[k]||(mats[k]=(()=>{const m=new T.MeshStandardMaterial({color:k=='tl'?0xf1ebdf:k=='fin'?0xf5f1e8:0xb9b6b0,roughness:.9,map:(f>=1&&f<=PH-1)?planTex:null});m.userData.own=1;return m})());
  BKT='tmp';box('conc',-W/2,W/2,y-.3,y-.02,-D/2,D/2);
  // קירות חוץ בגובה חתך (1.2 מ') באבן
  for(const s of [-1,1]){box('stone',-W/2,W/2,y,y+1.2,s*D/2-(s>0?.3:0),s*D/2+(s<0?.3:0));box('stone',s*W/2-(s>0?.3:0),s*W/2+(s<0?.3:0),y,y+1.2,-D/2,D/2)}
@@ -307,7 +308,7 @@ function buildDio(f){clear(DIO);ZPICK.length=0;const y=yF(f),fd=(DATA.fl||{})[f]
 let OPEN=null,CUT=0,CUTG=0;
 function applyMode(){SK=skInfo();const sk=MODE=='today'&&SK;
  for(const m of MESHES){const k=m.userData.k;m.visible=!(sk&&SKHIDE[k]);m.userData.base=sk&&SKM[k]?SKM[k]:M[k]}
- FG.forEach((g,f)=>{g.visible=!sk||(f<SK.cur)});if(sk&&SK.cur<=17)FG[18].visible=false;
+ FG.forEach((g,f)=>{g.visible=!sk||(f<SK.cur)});if(sk&&SK.cur<=PH)FG[RF].visible=false;
  FEN.visible=!!sk;SKG.visible=!!sk;if(sk)buildSkel();else clear(SKG);
  const md=q('.fcd-md');md.innerHTML=SK?'<button data-m="today" class="'+(MODE=='today'?'on':'')+'">היום · שלד</button><button data-m="fin" class="'+(MODE=='fin'?'on':'')+'">בסיום</button>':'';
  q('.fcd-ttl small').textContent=SK&&MODE=='today'?'שלד: קומה '+(SK.cur==0?'קרקע':SK.cur)+' בעבודה · לפי סימוני מנהל העבודה':(CFG.sub||'לפי הצילומים והתוכניות · ≈');
@@ -344,12 +345,12 @@ const BB=new T.Box3(new T.Vector3(-W/2-.4,0,-D/2-.4),new T.Vector3(W/2+.4,TOP,D/
 function tap(cx,cy){const r=host.getBoundingClientRect();RC.setFromCamera(new T.Vector2((cx-r.left)/r.width*2-1,-(cy-r.top)/r.height*2+1),cam);
  if(OPEN!=null&&CUT>.5){const h=RC.intersectObjects(ZPICK,false)[0];if(h){const z=h.object.userData.z;if(z.L!=null)CFG.onLobby&&CFG.onLobby(z.L);else CFG.onApt&&CFG.onApt(z.n,OPEN);return}}
  const h=RC.ray.intersectBox(BB,HV);if(!h){if(OPEN!=null)closeFloor();return}
- const f=h.y<GH?0:Math.min(17,Math.floor((h.y-GH)/FH)+1);
+ const f=h.y<GH?0:Math.min(PH,Math.floor((h.y-GH)/FH)+1);
  if(OPEN!=null&&f>=OPEN){const hh=RC.intersectObjects(ZPICK,false)[0];if(!hh)closeFloor();return}
  openFloor(f)}
 function sheet(f){const fd=(DATA.fl||{})[f]||{},apts=fd.apts||[],sk=MODE=='today'&&SK;
  q('.fcd-sT').textContent=f==0?'קומת קרקע':'קומה '+f;
- let sub=f==0?'חנויות · לובי ראשי · דירות גן':f==17?'פנטהאוזים':apts.length+' דירות';let h='';
+ let sub=f==0?(PH==17?'חנויות · לובי ראשי · דירות גן':'לובי ראשי · דירת גן'):f==PH?'פנטהאוזים':apts.length+' דירות';let h='';
  if(sk&&f>=SK.cur){const els=SK.fl[f]||[];sub='שלד · '+(f==SK.cur?'בעבודה':'עוד לא התחיל');
   h+='<div class="fcd-sk">'+(els.length?els.map(e=>{const st=elSt(e);return '<div><b>'+esc(e.n)+'</b><span class="l'+st.lv+'">'+(st.lv==4?'✓ יצוק':st.lv==3?'יצוק · תבנית עדיין':st.nx?esc(st.nx):'—')+'</span></div>'}).join(''):'<div class="mu">אין סימונים לקומה הזאת</div>')+'</div>'}
  else{h+='<div class="fcd-ap">'+apts.map(a=>'<button data-n="'+a.n+'"><b>דירה '+a.n+'</b><small>'+(a.typ?a.typ+' · ':'')+esc(a.stg||'')+(a.pc!=null?' · '+(a.pc|0)+'%':'')+'</small></button>').join('')+'</div>';
@@ -360,7 +361,7 @@ function sheet(f){const fd=(DATA.fl||{})[f]||{},apts=fd.apts||[],sk=MODE=='today
  q('.fcd-sh').classList.add('on')}
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
 let anim=null,saveV=null;
-function openFloor(f){hideHint();f=Math.max(0,Math.min(17,f|0));if(MODE=='today'&&SK&&f>=SK.cur){if(OPEN!=null)closeFloor();sheet(f);return}if(OPEN!=null&&OPEN!=f)setCut(0);OPEN=f;buildDio(f);sheet(f);
+function openFloor(f){hideHint();f=Math.max(0,Math.min(PH,f|0));if(MODE=='today'&&SK&&f>=SK.cur){if(OPEN!=null)closeFloor();sheet(f);return}if(OPEN!=null&&OPEN!=f)setCut(0);OPEN=f;buildDio(f);sheet(f);
  if(!saveV)saveV=Object.assign({},V);goal={yaw:V.yaw,pit:.95,dist:MOB?50:44,ty:yF(f)-(MOB?8:3)};anim={from:CUT,to:1,t0:performance.now()};CUTG=1}
 function closeFloor(quick){if(OPEN==null)return;q('.fcd-sh').classList.remove('on');CUTG=0;anim={from:CUT,to:0,t0:performance.now(),end:1};if(saveV&&!quick)goal=saveV;saveV=null;if(quick){setCut(0);OPEN=null;clear(DIO);ZPICK.length=0;anim=null;R.shadowMap.needsUpdate=true}}
 
