@@ -362,6 +362,7 @@ function sheet(f){const fd=(DATA.fl||{})[f]||{},apts=fd.apts||[],sk=MODE=='today
   h+='<div class="fcd-sk">'+(els.length?els.map(e=>{const st=elSt(e);return '<div><b>'+esc(e.n)+'</b><span class="l'+st.lv+'">'+(st.lv==4?'✓ יצוק':st.lv==3?'יצוק · תבנית עדיין':st.nx?esc(st.nx):'—')+'</span></div>'}).join(''):'<div class="mu">אין סימונים לקומה הזאת</div>')+'</div>'}
  else{h+='<div class="fcd-ap">'+apts.map(a=>'<button data-n="'+a.n+'"><b>דירה '+a.n+'</b><small>'+(a.typ?a.typ+' · ':'')+esc(a.stg||'')+(a.pc!=null?' · '+(a.pc|0)+'%':'')+'</small></button>').join('')+'</div>';
   if(f>=1)h+='<button class="fcd-lb" data-l="'+f+'">לובי קומה '+f+'</button>'}
+ {const L=(DATA.wk||{})[f];if(L&&L.length){const tot=L.reduce((a,x)=>a+(+x.n||0),0);h='<div class="fcd-wk">ביומן היום'+(tot?': '+tot+' פועלים':'')+' — '+esc(L.map(x=>(x.n?x.n+' ':'')+x.tr).join(', '))+'</div>'+h}}
  q('.fcd-sS').textContent=sub;const B=q('.fcd-sB');B.innerHTML=h;
  B.querySelectorAll('button[data-n]').forEach(b=>b.onclick=()=>CFG.onApt&&CFG.onApt(+b.dataset.n,f));
  B.querySelectorAll('button[data-l]').forEach(b=>b.onclick=()=>CFG.onLobby&&CFG.onLobby(+b.dataset.l));
@@ -377,10 +378,19 @@ function loop(){if(dead)return;requestAnimationFrame(loop);
  if(anim){const k=Math.min(1,(performance.now()-anim.t0)/650),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;setCut(anim.from+(anim.to-anim.from)*e);if(k>=1){if(anim.end){OPEN=null;clear(DIO);ZPICK.length=0;setCut(0)}anim=null;R.shadowMap.needsUpdate=true}}
  if(goal){let done=true;for(const k in goal){const d=goal[k]-V[k];if(Math.abs(d)>1e-3){V[k]+=d*.12;done=false}}if(done){V=Object.assign({},goal);goal=null}dirty=true}
  if(!dirty)return;dirty=false;place();R.render(scene,cam);FCD.frames=(FCD.frames||0)+1}
-let SKSEEN=!!skInfo();MODE=SKSEEN?'today':'fin';applyMode();
+/* 932 (יהב): יומן העבודה של היום על החזית — פועלים בווסטים במרפסות של הקומה שרשומה ביומן + תווית כמה ומי. data.wk = {קומה:[{tr,n}]} */
+const WKM={v1:new T.MeshStandardMaterial({color:0xff7a1a,roughness:.7}),v2:new T.MeshStandardMaterial({color:0xe6d21e,roughness:.7}),pn:new T.MeshStandardMaterial({color:0x34404c,roughness:.9}),sk:new T.MeshStandardMaterial({color:0xc69a74,roughness:.8}),hm:new T.MeshStandardMaterial({color:0xf5f5f0,roughness:.5})};
+const WKG={leg:new T.BoxGeometry(.32,.86,.22),body:new T.CylinderGeometry(.21,.23,.66,8),head:new T.SphereGeometry(.12,10,8),hat:new T.SphereGeometry(.155,10,6,0,6.283,0,1.6)};
+function man(x,y,z,i,rot){const g=new T.Group(),a=(geo,m,yy)=>{const o=new T.Mesh(geo,m);o.position.y=yy;o.castShadow=true;g.add(o)};a(WKG.leg,WKM.pn,.43);a(WKG.body,i%2?WKM.v2:WKM.v1,1.19);a(WKG.head,WKM.sk,1.64);a(WKG.hat,i%3?WKM.hm:WKM.v2,1.69);g.position.set(x,y,z);g.rotation.y=rot;return g}
+function buildWk(){FG.forEach(g=>{for(let i=g.children.length-1;i>=0;i--)if(g.children[i].userData.wk){const c=g.children[i];g.remove(c);c.traverse(o=>{if(o.isSprite&&o.material){if(o.material.map)o.material.map.dispose();o.material.dispose()}})}});
+ const W0=DATA.wk||{};for(const f in W0){const fi=+f,L=W0[f]||[];if(!(fi>=0&&fi<=PH)||!FG[fi]||!L.length)continue;const tot=L.reduce((a,x)=>a+(+x.n||0),0),n=Math.min(14,tot||L.length),y=yF(fi)+.02,grp=new T.Group();grp.userData.wk=1;
+  for(let i=0;i<n;i++){const bk=i>=7,k=bk?i-7:i;grp.add(man(-3+(k%7),y,(bk?-D/2+1.05:D/2-1.05)+(k%2?(bk?.35:-.35):0),i,bk?Math.PI:0))}
+  const sp=lbl([tot?tot+' פועלים':'עבודה היום',L.map(x=>(x.n?x.n+' ':'')+x.tr).join(' · ').slice(0,26),1],'#f08a24');sp.position.set(W/2-6.2,y+1.6,D/2+1.4);grp.add(sp);FG[fi].add(grp)}
+ R.shadowMap.needsUpdate=true;dirty=true}
+let SKSEEN=!!skInfo();MODE=SKSEEN?'today':'fin';applyMode();try{buildWk()}catch(e){}
 R.shadowMap.needsUpdate=true;loop();
 return{
- refresh(d){DATA=d||DATA;const si=skInfo();if(!si&&MODE=='today')MODE='fin';if(si&&!SKSEEN)MODE='today';SKSEEN=!!si;applyMode();if(OPEN!=null){buildDio(OPEN);sheet(OPEN);setCut(CUT)}},
+ refresh(d){DATA=d||DATA;try{buildWk()}catch(e){}const si=skInfo();if(!si&&MODE=='today')MODE='fin';if(si&&!SKSEEN)MODE='today';SKSEEN=!!si;applyMode();if(OPEN!=null){buildDio(OPEN);sheet(OPEN);setCut(CUT)}},
  openFloor,closeFloor,
  view(v){if(VIEWS[v])goal=Object.assign({},VIEWS[v])},
  mode(m){MODE=m;applyMode()},
@@ -400,5 +410,6 @@ window.FCD.css='.fcd{position:absolute;inset:0;overflow:hidden;font:15px/1.45 He
 '.fcd-x{width:44px;height:44px;border-radius:50%;border:1px solid #d8dcd5;background:rgba(255,255,255,.9)}'+
 '.fcd-ap{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.fcd-ap button{min-height:52px;border-radius:14px;border:1px solid #d8dcd5;background:rgba(255,255,255,.92);text-align:right;padding:6px 10px}.fcd-ap small{display:block;font-weight:500;color:#5d625e;font-size:12px}'+
 '.fcd-lb{width:100%;min-height:44px;margin-top:8px;border-radius:14px;border:0;background:#0F4C2F!important;color:#fff!important}'+
+'.fcd-wk{background:#fff3e6;border:1px solid #f5c79a;color:#7a3d06;border-radius:12px;padding:8px 10px;margin:4px 0 8px;font-weight:700;font-size:14px}'+
 '.fcd-sk{display:grid;gap:4px;margin-top:8px}.fcd-sk div{display:flex;justify-content:space-between;gap:8px;background:rgba(255,255,255,.9);border-radius:12px;padding:8px 10px}.fcd-sk span{font-weight:700;font-size:13px}.fcd-sk .l4{color:#2f6b43}.fcd-sk .l3{color:#2f6b43}.fcd-sk .l2,.fcd-sk .l1{color:#a0661c}.fcd-sk .l0{color:#8a8178}.fcd .mu{color:#5d625e;font-size:13px}';
 })();
