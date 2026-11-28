@@ -139,10 +139,10 @@ for(const key in FAC){const F=FAC[key],h=F.half;
   for(const s of [-1,1]){const u0=s<0?-BX:.24,u1=s<0?-.24:BX;
    for(let f=1;f<=PH-1;f++){const ys=yF(f);
     if(f>1)fb(F,'plaster',u0,u1,ys,ys+.02,-BD,0);
-    fb(F,'dark',u0-(s<0?.08:0),u1+(s>0?.08:0),ys+.04,ys+.15,-.04,.18);if(f>1)fb(F,'dark',u0-(s<0?.08:0),u1+(s>0?.08:0),ys-.45,ys-.04,-.04,.18);
-    frail(F,u0+.05,u1-.05,ys+.15,.07);win(F,(u0+u1)/2-s*.3,ys+.04,2.1,2.3,{wo:-BD});fb(F,'plaster',u0,u1,ys+FH-.22,ys+FH-.04,-BD,0)}}
+    /* 939 (יהב): פס המרפסת בדיוק בגובה הקורה של החזית (y-0.30 עד y+0.45) — קו אחד רציף */fb(F,'dark',u0-(s<0?.08:0),u1+(s>0?.08:0),f>1?ys-.3:ys+.04,ys+.45,-.04,.18);
+    frail(F,u0+.05,u1-.05,ys+.45,.07);win(F,(u0+u1)/2-s*.3,ys+.04,2.1,2.3,{wo:-BD});fb(F,'plaster',u0,u1,ys+FH-.22,ys+FH-.04,-BD,0)}}
   for(const u of [-2.6,0,2.6])win(F,u,yF(PH)+.05,2.2,2.5,{wo:-PHD});
-  fb(F,'dark',-PHX,PHX,yF(PH)-.45,yF(PH)-.04,-.04,.18);fb(F,'dark',-PHX,PHX,yF(PH)+.04,yF(PH)+.12,-.04,.18);frail(F,-PHX,PHX,yF(PH)+.12,.07);
+  fb(F,'dark',-PHX,PHX,yF(PH)-.3,yF(PH)+.45,-.04,.18);frail(F,-PHX,PHX,yF(PH)+.45,.07);
   if(key=='front'){shop(F,0,3.6,true);for(const u of [-10.4,-6.4,6.4,10.4])shop(F,u,3.0)}else for(const u of [-10.4,-6.4,6.4,10.4])win(F,u,1.0,1.6,1.9,{tr:true})
  }else{
   for(const s of [-1,1]){bands(F,s<0?-h-.08:0,s<0?0:h+.08);column(F,s*3.2,'A',1,PH);column(F,s*8.6,'B',1,PH-1)}
