@@ -371,27 +371,46 @@ function closeFloor(quick){if(OPEN==null)return;q('.fcd-sh').classList.remove('o
 function loop(){if(dead)return;requestAnimationFrame(loop);
  if(anim){const k=Math.min(1,(performance.now()-anim.t0)/650),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;setCut(anim.from+(anim.to-anim.from)*e);if(k>=1){if(anim.end){OPEN=null;clear(DIO);ZPICK.length=0;setCut(0)}anim=null;R.shadowMap.needsUpdate=true}}
  if(goal){let done=true;for(const k in goal){const d=goal[k]-V[k];if(Math.abs(d)>1e-3){V[k]+=d*.12;done=false}}if(done){V=Object.assign({},goal);goal=null}dirty=true}
- if(!dirty)return;dirty=false;place();R.render(scene,cam);FCD.frames=(FCD.frames||0)+1}
+ if(WKT.length){const t=performance.now();if(t-(WKT.t||0)>66){WKT.t=t;wkTick(t);dirty=true}}if(!dirty)return;dirty=false;place();R.render(scene,cam);FCD.frames=(FCD.frames||0)+1}
 /* 932 (יהב): יומן העבודה של היום על החזית — פועלים בווסטים במרפסות של הקומה שרשומה ביומן + תווית כמה ומי. data.wk = {קומה:[{tr,n}]} */
 const WKM={v1:new T.MeshStandardMaterial({color:0xff7a1a,roughness:.7}),v2:new T.MeshStandardMaterial({color:0xe6d21e,roughness:.7}),pn:new T.MeshStandardMaterial({color:0x34404c,roughness:.9}),sk:new T.MeshStandardMaterial({color:0xc69a74,roughness:.8}),hm:new T.MeshStandardMaterial({color:0xf5f5f0,roughness:.5})};
-const WKX={bt:new T.MeshStandardMaterial({color:0x3a2a1c,roughness:.8}),st:new T.MeshStandardMaterial({color:0xdfe3e6,roughness:.4,metalness:.3}),ey:new T.MeshBasicMaterial({color:0x1b1b1b}),hd:new T.MeshStandardMaterial({color:0x6b4a2e,roughness:.7}),tl:new T.MeshStandardMaterial({color:0x2f3a44,roughness:.5,metalness:.5}),dr:new T.MeshStandardMaterial({color:0x1f7a3a,roughness:.6})};
-/* 933 (יהב): פועל מפורט — מגפיים, מכנסיים, ווסט צהוב/כתום לסירוגין עם פסים מחזירי אור, ידיים, פנים עם עיניים, קסדה עם מצחייה, ובחלק מהם פטיש או מברגה */
+/* 937 (יהב): פועלים איכותיים — גוף חלק בפרופורציות אמיתיות, פנים, קסדה עם מצחייה, ווסט עם פסים מחזירי אור, כפפות, חגורת כלים ומגפיים. 6 סוגים קבועים לפי עבודה, עם תנועת עבודה עדינה */
+const MW=(c,r,m)=>new T.MeshStandardMaterial({color:c,roughness:r==null?.75:r,metalness:m||0});
+const WKX={skin:MW(0xc89a76,.6),skin2:MW(0x9a6b4c,.6),pants:MW(0x1c2530,.9),shirt:MW(0x283646,.85),vY:MW(0xe8e02a,.55),vO:MW(0xff6a13,.55),refl:MW(0xe9eef2,.25,.4),boot:MW(0x3b2a1e,.7),glove:MW(0x6d5a3e,.85),belt:MW(0x4a3424,.7),hatW:MW(0xf4f4f0,.35),hatY:MW(0xf1d21c,.35),hair:MW(0x2a211c,.9),eye:new T.MeshBasicMaterial({color:0x161616}),steel:MW(0xcfd5da,.35,.6),wood:MW(0x8a6236,.7),grn:MW(0x1d7a3e,.5),dark:MW(0x2c3238,.5,.3),bucket:MW(0xe0e3e6,.6),brush:MW(0xc9a25a,.9)};
+function lath(pts,mat,seg){const g=new T.LatheGeometry(pts.map(p=>new T.Vector2(p[0],p[1])),seg||18);const m=new T.Mesh(g,mat);m.castShadow=true;return m}
+function limbM(r0,r1,L,mat){/* איבר חלק: גליל מעוגל בקצוות */const pts=[];for(let i=0;i<=6;i++){const a=i/6*Math.PI/2;pts.push([r0*Math.sin(a),-r0*Math.cos(a)+r0])}for(let i=0;i<=6;i++){const a=i/6*Math.PI/2;pts.push([r1*Math.cos(a),L-r1+r1*Math.sin(a)])}const m=lath(pts,mat,14);return m}
+const WKT=[];/* פועלים לאנימציה */
 function man(x,y,z,i,rot){
- const g=new T.Group(),V=i%2?WKM.v2:WKM.v1,a=(geo,m,px,py,pz)=>{const o=new T.Mesh(geo,m);o.position.set(px||0,py,pz||0);o.castShadow=true;g.add(o);return o},B=(w,h,d)=>new T.BoxGeometry(w,h,d),C=(r1,r2,h,n)=>new T.CylinderGeometry(r1,r2,h,n||10);
- for(const s of [-1,1]){a(B(.13,.1,.24),WKX.bt,s*.1,.05,.03);a(C(.068,.075,.78),WKM.pn,s*.1,.49,0)}
- a(B(.36,.18,.22),WKM.pn,0,.92,0);a(C(.19,.2,.56,12),V,0,1.25,0);a(C(.195,.195,.05,12),WKX.st,0,1.12,0);a(C(.195,.195,.05,12),WKX.st,0,1.32,0);
- const sw=(i*1.7)%1-.5;
- for(const s of [-1,1]){const arm=new T.Group();arm.position.set(s*.215,1.47,0);arm.rotation.z=s*.12;{const sh=new T.Mesh(new T.SphereGeometry(.072,10,8),V);sh.castShadow=true;arm.add(sh)}arm.rotation.x=s>0?-.9+sw*.3:.25;
-  const sl=new T.Mesh(C(.058,.052,.3),V);sl.position.y=-.15;const fa=new T.Mesh(C(.048,.044,.3),WKM.sk);fa.position.y=-.43;const hn=new T.Mesh(new T.SphereGeometry(.052,8,6),WKM.sk);hn.position.y=-.6;sl.castShadow=fa.castShadow=true;arm.add(sl,fa,hn);
-  if(s>0&&i%3!=2){const tool=new T.Group();tool.position.y=-.62;
-   if(i%3==0){const h=new T.Mesh(C(.018,.018,.32,6),WKX.hd);h.rotation.x=Math.PI/2;h.position.z=.12;const hh=new T.Mesh(B(.06,.06,.15),WKX.tl);hh.position.z=.27;tool.add(h,hh)}
-   else{const bd=new T.Mesh(B(.07,.12,.2),WKX.dr);bd.position.z=.08;const bit=new T.Mesh(C(.012,.008,.12,6),WKX.st);bit.rotation.x=Math.PI/2;bit.position.z=.24;const gr=new T.Mesh(B(.05,.14,.06),WKX.tl);gr.position.set(0,-.09,.02);tool.add(bd,bit,gr)}
-   arm.add(tool)}
-  g.add(arm)}
- a(C(.06,.07,.08),WKM.sk,0,1.57,0);const hd=a(new T.SphereGeometry(.125,14,10),WKM.sk,0,1.7,0);hd.scale.set(1,1.12,1);
- for(const s of [-1,1])a(new T.SphereGeometry(.018,6,4),WKX.ey,s*.045,1.72,.112);a(B(.025,.035,.03),WKM.sk,0,1.68,.125);
- const HM=i%4==1?WKM.v2:WKM.hm;a(new T.SphereGeometry(.15,14,8,0,6.283,0,1.45),HM,0,1.76,0);a(C(.17,.17,.02,14),HM,0,1.775,.03).scale.set(1,1,1.15);
- g.position.set(x,y,z);g.rotation.y=rot+((i*.9)%1-.5)*.8;return g}
+ const ty=i%6,g=new T.Group(),VS=i%2?WKX.vY:WKX.vO,SK=i%3==2?WKX.skin2:WKX.skin,add=(o,px,py,pz)=>{o.position.set(px||0,py||0,pz||0);o.castShadow=true;g.add(o);return o};
+ /* רגליים ומגפיים */
+ const legs=[];for(const s of [-1,1]){const lg=new T.Group();lg.position.set(s*.1,.95,0);lg.rotation.z=s*.035;const L=lath([[0,0],[.06,0],[.068,.06],[.066,.2],[.072,.32],[.07,.42],[.082,.6],[.092,.78],[.094,.86],[0,.9]],WKX.pants,16);L.position.y=-.9;lg.add(L);const bt=lath([[0,0],[.075,0],[.08,.03],[.075,.11],[.06,.12],[0,.12]],WKX.boot,14);bt.scale.set(1,1,1.6);bt.position.set(0,-.95,.04);lg.add(bt);g.add(lg);legs.push(lg)}
+ /* אגן, חגורת כלים, גוף (חולצה), ווסט עם פסים */
+ add(lath([[0,0],[.17,0],[.18,.06],[.17,.14],[0,.14]],WKX.pants),0,.88,0);
+ add(lath([[0,0],[.185,0],[.19,.06],[0,.06]],WKX.belt),0,.96,0);add(new T.Mesh(new T.BoxGeometry(.11,.12,.06),WKX.belt),.13,.93,.1);
+ add(lath([[0,0],[.17,0],[.18,.14],[.2,.3],[.22,.42],[.2,.5],[.1,.55],[0,.56]],WKX.shirt),0,.97,0).scale.set(1,1,.68);
+ const vest=add(lath([[0,0],[.178,0],[.19,.14],[.21,.3],[.228,.42],[.205,.48],[.11,.53],[0,.535]],VS),0,1.0,0);vest.scale.set(1,1,.71);
+ for(const [yy,rr] of [[1.12,.196],[1.27,.218]]){const b=add(lath([[0,0],[rr,0],[rr,.035],[0,.035]],WKX.refl),0,yy,0);b.scale.set(1.02,1,.73)}
+ /* צוואר וראש */
+ add(limbM(.05,.05,.09,SK),0,1.5,0);
+ const hd=new T.Group();hd.position.set(0,1.6,0);g.add(hd);const head=new T.Mesh(new T.SphereGeometry(.105,20,16),SK);head.scale.set(.92,1.12,1);head.castShadow=true;hd.add(head);
+ const jaw=new T.Mesh(new T.SphereGeometry(.08,14,10),SK);jaw.position.set(0,-.06,.025);jaw.scale.set(1,.8,1);hd.add(jaw);
+ const nose=new T.Mesh(new T.ConeGeometry(.018,.045,8),SK);nose.rotation.x=Math.PI/2;nose.position.set(0,.0,.105);hd.add(nose);
+ for(const s of [-1,1]){const e=new T.Mesh(new T.SphereGeometry(.013,8,6),WKX.eye);e.position.set(s*.036,.025,.094);hd.add(e);const br=new T.Mesh(new T.BoxGeometry(.035,.008,.01),WKX.hair);br.position.set(s*.036,.048,.097);hd.add(br);const ear=new T.Mesh(new T.SphereGeometry(.022,8,6),SK);ear.scale.set(.5,1,.8);ear.position.set(s*.097,0,0);hd.add(ear)}
+ {const hr=new T.Mesh(new T.SphereGeometry(.108,16,12,0,6.283,0,2.0),WKX.hair);hr.position.set(0,.0,-.012);hr.scale.set(.95,1.1,1);hd.add(hr)}
+ const HT=i%4==1?WKX.hatY:WKX.hatW,hat=new T.Mesh(new T.SphereGeometry(.125,20,12,0,6.283,0,1.5),HT);hat.position.y=.035;hat.scale.set(1,.92,1.08);hat.castShadow=true;hd.add(hat);
+ const brim=new T.Mesh(new T.CylinderGeometry(.14,.145,.012,24),HT);brim.position.set(0,.04,.03);brim.scale.set(1,1,1.18);hd.add(brim);const rdg=new T.Mesh(new T.BoxGeometry(.03,.02,.2),HT);rdg.position.set(0,.15,0);hd.add(rdg);
+ /* ידיים: כתף ← מרפק ← כפפה, עם כלי לפי הסוג */
+ const arms=[];for(const s of [-1,1]){const sh=new T.Group();sh.position.set(s*.225,1.42,0);g.add(sh);const sb=new T.Mesh(new T.SphereGeometry(.066,12,10),WKX.shirt);sb.castShadow=true;sh.add(sb);const up=limbM(.058,.05,.3,WKX.shirt);up.rotation.x=Math.PI;sh.add(up);const el=new T.Group();el.position.y=-.27;const elb=new T.Mesh(new T.SphereGeometry(.05,10,8),WKX.shirt);el.add(elb);sh.add(el);const fa=limbM(.05,.04,.27,WKX.shirt);fa.rotation.x=Math.PI;fa.position.y=.02;el.add(fa);const hn=new T.Mesh(new T.SphereGeometry(.05,10,8),WKX.glove);hn.scale.set(.85,1.1,.7);hn.position.y=-.3;el.add(hn);const hand=new T.Group();hand.position.y=-.31;el.add(hand);arms.push({sh,el,hand,s})}
+ const R=arms[1],Lf=arms[0],tool=new T.Group();R.hand.add(tool);
+ if(ty==0){/* טייח: מאלג' מול הקיר */R.sh.rotation.set(-1.9,0,.15);R.el.rotation.x=-.5;const pl=new T.Mesh(new T.BoxGeometry(.12,.01,.26),WKX.steel);pl.position.set(0,-.04,.06);const hdl=new T.Mesh(new T.CylinderGeometry(.015,.015,.1,8),WKX.wood);hdl.position.set(0,0,.02);tool.add(pl,hdl);Lf.sh.rotation.set(-.5,0,-.15);Lf.el.rotation.x=-.9;const hawk=new T.Mesh(new T.BoxGeometry(.26,.01,.26),WKX.steel);hawk.position.y=-.02;Lf.hand.add(hawk)}
+ else if(ty==1){/* מברגה */R.sh.rotation.set(-1.25,0,.1);R.el.rotation.x=-.35;const bd=new T.Mesh(new T.BoxGeometry(.07,.1,.2),WKX.grn);bd.position.set(0,0,.06);const gr=new T.Mesh(new T.BoxGeometry(.05,.13,.06),WKX.dark);gr.position.set(0,-.08,0);const bt=new T.Mesh(new T.BoxGeometry(.07,.05,.08),WKX.dark);bt.position.set(0,-.16,0);const bit=new T.Mesh(new T.CylinderGeometry(.008,.004,.1,6),WKX.steel);bit.rotation.x=Math.PI/2;bit.position.z=.21;tool.add(bd,gr,bt,bit);Lf.sh.rotation.set(-.2,0,-.1);Lf.el.rotation.x=-.4}
+ else if(ty==2){/* פטיש */R.sh.rotation.set(-2.3,0,.2);R.el.rotation.x=-.7;const hd2=new T.Mesh(new T.CylinderGeometry(.016,.016,.3,8),WKX.wood);hd2.rotation.x=Math.PI/2;hd2.position.z=.12;const hh=new T.Mesh(new T.BoxGeometry(.05,.05,.13),WKX.dark);hh.rotation.y=Math.PI/2;hh.position.z=.27;tool.add(hd2,hh);Lf.sh.rotation.set(-.9,0,-.2);Lf.el.rotation.x=-.6}
+ else if(ty==3){/* דלי ביד שמאל */Lf.sh.rotation.set(0,0,-.12);const bk=lath([[0,0],[.1,0],[.12,.22],[.115,.22],[.095,.01],[0,.01]],WKX.bucket);bk.position.y=-.26;Lf.hand.add(bk);const hb=new T.Mesh(new T.TorusGeometry(.1,.006,6,16,Math.PI),WKX.dark);hb.position.y=-.04;Lf.hand.add(hb);R.sh.rotation.set(.15,0,.12);R.el.rotation.x=-.25}
+ else if(ty==4){/* מטאטא — ניקיון */R.sh.rotation.set(-.6,0,.05);R.el.rotation.x=-.6;Lf.sh.rotation.set(-.9,0,-.05);Lf.el.rotation.x=-.3;tool.rotation.x=1.2;const st=new T.Mesh(new T.CylinderGeometry(.012,.012,1.3,8),WKX.wood);st.position.set(0,-.45,.12);st.rotation.x=.28;tool.add(st);const br=new T.Mesh(new T.BoxGeometry(.34,.06,.09),WKX.brush);br.position.set(0,-1.05,.3);tool.add(br)}
+ else{/* קרש על הכתף */R.sh.rotation.set(-2.6,0,.35);R.el.rotation.x=-1.6;const pk=new T.Mesh(new T.BoxGeometry(.05,.1,2.2),WKX.wood);pk.position.set(.23,1.66,.1);pk.rotation.y=.12;pk.castShadow=true;g.add(pk);Lf.sh.rotation.set(-.15,0,-.08);Lf.el.rotation.x=-.3}
+ g.position.set(x,y,z);g.rotation.y=rot+((i*.37)%1-.5)*.6;g.userData.wk={ty,R,Lf,hd,ph:i*1.7,b:{rx:R.sh.rotation.x,ex:R.el.rotation.x,lx:Lf.sh.rotation.x}};WKT.push(g);return g}
+function wkTick(t){/* תנועת עבודה עדינה */for(let k=WKT.length-1;k>=0;k--){const g=WKT[k];if(!g.parent){WKT.splice(k,1);continue}const u=g.userData.wk,s=Math.sin(t*.0034+u.ph),f=Math.sin(t*.0062+u.ph);
+  if(u.ty==0){u.R.sh.rotation.x=u.b.rx+s*.18;u.R.sh.rotation.z=.15+f*.08}else if(u.ty==1){u.R.el.rotation.x=u.b.ex+f*.03}else if(u.ty==2){u.R.el.rotation.x=u.b.ex+Math.max(0,s)*.9}else if(u.ty==4){u.R.sh.rotation.x=u.b.rx+s*.25;u.Lf.sh.rotation.x=u.b.lx+s*.2}else u.hd.rotation.y=s*.25}}
 function buildWk(){FG.forEach(g=>{for(let i=g.children.length-1;i>=0;i--)if(g.children[i].userData.wk){const c=g.children[i];g.remove(c);c.traverse(o=>{if(o.isSprite&&o.material){if(o.material.map)o.material.map.dispose();o.material.dispose()}})}});
  const W0=DATA.wk||{};for(const f in W0){const fi=+f,L=W0[f]||[];if(!(fi>=0&&fi<=PH)||!FG[fi]||!L.length)continue;const tot=L.reduce((a,x)=>a+(+x.n||0),0),n=Math.min(14,tot||L.length),y=yF(fi)+.02,grp=new T.Group();grp.userData.wk=1;
   for(let i=0;i<n;i++){const bk=i>=7,k=bk?i-7:i;grp.add(man(-3+(k%7),y,(bk?-D/2+1.05:D/2-1.05)+(k%2?(bk?.35:-.35):0),i,bk?Math.PI:0))}
