@@ -185,7 +185,14 @@ function treeAt(x,y,z,s){const r=rnd(Math.abs(x*131+z*71|0)+5),th=(2.0+r()*.5)*s
   for(let j=0;j<2;j++){const ang=r()*3.14+j*1.57,tilt=(r()-.5)*.9,A=new T.Vector3(Math.cos(ang),0,Math.sin(ang)).multiplyScalar(qq/2),B=new T.Vector3(-Math.sin(ang)*tilt,1,Math.cos(ang)*tilt).normalize().multiplyScalar(qq/2),fl=r()<.5;
    for(const [ua,ub,uu,vv] of [[-1,-1,0,0],[1,-1,1,0],[1,1,1,1],[-1,-1,0,0],[1,1,1,1],[-1,1,0,1]]){LEAF.p.push(P.x+A.x*ua+B.x*ub,P.y+A.y*ua+B.y*ub,P.z+A.z*ua+B.z*ub);LEAF.n.push(N.x,N.y,N.z);LEAF.u.push(fl?1-uu:uu,vv);LEAF.c.push(...tint)}}}}
 function planter(x,z){box('lstone',x-1.7,x+1.7,0,.45,z-1.7,z+1.7);box('lstone',x-1.2,x+1.2,.45,.95,z-1.2,z+1.2);box('soil',x-1.05,x+1.05,.95,.97,z-1.05,z+1.05);treeAt(x,.95,z,1)}
-for(const x of [-5,5])for(const z of [D/2+4.6,D/2+12.6])planter(x,z);
+/* 930 (יהב): מול הבניין — שורה של 4 עצים בעציצים אפורים, מקצה לקצה של הבניין, ובין שני העצים הימניים גן הילדים עם גדר צהובה */
+function gplanter(x,z){box('conc',x-1.3,x+1.3,0,.5,z-1.3,z+1.3);box('soil',x-1.05,x+1.05,.5,.52,z-1.05,z+1.05);treeAt(x,.5,z,1)}
+{const zr=D/2+7.5;for(const x of [-11,-3.7,3.7,11])gplanter(x,zr);
+ const x0=5.4,x1=9.3,z0=zr-3.2,z1=zr+3.2,h=1.2;box('grn',x0,x1,0,.03,z0,z1);
+ const side=(ax,az,bx,bz)=>{const L=Math.hypot(bx-ax,bz-az),n=Math.round(L/.22);for(let i=0;i<=n;i++){const x=ax+(bx-ax)*i/n,z=az+(bz-az)*i/n;box('yel',x-.025,x+.025,0,h,z-.025,z+.025)}
+  if(ax==bx){box('yel',ax-.04,ax+.04,h-.06,h+.02,az,bz);box('yel',ax-.04,ax+.04,.08,.14,az,bz)}else{box('yel',ax,bx,h-.06,h+.02,az-.04,az+.04);box('yel',ax,bx,.08,.14,az-.04,az+.04)}};
+ side(x0,z0,x1,z0);side(x0,z1,x1,z1);side(x0,z0,x0,z1);side(x1,z0,x1,z1);
+ box('yel',6.6,6.75,0,1.6,zr-.9,zr-.75);box('yel',8.0,8.15,0,1.6,zr-.9,zr-.75);box('door',6.6,8.15,1.55,1.65,zr-.95,zr-.7);box('door',6.9,7.85,.9,1.2,zr-.1,zr+1.2)}
 for(const x of [-22,22])planter(x,0);
 for(const [x,z] of [[-30,D/2+8],[30,D/2+8],[-32,-8],[32,-12],[-14,-D/2-8],[14,-D/2-8]])treeAt(x,0,z,1.4);
 for(const x of [-26,-11,11,26]){box('dark',x-.08,x+.08,0,5.5,SITE_F-3.92,SITE_F-4.08);box('dark',x-.25,x+.25,5.5,5.75,SITE_F-4.5,SITE_F-3.85)}
