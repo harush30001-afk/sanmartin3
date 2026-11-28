@@ -185,14 +185,8 @@ function treeAt(x,y,z,s){const r=rnd(Math.abs(x*131+z*71|0)+5),th=(2.0+r()*.5)*s
   for(let j=0;j<2;j++){const ang=r()*3.14+j*1.57,tilt=(r()-.5)*.9,A=new T.Vector3(Math.cos(ang),0,Math.sin(ang)).multiplyScalar(qq/2),B=new T.Vector3(-Math.sin(ang)*tilt,1,Math.cos(ang)*tilt).normalize().multiplyScalar(qq/2),fl=r()<.5;
    for(const [ua,ub,uu,vv] of [[-1,-1,0,0],[1,-1,1,0],[1,1,1,1],[-1,-1,0,0],[1,1,1,1],[-1,1,0,1]]){LEAF.p.push(P.x+A.x*ua+B.x*ub,P.y+A.y*ua+B.y*ub,P.z+A.z*ua+B.z*ub);LEAF.n.push(N.x,N.y,N.z);LEAF.u.push(fl?1-uu:uu,vv);LEAF.c.push(...tint)}}}}
 function planter(x,z){box('lstone',x-1.7,x+1.7,0,.45,z-1.7,z+1.7);box('lstone',x-1.2,x+1.2,.45,.95,z-1.2,z+1.2);box('soil',x-1.05,x+1.05,.95,.97,z-1.05,z+1.05);treeAt(x,.95,z,1)}
-/* 931 (יהב, לפי צילום הפיתוח): מול הבניין — שורה של 4 עצים בעדניות לבנות, מקצה לקצה של הבניין, ובין שני העצים הימניים גן הילדים עם גדר צהובה */
-function gplanter(x,z){box('conc',x-1.3,x+1.3,0,.5,z-1.3,z+1.3);box('soil',x-1.05,x+1.05,.5,.52,z-1.05,z+1.05);treeAt(x,.5,z,1)}
-{const zr=D/2+7.5;for(const x of [-11,-3.7,3.7,11])planter(x,zr);
- const x0=5.7,x1=9.0,z0=zr-3.2,z1=zr+3.2,h=1.2;box('grn',x0,x1,0,.03,z0,z1);
- const side=(ax,az,bx,bz)=>{const L=Math.hypot(bx-ax,bz-az),n=Math.round(L/.22);for(let i=0;i<=n;i++){const x=ax+(bx-ax)*i/n,z=az+(bz-az)*i/n;box('yel',x-.025,x+.025,0,h,z-.025,z+.025)}
-  if(ax==bx){box('yel',ax-.04,ax+.04,h-.06,h+.02,az,bz);box('yel',ax-.04,ax+.04,.08,.14,az,bz)}else{box('yel',ax,bx,h-.06,h+.02,az-.04,az+.04);box('yel',ax,bx,.08,.14,az-.04,az+.04)}};
- side(x0,z0,x1,z0);side(x0,z1,x1,z1);side(x0,z0,x0,z1);side(x1,z0,x1,z1);
- box('yel',6.6,6.75,0,1.6,zr-.9,zr-.75);box('yel',8.0,8.15,0,1.6,zr-.9,zr-.75);box('door',6.6,8.15,1.55,1.65,zr-.95,zr-.7);box('door',6.9,7.85,.9,1.2,zr-.1,zr+1.2)}
+/* 933 (יהב): העצים חזרו לריבוע מול הכניסה (כמו קודם); גן הילדים האמיתי בין הבניינים — לא מצויר כאן */
+for(const x of [-5,5])for(const z of [D/2+4.6,D/2+12.6])planter(x,z);
 for(const x of [-22,22])planter(x,0);
 for(const [x,z] of [[-30,D/2+8],[30,D/2+8],[-32,-8],[32,-12],[-14,-D/2-8],[14,-D/2-8]])treeAt(x,0,z,1.4);
 for(const x of [-26,-11,11,26]){box('dark',x-.08,x+.08,0,5.5,SITE_F-3.92,SITE_F-4.08);box('dark',x-.25,x+.25,5.5,5.75,SITE_F-4.5,SITE_F-3.85)}
@@ -380,8 +374,24 @@ function loop(){if(dead)return;requestAnimationFrame(loop);
  if(!dirty)return;dirty=false;place();R.render(scene,cam);FCD.frames=(FCD.frames||0)+1}
 /* 932 (יהב): יומן העבודה של היום על החזית — פועלים בווסטים במרפסות של הקומה שרשומה ביומן + תווית כמה ומי. data.wk = {קומה:[{tr,n}]} */
 const WKM={v1:new T.MeshStandardMaterial({color:0xff7a1a,roughness:.7}),v2:new T.MeshStandardMaterial({color:0xe6d21e,roughness:.7}),pn:new T.MeshStandardMaterial({color:0x34404c,roughness:.9}),sk:new T.MeshStandardMaterial({color:0xc69a74,roughness:.8}),hm:new T.MeshStandardMaterial({color:0xf5f5f0,roughness:.5})};
-const WKG={leg:new T.BoxGeometry(.32,.86,.22),body:new T.CylinderGeometry(.21,.23,.66,8),head:new T.SphereGeometry(.12,10,8),hat:new T.SphereGeometry(.155,10,6,0,6.283,0,1.6)};
-function man(x,y,z,i,rot){const g=new T.Group(),a=(geo,m,yy)=>{const o=new T.Mesh(geo,m);o.position.y=yy;o.castShadow=true;g.add(o)};a(WKG.leg,WKM.pn,.43);a(WKG.body,i%2?WKM.v2:WKM.v1,1.19);a(WKG.head,WKM.sk,1.64);a(WKG.hat,i%3?WKM.hm:WKM.v2,1.69);g.position.set(x,y,z);g.rotation.y=rot;return g}
+const WKX={bt:new T.MeshStandardMaterial({color:0x3a2a1c,roughness:.8}),st:new T.MeshStandardMaterial({color:0xdfe3e6,roughness:.4,metalness:.3}),ey:new T.MeshBasicMaterial({color:0x1b1b1b}),hd:new T.MeshStandardMaterial({color:0x6b4a2e,roughness:.7}),tl:new T.MeshStandardMaterial({color:0x2f3a44,roughness:.5,metalness:.5}),dr:new T.MeshStandardMaterial({color:0x1f7a3a,roughness:.6})};
+/* 933 (יהב): פועל מפורט — מגפיים, מכנסיים, ווסט צהוב/כתום לסירוגין עם פסים מחזירי אור, ידיים, פנים עם עיניים, קסדה עם מצחייה, ובחלק מהם פטיש או מברגה */
+function man(x,y,z,i,rot){
+ const g=new T.Group(),V=i%2?WKM.v2:WKM.v1,a=(geo,m,px,py,pz)=>{const o=new T.Mesh(geo,m);o.position.set(px||0,py,pz||0);o.castShadow=true;g.add(o);return o},B=(w,h,d)=>new T.BoxGeometry(w,h,d),C=(r1,r2,h,n)=>new T.CylinderGeometry(r1,r2,h,n||10);
+ for(const s of [-1,1]){a(B(.13,.1,.24),WKX.bt,s*.1,.05,.03);a(C(.068,.075,.78),WKM.pn,s*.1,.49,0)}
+ a(B(.36,.18,.22),WKM.pn,0,.92,0);a(C(.19,.2,.56,12),V,0,1.25,0);a(C(.195,.195,.05,12),WKX.st,0,1.12,0);a(C(.195,.195,.05,12),WKX.st,0,1.32,0);
+ const sw=(i*1.7)%1-.5;
+ for(const s of [-1,1]){const arm=new T.Group();arm.position.set(s*.215,1.47,0);arm.rotation.z=s*.12;{const sh=new T.Mesh(new T.SphereGeometry(.072,10,8),V);sh.castShadow=true;arm.add(sh)}arm.rotation.x=s>0?-.9+sw*.3:.25;
+  const sl=new T.Mesh(C(.058,.052,.3),V);sl.position.y=-.15;const fa=new T.Mesh(C(.048,.044,.3),WKM.sk);fa.position.y=-.43;const hn=new T.Mesh(new T.SphereGeometry(.052,8,6),WKM.sk);hn.position.y=-.6;sl.castShadow=fa.castShadow=true;arm.add(sl,fa,hn);
+  if(s>0&&i%3!=2){const tool=new T.Group();tool.position.y=-.62;
+   if(i%3==0){const h=new T.Mesh(C(.018,.018,.32,6),WKX.hd);h.rotation.x=Math.PI/2;h.position.z=.12;const hh=new T.Mesh(B(.06,.06,.15),WKX.tl);hh.position.z=.27;tool.add(h,hh)}
+   else{const bd=new T.Mesh(B(.07,.12,.2),WKX.dr);bd.position.z=.08;const bit=new T.Mesh(C(.012,.008,.12,6),WKX.st);bit.rotation.x=Math.PI/2;bit.position.z=.24;const gr=new T.Mesh(B(.05,.14,.06),WKX.tl);gr.position.set(0,-.09,.02);tool.add(bd,bit,gr)}
+   arm.add(tool)}
+  g.add(arm)}
+ a(C(.06,.07,.08),WKM.sk,0,1.57,0);const hd=a(new T.SphereGeometry(.125,14,10),WKM.sk,0,1.7,0);hd.scale.set(1,1.12,1);
+ for(const s of [-1,1])a(new T.SphereGeometry(.018,6,4),WKX.ey,s*.045,1.72,.112);a(B(.025,.035,.03),WKM.sk,0,1.68,.125);
+ const HM=i%4==1?WKM.v2:WKM.hm;a(new T.SphereGeometry(.15,14,8,0,6.283,0,1.45),HM,0,1.76,0);a(C(.17,.17,.02,14),HM,0,1.775,.03).scale.set(1,1,1.15);
+ g.position.set(x,y,z);g.rotation.y=rot+((i*.9)%1-.5)*.8;return g}
 function buildWk(){FG.forEach(g=>{for(let i=g.children.length-1;i>=0;i--)if(g.children[i].userData.wk){const c=g.children[i];g.remove(c);c.traverse(o=>{if(o.isSprite&&o.material){if(o.material.map)o.material.map.dispose();o.material.dispose()}})}});
  const W0=DATA.wk||{};for(const f in W0){const fi=+f,L=W0[f]||[];if(!(fi>=0&&fi<=PH)||!FG[fi]||!L.length)continue;const tot=L.reduce((a,x)=>a+(+x.n||0),0),n=Math.min(14,tot||L.length),y=yF(fi)+.02,grp=new T.Group();grp.userData.wk=1;
   for(let i=0;i<n;i++){const bk=i>=7,k=bk?i-7:i;grp.add(man(-3+(k%7),y,(bk?-D/2+1.05:D/2-1.05)+(k%2?(bk?.35:-.35):0),i,bk?Math.PI:0))}
